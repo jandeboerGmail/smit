@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+
+<form action="." method="GET">
+  <div class="row form-inline">
+    
+    <div class="col-2">
+      <h3>Wijk</h3> 
+    </div>
+
+    <div class="form-group col-2">
+      <input type="text" class="form-control form-control-sm" name="q"  value="{{ query|escape }}" placeholder="Naam">
+    </div>
+
+    <div class="form-group col-1">
+      <button type="submit" class="btn btn-primary btn-sm">Zoek</button>
+    </div>
+    
+    <div class="form-group col-1">
+      <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
+    </div>
+
+    <!---
+    <div class="col-1">
+      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
+    </div>
+  -->
+
+  </div>
+</form>
+<hr>
+{% if query %}
+<table class="table">
+  <thead class="text-primary" >
+    <tr>
+      <!-- <th scope="col">#</th> -->
+      <th scope="col">Naam</th>
+      <th scope="col">Bedrijf</th>
+      <th scope="col">Contact</th>
+      <th scope="col">Telefoon</th>
+      <th scope="col">Bedrijf</th>
+      <th scope="col">Akties</th>
+    </tr>
+  </thead>
+  <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
+  {% if results %}
+  <tbody>
+    {% for wijk in results %}
+       <!-- <th scope="row">{{contact.id}}</th> -->
+       <th> {{wijk.naam}} </th>
+       <th> {{wijk.bedrijf.naam}} </th>
+       <th> {{wijk.contact_naam}} </th>
+       <th> {{wijk.contact_telefoon}} </th>
+       <th><a class="btn btn-sm btn-info" href="{% url 'editWijk' wijk.id %}">Edit</a></th>
+       <th><a class="btn btn-sm btn-danger" href="{% url 'deleteWijk' wijk.id %}">Delete</a></th>
+    </tbody> 
+   {% endfor %}
+  </table>
+  {% else %}
+    <p>Niks gevonden</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

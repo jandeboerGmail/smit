@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+
+<form action="." method="GET">
+  <div class="row form-inline">
+    
+    <div class="col-2">
+      <h3>Video</h3> 
+    </div>
+
+    <div class="form-group col-2">
+      <input type="text" class="form-control form-control-sm" name="q"  value="{{ query|escape }}" placeholder="Naam">
+    </div>
+
+    <div class="form-group col-1">
+      <button type="submit" class="btn btn-primary btn-sm">Zoek</button>
+    </div>
+    
+    <div class="form-group col-1">
+      <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
+    </div>
+
+    <!---
+    <div class="col-1">
+      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
+    </div>
+  -->
+
+  </div>
+</form>
+<hr>
+{% if query %}
+<table class="table">
+  <thead class="text-primary" >
+    <tr>
+      <th scope="col">Naam</th>
+      <th scope="col">Camera</th>
+      <th scope="col">Locatie</th>
+      <th scope="col">Wijk</th>
+      <th scope="col">Opname van</th>
+      <th scope="col">Opname tot</th>
+      <th scope="col">Akties</th>
+    </tr>
+  </thead>
+  <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
+  {% if results %}
+  <tbody>
+    {% for video in results %}
+    <th> {{video.naam}} </th>
+    <th> {{video.camera.locatie}} </th>
+    <th> {{video.camera.wijk}} </th>
+    <th> {{video.camera}} </th>
+    <th> {{video.opname_van}} </th>
+    <th> {{video.opname_tot}} </th>
+
+    <th><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></th>
+    <th><a class="btn btn-sm btn-primary" href="{% url 'downloadVideo' video.id %}">Download</a></th>
+    <th><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></th>
+    <th><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></th>
+    </tbody> 
+   {% endfor %}
+  </table>
+  {% else %}
+    <p>Niks gevonden</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

@@ -1,0 +1,25 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+    volumes:
+      - static_data:/vol/web
+    environment:
+      - SECRET_KEY=samplesecret123
+      - ALLOWED_HOSTS=192.168.1.10,127.0.0.1,localhost,berkhout.ddns.net
+      - DEBUG=0
+
+  proxy:
+    build:
+      context: ./proxy
+    volumes:
+      - static_data:/vol/static
+    ports:
+      - "9080:9080"
+    depends_on:
+      - app
+
+volumes:
+  static_data:

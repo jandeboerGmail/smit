@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Bootstrap Website</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+    <style>
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+        }
+        
+        #mainNav {
+            background-color: black;
+        }
+        
+        .htop div,
+        #about .container,
+        #contact .container {
+            background-color: rgb(0, 0, 0) transparent;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 10px;
+            color: white;
+        }
+        
+        #sidemenu {
+            padding: 4em 0;
+        }
+        
+        #sidemenu .container {
+            padding: 2em;
+        }
+        
+        .htop {
+            position: relative;
+            margin-top: 50px;
+            width: 100%;
+            text-align: center;
+            min-height: auto;
+            background-image: url(http://lorempixel.com/1600/700/sports);
+            /*background-image: url(http://placehold.it/1600x700);*/
+            background-size: cover;
+            color: white;
+            font-size: 1em;
+            padding: 3em;
+        }
+        
+        #about {
+            background-image: url(http://lorempixel.com/1600/700/cats);
+            /*background-image: url(http://placehold.it/1600x700);*/
+            background-size: cover;
+        }
+        
+        #contact {
+            background-image: url(http://lorempixel.com/1600/700/city);
+            /*background-image: url(http://placehold.it/1600x700);*/
+            background-size: cover;
+        }
+        
+        .footerA {
+            height: 200px;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        @media (min-width:768px) {
+            .htop {
+                min-height: 100%;
+            }
+            .msection {
+                min-height: 100%;
+                padding: 6em 0;
+            }
+        }
+    </style>
+</head>
+<body data-spy='scroll' data-target='#minimenu'>
+    <!-- content -->
+    <nav id='mainNav' class='navbar navbar-full  navbar-dark bg-faded navbar-fixed-top'>
+        <button class='navbar-toggler hidden-sm-up light float-xs-right' type='button' data-toggle='collapse' data-target='#minimenu'></button>
+        <div id='minimenu' class='collapse navbar-toggleable-xs'>
+            <ul class='nav navbar-nav text-uppercase'>
+                <li class='nav-item'><a class='nav-link' href='#about'>about</a></li>
+                <li class='nav-item'><a class='nav-link' href='#products'>products</a></li>
+                <li class='nav-item'><a class='nav-link' href='#contact'>contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <header class='htop'>
+        <div>
+            <h1>Your Company</h1>
+            <hr>
+            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis p</p>
+            <button type='button' class='btn btn-primary btn-lg' data-toggle='modal' data-target='#modal1'>Best deals today only</button>
+        </div>
+    </header>
+    <section id='about' class='msection'>
+        <div class='container'>
+            <div class='row'>
+                <div class='col-md-12'>
+                    <p>Lorem ipsum adipiscing elit. Aenean commodo ligula eget Cciis natoque penatibus et magnis dis p</p>
+                    <p>Lorem ipsum dolor sit amet, tetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis p</p>
+                    <p>Lorem ipsum dolor sit amet, consecdipiscing elit. Aenean commt dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis p</p>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-3 text-xs-center'>
+                    <h3>One</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                </div>
+                <div class='col-md-3 text-xs-center'>
+                    <h3>One</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                </div>
+                <div class='col-md-3 text-xs-center'>
+                    <h3>One</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                </div>
+                <div class='col-md-3 text-xs-center'>
+                    <h3>One</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-12'>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneula eget dolor. Aenean massa. Cum sociis natoque penaagnis dis p</p>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean coigula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis ppsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis p</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id='products' class='msection'>
+        <div class='container'>
+            <div class='row'>
+                <div class='col-md-4 text-xs-center'>
+                    <div class='card'>
+                        <div class='card-block'>
+                            <h3 class='card-title'>Product 1</h3> </div> <img src='http://placehold.it/600x600' class='img-fluid'>
+                        <div class='card-block'>
+                            <p class='card-text'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-md-4 text-xs-center'>
+                    <div class='card'>
+                        <div class='card-block'>
+                            <h3 class='card-title'>Product 1</h3> </div> <img src='http://placehold.it/600x600' class='img-fluid'>
+                        <div class='card-block'>
+                            <p class='card-text'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-md-4 text-xs-center'>
+                    <div class='card'>
+                        <div class='card-block'>
+                            <h3 class='card-title'>Product 1</h3> </div> <img src='http://placehold.it/600x600' class='img-fluid'>
+                        <div class='card-block'>
+                            <p class='card-text'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-md-4 text-xs-center'>
+                    <div class='card'>
+                        <div class='card-block'>
+                            <h3 class='card-title'>Product 1</h3> </div> <img src='http://placehold.it/600x600' class='img-fluid'>
+                        <div class='card-block'>
+                            <p class='card-text'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-md-4 text-xs-center'>
+                    <div class='card'>
+                        <div class='card-block'>
+                            <h3 class='card-title'>Product 1</h3> </div> <img src='http://placehold.it/600x600' class='img-fluid'>
+                        <div class='card-block'>
+                            <p class='card-text'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class='col-md-4 text-xs-center'>
+                    <div class='card'>
+                        <div class='card-block'>
+                            <h3 class='card-title'>Product 1</h3> </div> <img src='http://placehold.it/600x600' class='img-fluid'>
+                        <div class='card-block'>
+                            <p class='card-text'>Lorem ipsum dolor sit amet, consectetuer adipiscing elit.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id='more'>
+        <div class='container'>
+            <div class='row'>
+                <div class='col-md-12'>
+                    <h3>One</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                    <p>Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu.</p>
+                    <p>In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>
+                    <p>Aenean leo ligula, porttitor eu, consequat vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in, viverra quis, feugiat a, tellus. Phasellus viverra nulla ut metus varius laoreet. Quisque rutrum.</p>
+                    <p>Aenean imperdiet. Etiam ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi. Nam eget dui. Etiam rhoncus. Maecenas tempus, tellus eget condimentum rhoncus, sem quam semper libero, sit amet adipiscing sem neque sed ipsum.</p>
+                    <p>Nam quam nunc, blandit vel, luctus pulvinar, hendrerit id, lorem. Maecenas nec odio et ante tincidunt tempus. Donec vitae sapien ut libero venenatis faucibus. Nullam quis ante. Etiam sit amet orci eget eros faucibus tincidunt. Duis leo. Sed fringilla mauris sit amet nibh. Donec sodales sagittis magna. Sed consequat, leo eget bibendum sodales, augue velit cursus nunc,</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <aside id='sidemenu'>
+        <div class='container text-xs-center bg-success text-white'>
+            <h2>Add your email to the list to get the best deals first.</h2>
+            <button class='btn btn-primary' data-toggle='modal' data-target='#modal2'>More Info</button>
+        </div>
+    </aside>
+    <section id='contact' class='msection'>
+        <div class='container'>
+            <form>
+                <fieldset>
+                    <div class='form-group'>
+                        <label for='uname' class='control-label col-md-4'>UserName</label>
+                        <div class='col-md-8'>
+                            <input name='uname' id='uname' placeholder="please enter your name" class='form-control' type='text'> </div>
+                    </div>
+                    <div class='form-group'>
+                        <label for='uemail' class='control-label col-md-4'>Email</label>
+                        <div class='col-md-8'>
+                            <input name='uemail' id='uemail' placeholder="email address" class='form-control' type='email'> </div>
+                    </div>
+                    <div class='form-group'>
+                        <label for='umessage' class='control-label col-md-4'>Message</label>
+                        <div class='col-md-8'>
+                            <textarea class='form-control' name='umessage' id='umessage'></textarea>
+                        </div>
+                    </div>
+                    <div class='form-group'>
+                        <label class='control-label col-md-4'></label>
+                        <div class='col-md-4'>
+                            <button type='submit' class='btn btn-primary'>send message</button>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </section>
+    <footer class='text-xs-center footerA bg-inverse text-white'> (c) copyright info blah blah blah </footer>
+    <!-- Modal -->
+    <div id='modal1' class='modal' role='dialog'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>Best Deal OFFER ever</div>
+                <div class='modal-body'>Don't miss out buy now and save big</div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-primary' data-dismiss='modal'>close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id='modal2' class='modal' role='dialog'>
+        <div class='modal-dialog' role='document'>
+            <div class='modal-content'>
+                <div class='modal-header'>Best Deal OFFER ever</div>
+                <div class='modal-body'>Don't miss out buy now and save big</div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-primary' data-dismiss='modal'>close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+            $('.nav-link').on('click', function (e) {
+                e.preventDefault();
+                var hash = this.hash;
+                $('html, body').animate({
+                    scrollTop: $(hash).offset().top
+                }, 1000, function () {
+                    window.location.hash = hash
+                })
+            })
+        });
+    </script>
+</body>
+</html>

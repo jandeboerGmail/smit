@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% load static %}
+{% block content %}
+<!---
+<div class="col-4">
+  <img src="{% static 'media/coconut_bars.jpg' %}" alt="One Delicious chocolate coconut bars" />
+  <img src="{% static '/media/coconut_bars.jpg' %}" alt="Two elicious chocolate coconut bars" />
+  <hr>  
+  <hr>  
+  </div>
+-->
+  <div class="col-4">  
+    
+     <video controls muted src="{% static '/media/' %}{{video.video_link}}" width="640" height="480"> 
+      <p>This is fallback content to display for user agents that do not support the video tag.</p>
+     </video>
+  </div>
+  <div class="col-4 ">   
+      <!-- {{video.video_link}} --->
+      <h4>Play {% static 'media/' %}{{video.video_link}} </h4>
+  </div>
+   <!-- 
+  <div class="video-player video ">
+    <video
+      src="{% static '/media/' %}{{video.video_link}}"
+      width="640" height="480"
+      class = "video"
+      muted
+    ></video>
+
+    <div class="player-controls">
+      <div class="video-progress">
+        <div class="video-progress-filled"></div>
+      </div>
+
+      <button class="play-button" title="Play">►</button>
+
+      <input
+        type="range"
+        class="volume"
+        min="0"
+        max="1"
+        step="0.01"
+        value="1"
+      />
+
+      <div class="time">
+        <span class="current">0:00</span> / <span class="duration">0:00</span>
+      </div>
+
+    </div>
+  </div>
+  -->
+ <!-- {% include 'videojs.html' %} --> 
+{% endblock %}

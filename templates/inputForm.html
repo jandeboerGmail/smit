@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+
+{% if title %}
+     <h2 class='container col text-center'>{{ title }}</h2>     
+{% endif %}
+
+<div class="form-group">
+    <form method='POST' action ="" enctype='multipart/form-data'>   
+        <button type="submit" class="btn btn-success">Update</button>
+        <hr>
+        {% csrf_token %}
+        <!--- {{ form.media }} --->
+        {{ form.as_p }}
+        <hr>
+        <div class="form-row text-center">
+            <button type="submit" class="btn btn-success">Toevoegen</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

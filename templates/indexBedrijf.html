@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+<h2 class='container'>Bedrijf</h2>
+<ul>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/createBedrijf">Toevoegen</a>
+  </div>
+  <hr> 
+  <div class="nav-index">
+      <a class="nav-index" href="/camera/allBedrijf">Alle Bedrijven</a>
+  </div>
+  <hr>
+  <div class="nav-index">
+      <a class="nav-index" href="/camera/zNaamBedrijf">Zoek op Naam</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/zPlaatsBedrijf">Zoek op Plaats</a>
+</div>
+  <hr>
+</ul>
+{% endblock %}

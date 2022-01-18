@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row align-items-end">
+    <div class="col-9">
+      <h2>Gebruikers</h2> 
+    </div>
+   
+    <div class="col-1">
+      <a class="btn btn-sm btn-dark" href="{% url 'exportGebruiker' %}">Export </a>
+    </div>
+   
+   <div class="col-1">
+    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
+  </div>
+
+  <div class="col-1">
+    <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
+  </div>
+  </div>
+</div>
+<br>
+<table class="table">
+  <thead class="text-primary" >
+    <tr>
+      <!-- <th scope="col">#</th> -->
+      <th scope="col">Naam</th>
+      <th scope="col">User</th>
+      <th scope="col">Email</th>
+      <th scope="col">Telefoon</th>
+      <th scope="col">Soort</th>
+      <th scope="col">Aktie</th>
+    </tr>
+  </thead>
+  <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
+  {% if results %}
+  <tbody>
+    {% for gebruiker in results %}
+       <!-- <th scope="row">{{contact.id}}</th> -->
+       <th> {{gebruiker.naam}} </th>
+       <th> {{gebruiker.user}} </th>
+       <th> {{gebruiker.email}} </th>
+       <th> {{gebruiker.telefoon}} </th>
+       <th> {{gebruiker.soort}} </th>
+       <th><a class="btn btn-sm btn-info" href="{% url 'editGebruiker' gebruiker.id %}">Edit</a></th>
+       <th><a class="btn btn-sm btn-danger" href="{% url 'deleteGebruiker' gebruiker.id %}">Delete</a></th>
+    </tbody> 
+   {% endfor %}
+  </table>
+  {% else %}
+    <strong>Er zijn geen Gebruikers</strong>
+  {% endif %}
+ </div>
+{% endblock %}

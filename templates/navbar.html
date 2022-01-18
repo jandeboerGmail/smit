@@ -1,0 +1,52 @@
+
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary"> 
+  <!---
+  <a class="navbar-brand" href="/camera/about">SMIT</a>
+  -->
+  <img src="{%static 'images/smit-logo.png' %}"class="navbar-brand"  width="123" height="58"alt="Logo" >
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="/camera/zoekVideo">Zoek</a>
+      </li>
+        <li class="nav-item">
+        <a class="nav-link" href="/camera/indexGebruiker">Gebruiker</a>
+      </li>
+      <li class="nav-item"></li>
+        <a class="nav-link" href="/camera/indexBedrijf">Bedrijf</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/camera/indexWijk">Wijk</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/camera/indexCamera">Camera</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/camera/indexVideo">Video</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/camera/indexAkties">Akties</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/camera/about">About</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/admin/logout/">Logout</a>
+      </li>
+      
+    </ul>
+    <!----
+    <form class="form-inline my-2 my-lg-0" action='/search/'>
+      <input class="form-control mr-sm-2" type="search" name='q' placeholder="Search" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+    </form>
+  -->
+  </div>
+</nav>
