@@ -17,6 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+app_name = 'camera'
+
 urlpatterns = [
     path('', include('camera.urls')),
     #path('', admin.site.urls),

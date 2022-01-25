@@ -2,7 +2,8 @@ camera/static/media/
 convert/*.mp4
 ._*
 .DS_Store
-Piugins/Microsoft.HEVCVideoExtension_1.0.43421.0_x64__8wekyb3d8bbwe.Appx
+Plugins/Microsoft.HEVCVideoExtension_1.0.43421.0_x64__8wekyb3d8bbwe.Appx
+migrations/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -14,6 +15,7 @@ __pycache__/
 
 # Distribution / packaging
 .Python
+__init__.py
 build/
 develop-eggs/
 dist/
