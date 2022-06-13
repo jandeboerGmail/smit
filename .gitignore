@@ -2,8 +2,12 @@ camera/static/media/
 convert/*.mp4
 ._*
 .DS_Store
+._.DS_Store
 Plugins/Microsoft.HEVCVideoExtension_1.0.43421.0_x64__8wekyb3d8bbwe.Appx
 migrations/
+*.tar
+*.gz
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
