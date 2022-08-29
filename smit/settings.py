@@ -14,8 +14,7 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-#BASE_DIR = Path(__file__).resolve().parent.parent
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -25,10 +24,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = bool(int(os.environ.get('DEBUG', 0)))
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
-ALLOWED_HOSTS = ['192.168.1.10','berkhout.ddns.net']
+ALLOWED_HOSTS = ['192.168.1.11','berkhout.ddns.net']
 ALLOWED_HOSTS.extend(
     filter(
         None,
@@ -85,10 +83,10 @@ WSGI_APPLICATION = 'smit.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'smitvideo_dev',
+        'NAME': 'smitvideo',
         'USER': 'django',
         'PASSWORD': 'Django2020Pwd!',
-        'HOST': '192.168.1.10',
+        'HOST': 'host.docker.internal',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -99,7 +97,6 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-LOGIN_URL = '/admin/login'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -134,12 +131,20 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-#develop 
-STATIC_URL = '/static/'
-MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+# new
+STATIC_URL = '/static/static/'
+MEDIA_URL = '/static/media/'
 
-#STATICFILES_DIRS = (
-#    os.path.join(BASE_DIR,'static'),
-#)
+STATIC_ROOT = '/vol/web/static'
+MEDIA_ROOT = '/vol/web/media'
+
+#old
+#STATIC_URL = '/static/'
+
+#MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+#MEDIA_URL = '/media/'
+
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR,'static'),
+)

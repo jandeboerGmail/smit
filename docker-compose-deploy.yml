@@ -8,8 +8,9 @@ services:
       - static_data:/vol/web
     environment:
       - SECRET_KEY=samplesecret123
-      - ALLOWED_HOSTS=192.168.1.10,127.0.0.1,localhost,berkhout.ddns.net
-      - DEBUG=0
+      - ALLOWED_HOSTS=192.168.1.11,127.0.0.1,localhost,berkhout.ddns.net,jupiter
+      - DEBUG=1
+    network_mode: host
 
   proxy:
     build:
