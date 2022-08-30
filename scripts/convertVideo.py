@@ -67,9 +67,4 @@ for root, dirs, files in os.walk(inpath, topdown=True):
                         #print('Dest :',destFile)
                         shutil.move(filename,destFile)
                 
-                
-
-
-
-
-
+            
