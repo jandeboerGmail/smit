@@ -1,9 +1,8 @@
-
+# Convert 265 Video files to 264
+from operator import eq
 import os,time,shutil
 
-inpath='/home/jan/video/'
-outpath='/home/jan/results'
-processedPath = '/home/jan/Processed'
+videoPath='/home/jan/video/'
 
 def size_changed(fileName,sec):
         b_size = os.path.getsize(fileName)
@@ -18,26 +17,29 @@ def substring_after(s, delim):
 def substring_before(s, delim):
         return s.split(delim)[0]
 
-for root, dirs, files in os.walk(inpath, topdown=True):
+for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
             filename = os.path.join(root, name)
             # print("Files :",os.path.join(root, name))
-            if "2CONVERT" in filename or "2convert"  in filename:
+            if "2Convert" in filename:
                 #print('inFile :',filename)
                 if ".MP4" in filename or ".mp4" in filename:
-                    after = substring_after(filename,"2CONVERT/") or substring_after(filename,"2convert/")
+                    after = substring_after(filename,"2Convert/") 
             
                     if (after and size_changed(filename,5)) and (os.path.getsize(filename)) > 0:
                         #print('After :',after)
-    
                         request = after[0:after.find("/")]
-                        #print('request:',request)
-                        newDir = os.path.join(outpath,request)
-                        if not os.path.isdir(newDir):
-                            os.mkdir(newDir)
-            
-                        outFile = os.path.join(outpath,after)
+                        print('request:',request)
+                        
+                        #make/check output dir
+                        destDir = substring_before(filename, "2Convert") + "Converted/" 
+                       
+                        print('destDir :',destDir)
+                        if not os.path.isdir(destDir):
+                            os.mkdir(destDir)
+                
+                        outFile = os.path.join(destDir,after)
                
                         outFile = outFile.replace(".mp4", ".webm")
                         outFile = outFile.replace(".MP4", ".webm")
@@ -45,26 +47,29 @@ for root, dirs, files in os.walk(inpath, topdown=True):
                         outFile = outFile.replace(" ", "\ ")
                         inFile = filename.replace(" ", "\ ")
 
-                        print('Converting :' ,inFile, 'to', outFile) 
-    
-                        command = "ffmpeg  -i " + inFile 
-                        command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
-                        #print('Command :',command) 
-                        os.system(command)
-            
-                        #move the original file
-                        destFile = filename.replace("2convert","done")
-                        destFile = destFile.replace("2CONVERT","done")
+                        print('Converting :' ,inFile, 'to', outFile)
 
-                        #make/check output dir before move
-                        destDir = substring_before(destFile, "done") + "done/"
-                        #print('destDir :',destDir)
-                        if not os.path.isdir(destDir):
-                            os.mkdir(destDir)
-                        destDir = destDir + request
-                        if not os.path.isdir(destDir):
-                            os.mkdir(destDir)
-                        #print('Dest :',destFile)
-                        shutil.move(filename,destFile)
+                        #command 
+                        #command = "cp " + inFile + " " + outFile 
+
+                        command = "ffmpeg  -i " + inFile 
+                        #vb9 onepass
+                        #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
+                        #vb9 twopass
+                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && fmpeg -i input.mp4 -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus"  + outFile
+
+                        print('Command :',command) 
+                        result = os.system(command)
+
+                        print('Result :',result)
+                        if result ==  0:
+                            print('Infile:',inFile)
+                            if os.path.exists(inFile):
+                                #os.remove(inFile)
+                                print('Removed original file :',inFile)
+            
+            
+
+                      
                 
             
