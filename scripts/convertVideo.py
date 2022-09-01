@@ -4,6 +4,11 @@ import os,time,shutil
 
 videoPath='/home/jan/video/'
 
+def removeFile(fileName):
+   if os.path.exists(fileName):
+        os.remove(fileName)
+        print('Removed File :',fileName)
+
 def size_changed(fileName,sec):
         b_size = os.path.getsize(fileName)
         time.sleep(sec)
@@ -56,20 +61,16 @@ for root, dirs, files in os.walk(videoPath, topdown=True):
                         #vb9 onepass
                         #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
                         #vb9 twopass
-                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && fmpeg -i input.mp4 -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus"  + outFile
+                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
+                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
 
                         print('Command :',command) 
+                        removeFile(outFile)
                         result = os.system(command)
 
                         print('Result :',result)
-                        if result ==  0:
+                        if result ==  0: # 256 error
                             print('Infile:',inFile)
-                            if os.path.exists(inFile):
-                                #os.remove(inFile)
-                                print('Removed original file :',inFile)
-            
-            
-
-                      
-                
-            
+                            #removeFile(inFile)
+                             
+                        
