@@ -22,7 +22,10 @@ def substring_after(s, delim):
 def substring_before(s, delim):
         return s.split(delim)[0]
 
-for root, dirs, files in os.walk(videoPath, topdown=True):
+def converting():
+
+    print("Converting...")
+    for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
             filename = os.path.join(root, name)
@@ -35,14 +38,20 @@ for root, dirs, files in os.walk(videoPath, topdown=True):
                     if (after and size_changed(filename,5)) and (os.path.getsize(filename)) > 0:
                         #print('After :',after)
                         request = after[0:after.find("/")]
-                        print('request:',request)
+                        #print('request:',request)
                         
                         #make/check output dir
                         destDir = substring_before(filename, "2Convert") + "Converted/" 
                        
-                        print('destDir :',destDir)
+                        #print('destDir :',destDir)
                         if not os.path.isdir(destDir):
                             os.mkdir(destDir)
+
+                        # check / create request directory
+                        reqDir = destDir + request + "/"
+                        #print('reqDir :', reqDir)
+                        if not os.path.isdir(reqDir):
+                            os.mkdir(reqDir)
                 
                         outFile = os.path.join(destDir,after)
                
@@ -57,20 +66,23 @@ for root, dirs, files in os.walk(videoPath, topdown=True):
                         #command 
                         #command = "cp " + inFile + " " + outFile 
 
-                        command = "ffmpeg  -i " + inFile 
                         #vb9 onepass
+                        #command = "ffmpeg  -i " + inFile
                         #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
                         #vb9 twopass
+                        command = "ffmpeg  -i " + inFile
                         command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
                         command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
 
-                        print('Command :',command) 
+                        #print('Command :',command) 
                         removeFile(outFile)
                         result = os.system(command)
 
-                        print('Result :',result)
+                        #print('Result :',result)
                         if result ==  0: # 256 error
-                            print('Infile:',inFile)
-                            #removeFile(inFile)
-                             
-                        
+                            print("Converted")
+                            #removeFile(inFile) uncommend for production
+
+#main
+converting()                         
+print ("Ready")                        
