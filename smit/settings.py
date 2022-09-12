@@ -14,7 +14,8 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+#BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,7 +25,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+#DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.11','berkhout.ddns.net']
 ALLOWED_HOSTS.extend(
@@ -83,10 +85,10 @@ WSGI_APPLICATION = 'smit.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'smitvideo',
+        'NAME': 'smitvideo_dev',
         'USER': 'django',
         'PASSWORD': 'Django2020Pwd!',
-        'HOST': 'host.docker.internal',
+        'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -97,6 +99,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+LOGIN_URL = '/admin/login'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -119,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 
 USE_I18N = True
 
@@ -131,20 +134,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+#develop 
+STATIC_URL = '/static/'
+MEDIA_URL = '/media/'
 
-# new
-STATIC_URL = '/static/static/'
-MEDIA_URL = '/static/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
-STATIC_ROOT = '/vol/web/static'
-MEDIA_ROOT = '/vol/web/media'
-
-#old
-#STATIC_URL = '/static/'
-
-#MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-#MEDIA_URL = '/media/'
-
-STATICFILES_DIRS = (
-    os.path.join(BASE_DIR,'static'),
-)
+#STATICFILES_DIRS = (
+#    os.path.join(BASE_DIR,'static'),
+#)

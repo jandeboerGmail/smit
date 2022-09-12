@@ -67,9 +67,10 @@ class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
 
-        fields = ['naam','camera','opname_van','opname_tot','video_image','video_link','codec','memo']
+        fields = ['ordernr','naam','camera','opname_van','opname_tot','video_image','video_link','codec','memo']
 
         widgets = {
+            'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'opname_van': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'opname_tot': forms.DateTimeInput(attrs={'class': 'form-control'}),   
@@ -81,7 +82,7 @@ class VideoForm(forms.ModelForm):
 class ZoekVideoForm(forms.ModelForm):
     class Meta:
         model = Video
-        fields = (['naam','camera','opname_van','opname_tot','video_image','video_link','codec','memo'])
+        fields = (['ordernr','naam','camera','opname_van','opname_tot','video_image','video_link','codec','memo'])
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -4,8 +4,8 @@ from mysql.connector import Error
 try:
     connection = mysql.connector.connect(host='localhost',
                                          database='smitvideo_dev',
-                                         user='root',
-                                         password='daf1234')
+                                         user='django',
+                                         password='Django2020Pwd!')
     if connection.is_connected():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version ", db_Info)

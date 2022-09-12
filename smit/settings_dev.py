@@ -88,7 +88,7 @@ DATABASES = {
         'NAME': 'smitvideo_dev',
         'USER': 'django',
         'PASSWORD': 'Django2020Pwd!',
-        'HOST': 'host.docker.internal',
+        'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -122,7 +122,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'CET'
 
 USE_I18N = True
 

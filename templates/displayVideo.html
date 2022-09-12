@@ -25,9 +25,8 @@
 <table class="table">
   <thead class="text-primary" >
     <tr>
+      <th scope="col">Order</th>
       <th scope="col">Naam</th>
-      <th scope="col">Codec</th>
-      <th scope="col">Play</th>
       <th scope="col">Camera</th>
       <th scope="col">Locatie</th>
       <th scope="col">Wijk</th>
@@ -38,18 +37,16 @@
   {% if results %}
   <tbody>
     {% for video in results %}
+       <th> {{video.ordernr}} </th>
        <th> {{video.naam}} </th>
-       <th> {{video.codec}} </th>
-       <th><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></th>
        <th> {{video.camera.locatie}} </th>
        <th> {{video.camera.wijk}} </th>
        <th> {{video.camera}} </th>
-       <th> {{video.camera}} </th>
        <th> {{video.opname_van}} </th>
        <th> {{video.opname_tot}} </th>
-
+       <th><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></th>
        <!--<th><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></th> -->
-       <th><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></th>
+       <!--<th><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></th> -->
        <th><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></th>
        <th><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></th>
     </tbody> 
