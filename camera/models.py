@@ -18,12 +18,12 @@ class Gebruiker(models.Model):
     soort = models.IntegerField(choices=Soorten.choices,default=0)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank=False)
+    datum_inserted = models.dateTimeField(default=timezone.now, blank=False)
+    datum_updatumd = models.dateTimeField(default=timezone.now, blank=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
+        self.datum_updatumd = timezone.now()
         super(Gebruiker, self).save(*args, **kwargs)
 
     class Meta:
@@ -46,12 +46,12 @@ class Bedrijf(models.Model):
     contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank =False)
+    datum_inserted = models.dateTimeField(default=timezone.now, blank=False)
+    datum_updatumd = models.dateTimeField(default=timezone.now, blank =False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
+        self.datum_updatumd = timezone.now()
         super(Bedrijf, self).save(*args, **kwargs)
 
     class Meta:
@@ -69,12 +69,12 @@ class Wijk(models.Model):
     contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank =False)
+    datum_inserted = models.dateTimeField(default=timezone.now, blank=False)
+    datum_updatumd = models.dateTimeField(default=timezone.now, blank =False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
+        self.datum_updatumd = timezone.now()
         super(Wijk, self).save(*args, **kwargs)
 
     class Meta:
@@ -92,15 +92,15 @@ class Camera(models.Model):
     wijk = models.ForeignKey(Wijk,on_delete=models.CASCADE)
     gps_locatie = models.CharField(max_length=50,blank = True)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
-    datum_geplaatst = models.DateTimeField(default=timezone.now, blank=False)
+    datum_geplaatst = models.dateTimeField(default=timezone.now, blank=False)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank=False)
+    datum_inserted = models.dateTimeField(default=timezone.now, blank=False)
+    datum_updatumd = models.dateTimeField(default=timezone.now, blank=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
+        self.datum_updatumd = timezone.now()
         super(Camera, self).save(*args, **kwargs)
 
     class Meta:
@@ -113,8 +113,9 @@ class Camera(models.Model):
      
 class Video(models.Model):
     naam = models.CharField(max_length=50,blank = False,unique=True) #format bedrijflocatieddmmyyhhmmss  (utc)
-    opname_van = models.DateTimeField(default=timezone.now, blank=False)
-    opname_tot = models.DateTimeField(default=timezone.now, blank=False)
+    ordernr = models.CharField(max_length=50,blank = False,unique=False)
+    opname_van = models.dateTimeField(default=timezone.now, blank=False)
+    opname_tot = models.dateTimeField(default=timezone.now, blank=False)
     camera = models.ForeignKey(Camera,on_delete=models.CASCADE)
     video_image = models.ImageField(upload_to ='images/',null=True,blank=True)
     video_link= models.CharField(max_length=500,blank=True)
@@ -122,19 +123,53 @@ class Video(models.Model):
     codec = models.CharField(max_length=50,blank = True)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank=False)
+    datum_inserted = models.dateTimeField(default=timezone.now, blank=False)
+    datum_updatumd = models.dateTimeField(default=timezone.now, blank=False)
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
+        self.datum_updatumd = timezone.now()
         super(Video, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = 'video'
-        ordering = ['naam','codec']
+        ordering = ['ordernr','naam','codec']
         unique_together = ('naam','codec')
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
 
+class Log(models.Model):
+    id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
+    ordernr = models.CharField(max_length=50,blank = False,unique=False)
+    message = models.CharField(max_length=100,blank = False,default="empty")
+    datum_inserted = models.dateTimeField(default=timezone.now, blank=False)
+    datum_updatumd = models.dateTimeField(default=timezone.now, blank=False)
+
+    def save(self, *args, **kwargs):
+        self.datum_updatumd = timezone.now()
+        super(Log, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'log'
+        ordering = ['ordernr']
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return self.id
+     
+class Parameter(models.Model):
+    id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
+    videoPath = models.CharField(max_length=100,blank = False,unique=False) # ex /home/jan/video/'
+    datum_inserted = models.dateTimeField(default=timezone.now, blank=False)
+    datum_updatumd = models.dateTimeField(default=timezone.now, blank=False)
+
+    def save(self, *args, **kwargs):
+        self.datum_updatumd = timezone.now()
+        super(Log, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'parameter'
+        ordering = ['id']
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return self.videoPath
