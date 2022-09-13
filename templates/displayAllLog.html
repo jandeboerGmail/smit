@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row align-items-end">
+    <div class="col-9">
+      <h2>Log Entries</h2> 
+    </div>
+
+    <!--
+    <div class="col-1">
+      <a class="btn btn-sm btn-dark" href="{% url 'exportLog' %}">Export </a>
+    </div>
+    -->
+   
+   <div class="col-1">
+    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
+  </div>
+
+  <div class="col-1">
+    <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
+  </div>
+
+</div>
+<br>
+<table class="table">
+  <thead class="text-primary" >
+    <tr>
+      <th scope="col">Service OrderNr</th>
+      <th scope="col">Message</th>
+      <th scope="col">Date</th>
+    </tr>
+  </thead>
+  {% if results %}
+  <tbody>
+    {% for log in results %}
+       <th> {{log.ordernr}} </th>
+       <th> {{log.message}} </th>
+       <th> {{log.datum_inserted}} </th>
+    </tbody> 
+   {% endfor %}
+  </table>
+  {% else %}
+    <strong>Er zijn geen Log Entries</strong>
+  {% endif %}
+
+ </div>
+{% endblock %}
