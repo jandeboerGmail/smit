@@ -4,14 +4,121 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.conf import settings
 from django.db.models import Q
 from django import forms
+from operator import eq
+import os,time,shutil
 
-from camera.models import Gebruiker, Bedrijf, Wijk, Camera, Video
+from camera.models import Gebruiker, Bedrijf, Parameter, Wijk, Camera, Video , Log, Parameter
 from camera.forms import GebruikerForm, BedrijfForm, WijkForm, CameraForm, VideoForm 
+#from camera.process import *
 
 import datetime
 import locale
+#import camera.process
 import xlwt
 
+#process generic function ----------------------------------------------------
+def addLogEntry(orderNr,message):
+    aLog = Log()
+    aLog.ordernr = orderNr
+    aLog.message = message
+    aLog.save()
+    return
+
+def getParameter(pk):
+    aParameter =  Parameter.objects.get(id=pk)
+    return aParameter.videoPath
+
+# Convert 265 Video files to 264
+videoPath='/home/jan/video/'
+
+def removeFile(fileName):
+   if os.path.exists(fileName):
+        os.remove(fileName)
+        print('Removed File :',fileName)
+
+def size_changed(fileName,sec):
+        b_size = os.path.getsize(fileName)
+        time.sleep(sec)
+        e_size = os.path.getsize(fileName)
+        #print('Sizes :',b_size, e_size)
+        return b_size == e_size
+
+def substring_after(s, delim):
+        return s.partition(delim)[2]
+
+def substring_before(s, delim):
+        return s.split(delim)[0]
+
+def ConvertingVideos():
+    videolocation = getParameter(1)
+    message = "Looking for New Videos in " + videolocation
+    addLogEntry(" ", message)
+    for root, dirs, files in os.walk(videoPath, topdown=True):
+  
+        for name in files:
+            filename = os.path.join(root, name)
+            # print("Files :",os.path.join(root, name))
+            if "2Convert" in filename:
+                #print('inFile :',filename)
+                if ".MP4" in filename or ".mp4" in filename:
+                    after = substring_after(filename,"2Convert/") 
+            
+                    if (after and size_changed(filename,5)) and (os.path.getsize(filename)) > 0:
+                        #print('After :',after)
+                        request = after[0:after.find("/")]
+                        #print('request:',request)
+                        
+                        #make/check output dir
+                        destDir = substring_before(filename, "2Convert") + "Converted/" 
+                       
+                        #print('destDir :',destDir)
+                        if not os.path.isdir(destDir):
+                            os.mkdir(destDir)
+
+                        # check / create request directory
+                        reqDir = destDir + request + "/"
+                        #print('reqDir :', reqDir)
+                        if not os.path.isdir(reqDir):
+                            os.mkdir(reqDir)
+                
+                        outFile = os.path.join(destDir,after)
+               
+                        outFile = outFile.replace(".mp4", ".webm")
+                        outFile = outFile.replace(".MP4", ".webm")
+
+                        outFile = outFile.replace(" ", "\ ")
+                        inFile = filename.replace(" ", "\ ")
+                        
+                     
+                        message = 'Converting : ' + inFile + ' to ' + outFile
+                        addLogEntry(request,message)
+
+                        #command 
+                        #command = "cp " + inFile + " " + outFile 
+
+                        #vb9 onepass
+                        #command = "ffmpeg  -i " + inFile
+                        #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
+                        #vb9 twopass
+                        command = "ffmpeg  -i " + inFile
+                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
+                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
+
+                        addLogEntry(request,command)
+                        #print('Command :',command) 
+                        removeFile(outFile)
+                        result = os.system(command)
+                        #result = 0
+
+                        #print('Result :',result)
+                        if result ==  0: # 256 error
+                            addLogEntry(request,"Converted")
+                            print("Converted")
+                            #removeFile(inFile) uncommend for production
+                        else:
+                            addLogEntry(request,"ERROR : Not Converted")
+#process generic function ----------------------------------------------------
+    
 # Create your views here.
 def current_datetime(request):
     now = datetime.datetime.now()
@@ -54,6 +161,10 @@ def indexCamera(request):
 @login_required
 def indexVideo(request):
     return render(request,'../templates/indexVideo.html', {} )
+
+@login_required
+def indexLog(request):
+    return render(request,'../templates/indexLog.html', {} )
 
 @login_required
 def indexAkties(request):
@@ -468,7 +579,7 @@ def deleteCamera(request,pk):
 # ---- Video ---------------
 @login_required
 def allVideo(request):
-    video_list = Video.objects.order_by('naam')
+    video_list = Video.objects.order_by('ordernr','naam')
     aantal =  video_list.count
     video_dict  = {'results' : video_list , 'aantal' : aantal}
     return render(request,'../templates/displayVideo.html',video_dict )
@@ -485,6 +596,18 @@ def zNaamVideo (request):
     else:
         video_dict = {}
     return render(request,'../templates/zNaamVideo.html', video_dict )
+
+@login_required
+def zOrderVideo (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(ordernr__icontains=query))       
+        video_list = Video.objects.filter(qset).distinct().order_by('naam')
+        aantal = video_list.count
+        video_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
+    else:
+        video_dict = {}
+    return render(request,'../templates/zOrderVideo.html', video_dict )
 
 # Export
 @login_required
@@ -606,6 +729,81 @@ def zoekVideo(request):
     # TODO 
     context  = {}
     return render(request,'todo.html',context )
+
+# ---- Log ---------------
+@login_required
+def allLog(request):
+    log_list = Log.objects.order_by('-id')
+    aantal =  log_list.count
+    video_dict  = {'results' : log_list , 'aantal' : aantal}
+    return render(request,'../templates/displayAllLog.html',video_dict )
+
+# Zoek
+@login_required
+def zOrderLog (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(ordernr__icontains=query))
+     
+        log_list = Log.objects.filter(qset).distinct().order_by('id')
+        aantal = log_list.count
+        video_dict  = {'results' : log_list , 'aantal' : aantal, "query": query}
+    else:
+        video_dict = {}
+    return render(request,'../templates/zOrderLog.html', video_dict )
+
+# Export
+@login_required
+def exportLog(request):
+        response = HttpResponse(content_type='application/ms-excel')
+        now = datetime.datetime.now()
+        response['Content-Disposition']  = 'attachment; filename=Log_' + \
+            now.strftime ("%Y%m%d_%H%M%S") +'.xls'
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Log')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+
+        columns = ['id','ordernr','message','datum_inserted']
+
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+
+        font_style = xlwt.XFStyle()
+
+        rows = Log.objects.order_by('id').values_list('id','ordernr','message','datum_inserted')
+        for row in rows:
+            row_num +=1
+
+            for col_num in range(len(columns)):
+                ws.write(row_num, col_num, str(row[col_num]), font_style)
+
+        wb.save(response)
+        return response
+
+
+# ---- Aktie ---------------
+@login_required
+def aktionFillLogfile(request):
+    
+    addLogEntry("ServiceOrder 1","Inserted from Django")
+    return redirect('indexAkties')
+
+@login_required
+def aktionGetVideoLocation(request):
+    
+    videolocation = getParameter(1)
+    print('Videolocation :',videolocation)
+    return redirect('indexAkties')
+
+@login_required
+def aktionConvertVideo(request):
+    print("ConvertingVideos")
+    ConvertingVideos()
+   
+    return redirect('indexAkties')
 
 '''
       item  = Video.objects.all() # use filter() when you have sth to filter ;)

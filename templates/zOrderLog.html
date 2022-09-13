@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+
+<form action="." method="GET">
+  <div class="row form-inline">
+    
+    <div class="col-2">
+      <h3>Log Entries</h3> 
+    </div>
+
+    <div class="form-group col-2">
+      <input type="text" class="form-control form-control-sm" name="q"  value="{{ query|escape }}" placeholder="Service Order Nummer">
+    </div>
+
+    <div class="form-group col-1">
+      <button type="submit" class="btn btn-primary btn-sm">Zoek</button>
+    </div>
+    
+     <!---
+    <div class="form-group col-1">
+        <div class="alert-md alert-dark" role="alert"> {{request}} </div>
+      </div>
+      --->
+
+    <div class="form-group col-1">
+      <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
+    </div>
+
+     <!---
+    <div class="col-1">
+      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
+    </div>
+    -->
+
+  </div>
+</form>
+<hr>
+<h7>
+{% if query %}
+<table class="table">
+  <thead class="text-primary" >
+    <tr>
+      <th scope="col">Service OrderNr</th>
+      <th scope="col">Message</th>
+      <th scope="col">Inserted</th>
+
+    </tr>
+  </thead>
+  <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
+  {% if results %}
+  <tbody>
+    {% for log in results %}
+    <th> {{log.ordernr}} </th>
+    <th> {{log.message}} </th>
+    <th> {{log.datum_inserted}} </th>
+    </tbody> 
+   {% endfor %}
+  </table>
+  </h7>
+  {% else %}
+    <p>Niks gevonden</p>
+  {% endif %}
+{% endif %}
+{% endblock %}

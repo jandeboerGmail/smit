@@ -18,6 +18,7 @@ urlpatterns = [
     path('indexWijk',views.indexWijk,name='indexWijk'),
     path('indexCamera',views.indexCamera,name='indexCamera'),
     path('indexVideo',views.indexVideo,name='indexVideo'),
+    path('indexLog',views.indexLog,name='indexLog'),
     path('indexAkties',views.indexAkties,name='indexAkties'),
 
 # Gebruiker
@@ -59,6 +60,7 @@ urlpatterns = [
 # Video
     path('allVideo/',views.allVideo,name='allVideo'),
     path('zNaamVideo/',views.zNaamVideo,name='zNaamVideo'),
+    path('zOrderVideo/',views.zOrderVideo,name='zOrderVideo'),
     path('exportVideo/',views.exportVideo,name='exportVideo'),
     path('createVideo/',views.createVideo,name='createVideo'),
     path('editVideo/<int:pk>',views.editVideo,name='editVideo'),
@@ -67,5 +69,15 @@ urlpatterns = [
     path('playVideo/<int:pk>',views.playVideo,name='playVideo'),
     path('convertVideo/<int:pk>',views.convertVideo,name='convertVideo'),
     path('downloadVideo/<int:pk>',views.downloadVideo,name='downloadVideo'),
+
+# Log
+    path('allLog/',views.allLog,name='allLog'),
+    path('zOrderLog/',views.zOrderLog,name='zOrderLog'),
+    path('exportLog/',views.exportLog,name='exportLog'),
+
+# Akties
+    path('aktionFillLogfile/',views.aktionFillLogfile,name='aktionFillLogfile'),
+    path('aktionGetVideoLocation/',views.aktionGetVideoLocation,name='aktionGetVideoLocation'),
+    path('aktionConvertVideo/',views.aktionConvertVideo,name='aktionConvertVideo'),
 
 ]
