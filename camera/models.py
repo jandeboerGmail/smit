@@ -149,11 +149,7 @@ class Log(models.Model):
     def save(self, *args, **kwargs):
         self.datum_updated = timezone.now()
         super(Log, self).save(*args, **kwargs)
-    '''
-    def __init__(self, ordernr, message):
-        self.ordernr = ordernr
-        self.message = message
-    '''
+  
     class Meta:
         verbose_name_plural = 'log'
         ordering = ['ordernr']
@@ -164,12 +160,9 @@ class Log(models.Model):
 class Parameter(models.Model):
     id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
     videoPath = models.CharField(max_length=100,blank = False,unique=False) # ex /home/jan/video/'
+    conversion_running = models.BooleanField(default=False)
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
     datum_updated = models.DateTimeField(default=timezone.now, blank=False)
-
-    def save(self, *args, **kwargs):
-        self.datum_updated = timezone.now()
-        super(Log, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = 'parameter'

@@ -5,6 +5,7 @@ from django.conf import settings
 from django.db.models import Q
 from django import forms
 from operator import eq
+from django.utils import timezone
 import os,time,shutil
 
 from camera.models import Gebruiker, Bedrijf, Parameter, Wijk, Camera, Video , Log, Parameter
@@ -16,7 +17,7 @@ import locale
 #import camera.process
 import xlwt
 
-#process generic function ----------------------------------------------------
+# Log functions
 def addLogEntry(orderNr,message):
     aLog = Log()
     aLog.ordernr = orderNr
@@ -24,12 +25,31 @@ def addLogEntry(orderNr,message):
     aLog.save()
     return
 
-def getParameter(pk):
-    aParameter =  Parameter.objects.get(id=pk)
+# Parameter functions
+def getVideoLocation():
+    aParameter =  Parameter.objects.get(id=1)
     return aParameter.videoPath
 
-# Convert 265 Video files to 264
-videoPath='/home/jan/video/'
+def runningStatus():
+    aParameter =  Parameter.objects.get(id=1)
+    return aParameter.conversion_running
+
+def setRunningStatus(status):
+    aParameter = Parameter.objects.get(id=1)
+    aParameter.conversion_running = status
+    aParameter.datum_updated = timezone.now()
+    aParameter.save()
+    return
+
+#videoPath='/home/jan/video/'
+
+# Log generic functions
+def addLogEntry(orderNr,message):
+    aLog = Log()
+    aLog.ordernr = orderNr
+    aLog.message = message
+    aLog.save()
+    return
 
 def removeFile(fileName):
    if os.path.exists(fileName):
@@ -50,9 +70,10 @@ def substring_before(s, delim):
         return s.split(delim)[0]
 
 def ConvertingVideos():
-    videolocation = getParameter(1)
+    videolocation = getVideoLocation()
     message = "Looking for New Videos in " + videolocation
     addLogEntry(" ", message)
+    setRunningStatus(True)
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
@@ -90,7 +111,7 @@ def ConvertingVideos():
                         inFile = filename.replace(" ", "\ ")
                         
                      
-                        message = 'Converting : ' + inFile + ' to ' + outFile
+                        message = 'Converting ' + inFile + '\n to ' + outFile
                         addLogEntry(request,message)
 
                         #command 
@@ -104,7 +125,7 @@ def ConvertingVideos():
                         command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
                         command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
 
-                        addLogEntry(request,command)
+                        #addLogEntry(request,command)
                         #print('Command :',command) 
                         removeFile(outFile)
                         result = os.system(command)
@@ -117,8 +138,8 @@ def ConvertingVideos():
                             #removeFile(inFile) uncommend for production
                         else:
                             addLogEntry(request,"ERROR : Not Converted")
-#process generic function ----------------------------------------------------
-    
+                        setRunningStatus(False)
+
 # Create your views here.
 def current_datetime(request):
     now = datetime.datetime.now()
@@ -783,44 +804,27 @@ def exportLog(request):
         wb.save(response)
         return response
 
-
 # ---- Aktie ---------------
 @login_required
-def aktionFillLogfile(request):
-    
-    addLogEntry("ServiceOrder 1","Inserted from Django")
+def aktionDisplayConversionStatus(request):
+    if runningStatus():
+        print("Conversion is Running")
+    else:
+        print("Conversion is NOT Running")   
     return redirect('indexAkties')
 
 @login_required
 def aktionGetVideoLocation(request):
-    
-    videolocation = getParameter(1)
+    videolocation = getVideoLocation()
     print('Videolocation :',videolocation)
     return redirect('indexAkties')
 
 @login_required
 def aktionConvertVideo(request):
-    print("ConvertingVideos")
     ConvertingVideos()
-   
     return redirect('indexAkties')
 
 '''
-      item  = Video.objects.all() # use filter() when you have sth to filter ;)
-   form = request.POST # you seem to misinterpret the use of form from django and POST data. you should take a look at [Django with forms][1]
-   # you can remove the preview assignment (form =request.POST)
-   if request.method == 'POST':
-      selected_item = get_object_or_404(Item, pk=request.POST.get('item_id'))
-      # get the user you want (connect for example) in the var "user"
-      #user.item = selected_item
-      #user.save()
-
-      # Then, do a redirect for example
-
-    template_name = 'zoekVideo.html'
-    context = {'item' : item , 'title': 'Verwijder Video'}
-    return render(request,template_name,context)
-
 @login_required
 def zNaamCamera (request):
     query = request.GET.get('q','')

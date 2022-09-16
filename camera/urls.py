@@ -76,7 +76,7 @@ urlpatterns = [
     path('exportLog/',views.exportLog,name='exportLog'),
 
 # Akties
-    path('aktionFillLogfile/',views.aktionFillLogfile,name='aktionFillLogfile'),
+    path('aktionDisplayConversionStatus/',views.aktionDisplayConversionStatus,name='aktionDisplayConversionStatus'),
     path('aktionGetVideoLocation/',views.aktionGetVideoLocation,name='aktionGetVideoLocation'),
     path('aktionConvertVideo/',views.aktionConvertVideo,name='aktionConvertVideo'),
 
