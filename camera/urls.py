@@ -15,7 +15,7 @@ urlpatterns = [
 
     path('indexGebruiker',views.indexGebruiker,name='indexGebruiker'),
     path('indexBedrijf',views.indexBedrijf,name='indexBedrijf'),
-    path('indexWijk',views.indexWijk,name='indexWijk'),
+    #path('indexWijk',views.indexWijk,name='indexWijk'),
     path('indexCamera',views.indexCamera,name='indexCamera'),
     path('indexVideo',views.indexVideo,name='indexVideo'),
     path('indexLog',views.indexLog,name='indexLog'),
@@ -38,15 +38,14 @@ urlpatterns = [
     path('editBedrijf/<int:pk>',views.editBedrijf,name='editBedrijf'),
     path('deleteBedrijf/<int:pk>',views.deleteBedrijf,name='deleteBedrijf'),
 
-
+    
 # Wijk
-    path('allWijk/',views.allWijk,name='allWijk'),
-    path('zNaamWijk/',views.zNaamWijk,name='zNaamWijk'),
-    path('exportWijk/',views.exportWijk,name='exportWijk'),
-    path('createWijk/',views.createWijk,name='createWijk'),
-    path('editWijk/<int:pk>',views.editWijk,name='editWijk'),
-    path('deleteWijk/<int:pk>',views.deleteWijk,name='deleteWijk'),
-
+    #path('allWijk/',views.allWijk,name='allWijk'),
+    #path('zNaamWijk/',views.zNaamWijk,name='zNaamWijk'),
+    #path('exportWijk/',views.exportWijk,name='exportWijk'),
+    #path('createWijk/',views.createWijk,name='createWijk'),
+    #path('editWijk/<int:pk>',views.editWijk,name='editWijk'),
+    #p#ath('deleteWijk/<int:pk>',views.deleteWijk,name='deleteWijk'),
 
 # Camera
     path('allCamera/',views.allCamera,name='allCamera'),
@@ -55,7 +54,6 @@ urlpatterns = [
     path('createCamera/',views.createCamera,name='createCamera'),
     path('editCamera/<int:pk>',views.editCamera,name='editCamera'),
     path('deleteCamera/<int:pk>',views.deleteCamera,name='deleteCamera'),
-
 
 # Video
     path('allVideo/',views.allVideo,name='allVideo'),

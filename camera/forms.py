@@ -1,5 +1,5 @@
 from django import forms
-from .models import Gebruiker, Bedrijf, Wijk, Camera, Video
+from .models import Gebruiker, Bedrijf, Camera, Video
 
 # Gebruiker
 class GebruikerForm(forms.ModelForm):
@@ -36,7 +36,7 @@ class BedrijfForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
-
+'''
 class WijkForm(forms.ModelForm):
     class Meta:
         model = Wijk
@@ -48,13 +48,14 @@ class WijkForm(forms.ModelForm):
             'plaats': forms.TextInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
-        
+'''
+     
 
 class CameraForm(forms.ModelForm):
     class Meta:
         model = Camera
 
-        fields = ['naam','locatie','wijk','bedrijf','gps_locatie','memo']
+        fields = ['naam','locatie','bedrijf','gps_locatie','memo']
 
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
@@ -67,14 +68,14 @@ class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
 
-        fields = ['ordernr','naam','camera','opname_van','opname_tot','video_image','video_link','codec','memo']
+        fields = ['ordernr','naam','camera','opname_van','opname_tot','video_link','codec','memo']
 
         widgets = {
             'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'opname_van': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'opname_tot': forms.DateTimeInput(attrs={'class': 'form-control'}),   
-            'video_image': forms.FileInput(attrs={'class': 'form-control'}), 
+            #'video_image': forms.FileInput(attrs={'class': 'form-control'}), 
             'video_link': forms.TextInput(attrs={'class': 'form-control'}), 
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
@@ -82,7 +83,7 @@ class VideoForm(forms.ModelForm):
 class ZoekVideoForm(forms.ModelForm):
     class Meta:
         model = Video
-        fields = (['ordernr','naam','camera','opname_van','opname_tot','video_image','video_link','codec','memo'])
+        fields = (['ordernr','naam','camera','opname_van','opname_tot','video_link','codec','memo'])
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

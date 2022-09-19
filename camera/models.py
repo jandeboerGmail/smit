@@ -15,7 +15,7 @@ class Gebruiker(models.Model):
     naam = models.CharField(max_length=50,blank = False)
     email = models.EmailField(default='info@me.nl',max_length=254,blank = False)
     telefoon = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
-    soort = models.IntegerField(choices=Soorten.choices,default=0)
+    soort = models.IntegerField(choices=Soorten.choices,default=1)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
@@ -61,6 +61,7 @@ class Bedrijf(models.Model):
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
 
+'''
 class Wijk(models.Model):
     naam = models.CharField(max_length=50,blank = False)
     plaats = models.CharField(max_length=50,blank = True)
@@ -83,13 +84,14 @@ class Wijk(models.Model):
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
+'''
 
 class Camera(models.Model):
     naam = models.CharField(max_length=50,blank = False,unique=True)
     locatie = models.CharField(max_length=50,blank = False,default='locatie')
     type = models.CharField(max_length=50,blank = False,unique=False)
     bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-    wijk = models.ForeignKey(Wijk,on_delete=models.CASCADE)
+    #wijk = models.ForeignKey(Wijk,on_delete=models.CASCADE)
     gps_locatie = models.CharField(max_length=50,blank = True)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
     datum_geplaatst = models.DateTimeField(default=timezone.now, blank=False)
@@ -106,7 +108,7 @@ class Camera(models.Model):
     class Meta:
         verbose_name_plural = 'camera'
         ordering = ['naam']
-        unique_together = ('naam','bedrijf','wijk')
+        unique_together = ('naam','bedrijf')
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
@@ -117,9 +119,10 @@ class Video(models.Model):
     opname_van = models.DateTimeField(default=timezone.now, blank=False)
     opname_tot = models.DateTimeField(default=timezone.now, blank=False)
     camera = models.ForeignKey(Camera,on_delete=models.CASCADE)
-    video_image = models.ImageField(upload_to ='images/',null=True,blank=True)
+    #video_image = models.ImageField(upload_to ='images/',null=True,blank=True)
     video_link= models.CharField(max_length=500,blank=True)
     # video_link= models.URLField(max_length=500,blank=True)
+    duration = models.CharField(max_length=10,blank = True)
     codec = models.CharField(max_length=50,blank = True)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')

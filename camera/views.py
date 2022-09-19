@@ -8,8 +8,8 @@ from operator import eq
 from django.utils import timezone
 import os,time,shutil
 
-from camera.models import Gebruiker, Bedrijf, Parameter, Wijk, Camera, Video , Log, Parameter
-from camera.forms import GebruikerForm, BedrijfForm, WijkForm, CameraForm, VideoForm 
+from camera.models import Gebruiker, Bedrijf, Parameter, Camera, Video , Log, Parameter
+from camera.forms import GebruikerForm, BedrijfForm, CameraForm, VideoForm 
 #from camera.process import *
 
 import datetime
@@ -28,7 +28,7 @@ def addLogEntry(orderNr,message):
 # Parameter functions
 def getVideoLocation():
     aParameter =  Parameter.objects.get(id=1)
-    return aParameter.videoPath
+    return str(aParameter.videoPath)
 
 def runningStatus():
     aParameter =  Parameter.objects.get(id=1)
@@ -41,14 +41,32 @@ def setRunningStatus(status):
     aParameter.save()
     return
 
-#videoPath='/home/jan/video/'
-
 # Log generic functions
 def addLogEntry(orderNr,message):
     aLog = Log()
     aLog.ordernr = orderNr
     aLog.message = message
     aLog.save()
+    return
+
+def addVideoEntry(naam,ordernr,opnameFrom,opnameTo,camera,fileLocation,codec):
+
+    s = fileLocation
+    while substring_after(s, "/"):
+            s = substring_after(s, "/")
+            #print ("s" ,s)
+    naam = substring_before(s, ".webm")
+
+    aVideo = Video()
+    aVideo.naam = naam
+    aVideo.ordernr = ordernr
+    aVideo.opname_van = opnameFrom
+    aVideo.opname_tot = opnameTo
+    aVideo.camera = camera 
+    aVideo.video_link= fileLocation
+    aVideo.codec = codec
+    aVideo. datum_inserted = timezone.now
+    aVideo.save()
     return
 
 def removeFile(fileName):
@@ -70,27 +88,31 @@ def substring_before(s, delim):
         return s.split(delim)[0]
 
 def ConvertingVideos():
+    print('Conversion')
     videolocation = getVideoLocation()
     message = "Looking for New Videos in " + videolocation
     addLogEntry(" ", message)
     setRunningStatus(True)
+    videoPath='/home/jan/video/'
+    #videoPath = getVideoLocation
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
-            filename = os.path.join(root, name)
+            inFileName = os.path.join(root, name)
             # print("Files :",os.path.join(root, name))
-            if "2Convert" in filename:
-                #print('inFile :',filename)
-                if ".MP4" in filename or ".mp4" in filename:
-                    after = substring_after(filename,"2Convert/") 
+            if "2Convert" in inFileName:
+                #print('inFile :',filename)YY
+                if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
+                    after = substring_after(inFileName,"2Convert/") 
             
-                    if (after and size_changed(filename,5)) and (os.path.getsize(filename)) > 0:
+                    if (after and size_changed(inFileName,5)) and (os.path.getsize(inFileName)) > 0:
+                      
                         #print('After :',after)
                         request = after[0:after.find("/")]
                         #print('request:',request)
                         
                         #make/check output dir
-                        destDir = substring_before(filename, "2Convert") + "Converted/" 
+                        destDir = substring_before(inFileName, "2Convert") + "Converted/" 
                        
                         #print('destDir :',destDir)
                         if not os.path.isdir(destDir):
@@ -102,43 +124,63 @@ def ConvertingVideos():
                         if not os.path.isdir(reqDir):
                             os.mkdir(reqDir)
                 
-                        outFile = os.path.join(destDir,after)
+                        outFileName = os.path.join(destDir,after)
                
-                        outFile = outFile.replace(".mp4", ".webm")
-                        outFile = outFile.replace(".MP4", ".webm")
+                        outFileName = outFileName.replace(".mp4", ".webm")
+                        outFileName = outFileName.replace(".MP4", ".webm")
 
-                        outFile = outFile.replace(" ", "\ ")
-                        inFile = filename.replace(" ", "\ ")
-                        
-                     
-                        message = 'Converting ' + inFile + '\n to ' + outFile
+                        outFile = outFileName.replace(" ", "\ ")
+                        inFile = inFileName.replace(" ", "\ ")
+
+                        file_stats = os.stat(inFileName)
+                        #print(file_stats)
+                        fileSize = file_stats.st_size / (1024 * 1024)
+                        fSize = "%.5f" % fileSize
+
+                        startTime = time.time()
+                        message = 'Converting   ' + inFileName + " Size: " + fSize + " MB"
                         addLogEntry(request,message)
 
                         #command 
                         #command = "cp " + inFile + " " + outFile 
 
                         #vb9 onepass
-                        #command = "ffmpeg  -i " + inFile
-                        #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
+                        command = "ffmpeg -y -i " + inFile
+                        command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
                         #vb9 twopass
-                        command = "ffmpeg  -i " + inFile
-                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
-                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
+                        #command = "ffmpeg  -y -i " + inFile
+                        #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
+                        #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
 
                         #addLogEntry(request,command)
                         #print('Command :',command) 
-                        removeFile(outFile)
+                        # removeFile(outFile) # uncomment in production
+
+                        startTime = time.time()
                         result = os.system(command)
                         #result = 0
 
                         #print('Result :',result)
                         if result ==  0: # 256 error
-                            addLogEntry(request,"Converted")
-                            print("Converted")
-                            #removeFile(inFile) uncommend for production
+                            # Elapsed Timeß
+                            endTime = time.time()
+                            elapsedTime = endTime - startTime
+                            elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
+
+                            # fileSize
+                            file_stats = os.stat(outFileName)
+                            #print(file_stats)
+                            fileSize = file_stats.st_size / (1024 * 1024)
+                            fSize = "%.5f" % fileSize
+
+                            message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
+                            addLogEntry(request,message)
+                            #print("Converted ", inFile )
+                            # removeFile(inFileName) # uncommend for production
+                            addVideoEntry(naam,request,opnameFrom,opnameTo,"default",outFileName,"vb9")
                         else:
                             addLogEntry(request,"ERROR : Not Converted")
-                        setRunningStatus(False)
+        setRunningStatus(False)
 
 # Create your views here.
 def current_datetime(request):
@@ -171,9 +213,11 @@ def indexGebruiker(request):
 def indexBedrijf(request):
     return render(request,'../templates/indexBedrijf.html', {} )
 
+''' 
 @login_required
 def indexWijk(request):
     return render(request,'../templates/indexWijk.html', {} )
+'''
 
 @login_required
 def indexCamera(request):
@@ -402,7 +446,7 @@ def deleteBedrijf(request,pk):
         template_name = 'deleteRecord.html'
         context = {'item' : bedrijf , 'title': 'Verwijder Bedrijf'}
         return render(request,template_name,context)
-
+'''
 # --- Wijk -----------------
 @login_required
 def allWijk(request):
@@ -499,6 +543,7 @@ def deleteWijk(request,pk):
     template_name = 'deleteRecord.html'
     context = {'item' : wijk , 'title': 'Verwijder Wijk'}
     return render(request,template_name,context)
+    '''
 
 # --- Camera -----------------
 @login_required
@@ -808,10 +853,14 @@ def exportLog(request):
 @login_required
 def aktionDisplayConversionStatus(request):
     if runningStatus():
-        print("Conversion is Running")
+        message  = "Running"
     else:
-        print("Conversion is NOT Running")   
-    return redirect('indexAkties')
+        message  = "NOT Running"
+
+    html = "<html><body>Converion is %s.</body></html>" % message
+    return HttpResponse(html)
+    #return HttpResponse("Hello, world. You're at the Camera About index")
+    #return redirect('indexAkties')
 
 @login_required
 def aktionGetVideoLocation(request):
