@@ -1,5 +1,19 @@
 from django import forms
-from .models import Gebruiker, Bedrijf, Camera, Video
+from .models import Adress, Gebruiker, Bedrijf, Locatie, Camera, Video
+#Adress
+class AdressForm(forms.ModelForm):
+    class Meta:
+        model = Adress
+
+        fields = ['naam','straat','postcode','plaats','land'] 
+        
+        widgets = {
+            'naam': forms.TextInput(attrs={'class': 'form-control'}),
+            'straat': forms.TextInput(attrs={'class': 'form-control'}),
+            'postcode': forms.TextInput(attrs={'class': 'form-control'}),
+            'plaats': forms.Select(attrs={'class': 'form-control'}),
+            'land': forms.Textarea(attrs={'class': 'form-control'}),
+        }
 
 # Gebruiker
 class GebruikerForm(forms.ModelForm):
@@ -22,14 +36,11 @@ class BedrijfForm(forms.ModelForm):
     class Meta:
         model = Bedrijf
 
-        fields = ['naam','adres','postcode','plaats','land','telefoon','email','website','image','telefoon','contact','memo'] 
+        fields = ['naam','telefoon','email','website','image','telefoon','memo'] 
         
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
-            'adres': forms.TextInput(attrs={'class': 'form-control'}),
-            'postcode': forms.TextInput(attrs={'class': 'form-control'}),  
-            'plaats': forms.TextInput(attrs={'class': 'form-control'}),
-            'land': forms.TextInput(attrs={'class': 'form-control'}),
+            #adress
             'telefoon': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),  
             'website': forms.URLInput(attrs={'class': 'form-control'}),
@@ -55,12 +66,10 @@ class CameraForm(forms.ModelForm):
     class Meta:
         model = Camera
 
-        fields = ['naam','locatie','bedrijf','gps_locatie','memo']
+        fields = ['naam','memo']
 
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
-            'locatie': forms.TextInput(attrs={'class': 'form-control'}),
-            'gps_locatie': forms.TextInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
 

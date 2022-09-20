@@ -14,6 +14,7 @@ urlpatterns = [
     path('zoekVideo',views.zoekVideo,name='zoekVideo'),
 
     path('indexGebruiker',views.indexGebruiker,name='indexGebruiker'),
+    path('indexAdress',views.indexAdress,name='indexAdress'),
     path('indexBedrijf',views.indexBedrijf,name='indexBedrijf'),
     #path('indexWijk',views.indexWijk,name='indexWijk'),
     path('indexCamera',views.indexCamera,name='indexCamera'),
@@ -29,11 +30,14 @@ urlpatterns = [
     path('editGebruiker/<int:pk>',views.editGebruiker,name='editGebruiker'),
     path('deleteGebruiker/<int:pk>',views.deleteGebruiker,name='deleteGebruiker'),
 
+# Adresss
+    path('allAdress/',views.allAdress,name='allAdress'),
+
 # Bedrijf
     path('allBedrijf/',views.allBedrijf,name='allBedrijf'),
     path('zNaamBedrijf/',views.zNaamBedrijf,name='zNaamBedrijf'),
-    path('zPlaatsBedrijf/',views.zPlaatsBedrijf,name='zPlaatsBedrijf'),
-	path('exportBedrijf/',views.exportBedrijf,name='exportBedrijf'),
+    #path('zPlaatsBedrijf/',views.zPlaatsBedrijf,name='zPlaatsBedrijf'),
+	#path('exportBedrijf/',views.exportBedrijf,name='exportBedrijf'),
     path('createBedrijf/',views.createBedrijf,name='createBedrijf'),
     path('editBedrijf/<int:pk>',views.editBedrijf,name='editBedrijf'),
     path('deleteBedrijf/<int:pk>',views.deleteBedrijf,name='deleteBedrijf'),
