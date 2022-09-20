@@ -2,6 +2,54 @@ from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 
+class Adress (models.Model):
+    naam = models.CharField(max_length=50,blank = False)
+    straat = models.CharField(max_length=50,blank = False,default = 'Straatmaam 1')
+    postcode = models.CharField(max_length=6,blank = False,default = '0000AA')
+    plaats = models.CharField(max_length=50,blank = False,default = 'Plaats')
+    land = models.CharField(max_length=50,default='Nederland',blank = False)
+    memo = models.TextField(blank = True)
+    slug = models.SlugField(max_length=120,default='slug')
+    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
+    datum_updated = models.DateTimeField(default=timezone.now, blank=False)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.naam)
+        self.datum_updated = timezone.now()
+        super(Adress, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'adress'
+        ordering = ['naam']
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return self.naam
+
+class Bedrijf(models.Model):
+    naam = models.CharField(max_length=50,blank = False)
+    adres = models.ForeignKey(Adress,on_delete=models.CASCADE)
+    email = models.EmailField(default='info@bedrijf.nl',max_length=254,blank = False)
+    website = models.URLField(max_length=200,blank=True)
+    image =  models.ImageField(upload_to ='images/',null=True,blank=True)
+    telefoon = models.CharField(max_length=16,blank = True)
+    # contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
+    memo = models.TextField(blank = True)
+    slug = models.SlugField(max_length=120,default='slug')
+    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
+    datum_updated = models.DateTimeField(default=timezone.now, blank =False)
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.naam)
+        self.datum_updated = timezone.now()
+        super(Bedrijf, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name_plural = 'bedrijf'
+        ordering = ['naam']
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return self.naam
+
 class Gebruiker(models.Model):
 
     class Soorten(models.IntegerChoices):
@@ -33,38 +81,9 @@ class Gebruiker(models.Model):
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
 
-class Bedrijf(models.Model):
+class Locatie(models.Model):
     naam = models.CharField(max_length=50,blank = False)
-    adres = models.CharField(max_length=50,blank = True)
-    postcode = models.CharField(max_length=6,blank = True)
-    plaats = models.CharField(max_length=50,blank = True)
-    land = models.CharField(max_length=50,default='Nederland',blank = False)
-    email = models.EmailField(default='info@bedrijf.nl',max_length=254,blank = False)
-    website = models.URLField(max_length=200,blank=True)
-    image =  models.ImageField(upload_to ='images/',null=True,blank=True)
-    telefoon = models.CharField(max_length=16,blank = True)
-    contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
-    memo = models.TextField(blank = True)
-    slug = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank =False)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
-        super(Bedrijf, self).save(*args, **kwargs)
-
-    class Meta:
-        verbose_name_plural = 'bedrijf'
-        ordering = ['naam']
-
-    def __str__(self): # For Python 2, use __unicode__ too
-        return self.naam
-
-'''
-class Wijk(models.Model):
-    naam = models.CharField(max_length=50,blank = False)
-    plaats = models.CharField(max_length=50,blank = True)
+    adres = models.ForeignKey(Adress,on_delete=models.CASCADE)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
     bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
     contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
@@ -76,24 +95,22 @@ class Wijk(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.naam)
         self.datum_updated = timezone.now()
-        super(Wijk, self).save(*args, **kwargs)
+        super(Locatie, self).save(*args, **kwargs)
 
     class Meta:
-        verbose_name_plural = 'wijk'
+        verbose_name_plural = 'locatie'
         ordering = ['naam']
+        unique_together = ('naam','bedrijf')
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
-'''
 
 class Camera(models.Model):
-    naam = models.CharField(max_length=50,blank = False,unique=True)
-    locatie = models.CharField(max_length=50,blank = False,default='locatie')
-    type = models.CharField(max_length=50,blank = False,unique=False)
-    bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-    #wijk = models.ForeignKey(Wijk,on_delete=models.CASCADE)
+    naam  = models.CharField(max_length=50,blank = False,unique=True)
     gps_locatie = models.CharField(max_length=50,blank = True)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
+    locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
+    type = models.CharField(max_length=50,blank = False,unique=False)
     datum_geplaatst = models.DateTimeField(default=timezone.now, blank=False)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
@@ -108,7 +125,7 @@ class Camera(models.Model):
     class Meta:
         verbose_name_plural = 'camera'
         ordering = ['naam']
-        unique_together = ('naam','bedrijf')
+        unique_together = ('naam','locatie')
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam

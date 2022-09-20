@@ -8,8 +8,8 @@ from operator import eq
 from django.utils import timezone
 import os,time,shutil
 
-from camera.models import Gebruiker, Bedrijf, Parameter, Camera, Video , Log, Parameter
-from camera.forms import GebruikerForm, BedrijfForm, CameraForm, VideoForm 
+from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video , Log, Parameter
+from camera.forms import AdressForm, GebruikerForm, BedrijfForm, CameraForm, VideoForm
 #from camera.process import *
 
 import datetime
@@ -49,7 +49,7 @@ def addLogEntry(orderNr,message):
     aLog.save()
     return
 
-def addVideoEntry(naam,ordernr,opnameFrom,opnameTo,camera,fileLocation,codec):
+def addVideoEntry(ordernr,cameraNaam,fileLocation,codec):
 
     s = fileLocation
     while substring_after(s, "/"):
@@ -57,15 +57,20 @@ def addVideoEntry(naam,ordernr,opnameFrom,opnameTo,camera,fileLocation,codec):
             #print ("s" ,s)
     naam = substring_before(s, ".webm")
 
+    aCamera = Camera.objects.get(naam=cameraNaam)  
+    print ('Naam', aCamera.naam)
+
+    now = datetime.datetime.now()
+
     aVideo = Video()
     aVideo.naam = naam
     aVideo.ordernr = ordernr
-    aVideo.opname_van = opnameFrom
-    aVideo.opname_tot = opnameTo
-    aVideo.camera = camera 
+    #aVideo.opname_van = now
+    #aVideo.opname_tot = now
+    aVideo.camera = aCamera
     aVideo.video_link= fileLocation
     aVideo.codec = codec
-    aVideo. datum_inserted = timezone.now
+    #aVideo. datum_inserted = now
     aVideo.save()
     return
 
@@ -101,7 +106,7 @@ def ConvertingVideos():
             inFileName = os.path.join(root, name)
             # print("Files :",os.path.join(root, name))
             if "2Convert" in inFileName:
-                #print('inFile :',filename)YY
+                #print('inFile :',inFileName)YY
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
                     after = substring_after(inFileName,"2Convert/") 
             
@@ -157,8 +162,8 @@ def ConvertingVideos():
                         # removeFile(outFile) # uncomment in production
 
                         startTime = time.time()
-                        result = os.system(command)
-                        #result = 0
+                        #result = os.system(command)
+                        result = 0
 
                         #print('Result :',result)
                         if result ==  0: # 256 error
@@ -177,7 +182,8 @@ def ConvertingVideos():
                             addLogEntry(request,message)
                             #print("Converted ", inFile )
                             # removeFile(inFileName) # uncommend for production
-                            addVideoEntry(naam,request,opnameFrom,opnameTo,"default",outFileName,"vb9")
+                        
+                            addVideoEntry(request,"default",outFileName,"vb9")
                         else:
                             addLogEntry(request,"ERROR : Not Converted")
         setRunningStatus(False)
@@ -205,13 +211,19 @@ def index(request):
     # return render(request,'index.html',{})
     return render(request,'../templates/index.html',{})
 
+
 @login_required
 def indexGebruiker(request):
     return render(request,'../templates/indexGebruiker.html', {} )
-@login_required
 
+@login_required
 def indexBedrijf(request):
     return render(request,'../templates/indexBedrijf.html', {} )
+
+@login_required
+def indexAdress(request):
+    return render(request,'../templates/indexAdress.html', {} )
+
 
 ''' 
 @login_required
@@ -333,6 +345,60 @@ def deleteGebruiker(request,pk):
     context = {'item' : gebruiker , 'title': 'Verwijder Gebruiker'}
     return render(request,template_name,context)
 
+# --- Adress
+@login_required
+def allAdress(request):
+    adress_list = Adress.objects.order_by('naam')
+    aantal =  adress_list.count
+    adress_dict  = {'adresses' : adress_list , 'aantal' : aantal}
+    return render(request,'../templates/displayAdress.html',adress_dict )
+
+#CRUD
+@login_required
+def createAdress(request):
+    form = AdressForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        form = AdressForm()
+    template_name = 'inputForm.html'
+    context = {'form' : form, 'title': 'Adding Adress'}
+    return render(request,template_name,context)
+
+
+@login_required
+def editAdress(request,pk):
+        try :
+            adress = Adress.objects.get(id=pk)
+        except Adress.DoesNotExist:
+            return redirect('indexAdress')
+
+        form = AdresssForm(request.POST or None,instance = adress)
+        # print('Request Method:',request.method)
+        if request.method == 'POST':
+            if form.is_valid():
+                form.save()
+                return ( redirect('indexAdress'))
+
+        template_name = 'inputForm.html'
+        context = {'form' : form, 'title': 'Change Adress'}
+        return render(request,template_name,context)
+
+@login_required
+def deleteAdress(request,pk):
+        try :
+            adress = Adress.objects.get(id=pk)
+        except Adress.DoesNotExist:
+            return redirect('/camera/indexAdress')
+
+        if request.method == 'POST':
+            #print('Deleting Post:',request.POST)
+            adress.delete()
+            return ( redirect('/camera/indexAdres'))
+
+        template_name = 'deleteRecord.html'
+        context = {'item' : adress , 'title': 'Delete Bedrijf'}
+        return render(request,template_name,context)
+
 # --- Bedrijf
 @login_required
 def allBedrijf(request):
@@ -356,6 +422,7 @@ def zNaamBedrijf (request):
         bedrijf_dict = {}
     return render(request,'../templates/zNaamBedrijf.html', bedrijf_dict ) 
 
+''''
 @login_required
 def zPlaatsBedrijf(request):
     query = request.GET.get('q','')
@@ -400,6 +467,7 @@ def exportBedrijf(request):
 
         wb.save(response)
         return response
+     '''
 
 #CRUD
 @login_required

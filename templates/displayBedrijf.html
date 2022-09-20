@@ -30,8 +30,8 @@
         <th scope="col">Adres</th>
         <th scope="col">Postcode</th>
         <th scope="col">Plaats</th>
+        <th scope="col">Telefoon<th></th>
         <th scope="col">Contact</th>
-        <th scope="col">Telefoon<th>
         <th scope="col">Akties</th>
     </div>
     </tr>
@@ -44,8 +44,8 @@
        <th> {{bedrijf.adres}} </th> 
        <th> {{bedrijf.postcode}} </th> 
        <th> {{bedrijf.plaats}} </th>
+       <th> {{bedrijf.telefoon}} </th>
        <th> {{bedrijf.contact.naam}} </th>
-       <th> {{bedrijf.contact.telefoon}} </th>
        
        <th><a class="btn btn-sm btn-info" href="{% url 'editBedrijf' bedrijf.id %}">Edit</a></th>
        <th><a class="btn btn-sm btn-danger" href="{% url 'deleteBedrijf' bedrijf.id %}">Delete</a></th>
