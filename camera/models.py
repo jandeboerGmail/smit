@@ -32,7 +32,7 @@ class Bedrijf(models.Model):
     website = models.URLField(max_length=200,blank=True)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
     telefoon = models.CharField(max_length=16,blank = True)
-    # contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
+    #contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
