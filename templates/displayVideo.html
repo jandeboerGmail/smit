@@ -5,7 +5,7 @@
 <div class="container-fluid">
   <div class="row align-items-end">
     <div class="col-9">
-      <h2>Video's</h2> 
+      <h2>Videos</h2> 
     </div>
    
     <div class="col-1">
@@ -13,7 +13,7 @@
     </div>
    
    <div class="col-1">
-    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
+    <input type="button" class="btn btn-primary btn-sm" value="Back" onclick="history.back()">
   </div>
 
   <div class="col-1">
@@ -26,12 +26,12 @@
   <thead class="text-primary" >
     <tr>
       <th scope="col">Order</th>
-      <th scope="col">Naam</th>
+      <th scope="col">Name</th>
       <th scope="col">Camera</th>
-      <th scope="col">Locatie</th>
-      <th scope="col">Wijk</th>
-      <th scope="col">Opname van</th>
-      <th scope="col">Opname tot</th>
+      <th scope="col">Location</th>
+      
+      <th scope="col">Record from</th>
+      <th scope="col">Record end</th>
     </tr>
   </thead>
   {% if results %}
@@ -39,8 +39,6 @@
     {% for video in results %}
        <th> {{video.ordernr}} </th>
        <th> {{video.naam}} </th>
-       <th> {{video.camera.locatie}} </th>
-       <th> {{video.camera.wijk}} </th>
        <th> {{video.camera}} </th>
        <th> {{video.opname_van}} </th>
        <th> {{video.opname_tot}} </th>
@@ -53,7 +51,7 @@
    {% endfor %}
   </table>
   {% else %}
-    <strong>Thera are no Video's</strong>
+    <strong>Thera are no entries</strong>
   {% endif %}
 
  </div>

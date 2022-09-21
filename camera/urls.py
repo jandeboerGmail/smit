@@ -32,12 +32,15 @@ urlpatterns = [
 
 # Adresss
     path('allAdress/',views.allAdress,name='allAdress'),
+    path('createAdress/',views.createAdress,name='createAdress'),
+    path('editAdress/<int:pk>',views.editAdress,name='editAdress'),
+    path('deleteAdress/<int:pk>',views.deleteAdress,name='deleteAdress'),
 
 # Bedrijf
     path('allBedrijf/',views.allBedrijf,name='allBedrijf'),
     path('zNaamBedrijf/',views.zNaamBedrijf,name='zNaamBedrijf'),
-    #path('zPlaatsBedrijf/',views.zPlaatsBedrijf,name='zPlaatsBedrijf'),
-	#path('exportBedrijf/',views.exportBedrijf,name='exportBedrijf'),
+    path('zPlaatsBedrijf/',views.zPlaatsBedrijf,name='zPlaatsBedrijf'),
+	path('exportBedrijf/',views.exportBedrijf,name='exportBedrijf'),
     path('createBedrijf/',views.createBedrijf,name='createBedrijf'),
     path('editBedrijf/<int:pk>',views.editBedrijf,name='editBedrijf'),
     path('deleteBedrijf/<int:pk>',views.deleteBedrijf,name='deleteBedrijf'),

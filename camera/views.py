@@ -162,8 +162,8 @@ def ConvertingVideos():
                         # removeFile(outFile) # uncomment in production
 
                         startTime = time.time()
-                        #result = os.system(command)
-                        result = 0
+                        result = os.system(command)
+                        #result = 0
 
                         #print('Result :',result)
                         if result ==  0: # 256 error
@@ -183,7 +183,7 @@ def ConvertingVideos():
                             #print("Converted ", inFile )
                             # removeFile(inFileName) # uncommend for production
                         
-                            addVideoEntry(request,"default",outFileName,"vb9")
+                            #addVideoEntry(request,"default",outFileName,"vb9")
                         else:
                             addLogEntry(request,"ERROR : Not Converted")
         setRunningStatus(False)
@@ -372,7 +372,7 @@ def editAdress(request,pk):
         except Adress.DoesNotExist:
             return redirect('indexAdress')
 
-        form = AdresssForm(request.POST or None,instance = adress)
+        form = AdressForm(request.POST or None,instance = adress)
         # print('Request Method:',request.method)
         if request.method == 'POST':
             if form.is_valid():
@@ -422,7 +422,6 @@ def zNaamBedrijf (request):
         bedrijf_dict = {}
     return render(request,'../templates/zNaamBedrijf.html', bedrijf_dict ) 
 
-''''
 @login_required
 def zPlaatsBedrijf(request):
     query = request.GET.get('q','')
@@ -467,7 +466,6 @@ def exportBedrijf(request):
 
         wb.save(response)
         return response
-     '''
 
 #CRUD
 @login_required

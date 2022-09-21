@@ -11,8 +11,8 @@ class AdressForm(forms.ModelForm):
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'straat': forms.TextInput(attrs={'class': 'form-control'}),
             'postcode': forms.TextInput(attrs={'class': 'form-control'}),
-            'plaats': forms.Select(attrs={'class': 'form-control'}),
-            'land': forms.Textarea(attrs={'class': 'form-control'}),
+            'plaats': forms.TextInput(attrs={'class': 'form-control'}),
+            'land': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 # Gebruiker
@@ -36,11 +36,11 @@ class BedrijfForm(forms.ModelForm):
     class Meta:
         model = Bedrijf
 
-        fields = ['naam','telefoon','email','website','image','telefoon','memo'] 
+        fields = ['naam','adres','telefoon','email','website','image','telefoon','memo'] 
         
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
-            #adress
+            'adres': forms.Select(attrs={'class': 'form-control'}),
             'telefoon': forms.TextInput(attrs={'class': 'form-control'}),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),  
             'website': forms.URLInput(attrs={'class': 'form-control'}),
