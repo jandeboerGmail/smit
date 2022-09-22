@@ -5,11 +5,11 @@
 <div class="container">
   <div class="row align-items-end text-primary">
     <div class="col-9">
-      <h2>Adresses</h2> 
+      <h2>Adres</h2> 
     </div>
    
    <div class="col-1">
-    <input type="button" class="btn btn-primary btn-sm" value="Back" onclick="history.back()">
+    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
   </div>
 
   <div class="col-1">
@@ -22,11 +22,11 @@
   <thead class="text-primary">
     <tr>
       <!-- <th scope="col">#</th> -->
-        <th scope="col">Name</th>
-        <th scope="col">Street</th>
-        <th scope="col">Postal</th>
-        <th scope="col">City</th>
-        <th scope="col">Aktions</th>
+        <th scope="col">Naam</th>
+        <th scope="col">Straat</th>
+        <th scope="col">Postcode</th>
+        <th scope="col">Plaats</th>
+        <th scope="col">Acties</th>
     </div>
     </tr>
   </thead>
@@ -39,14 +39,13 @@
        <th> {{adress.postcode}} </th> 
        <th> {{adress.plaats}} </th>
     
-       
        <th><a class="btn btn-sm btn-info" href="{% url 'editAdress' adress.id %}">Edit</a></th>
        <th><a class="btn btn-sm btn-danger" href="{% url 'deleteAdress' adress.id %}">Delete</a></th>
     </tbody>
    {% endfor %}
   </table>
   {% else %}
-    <strong>Thera are no entries</strong>
+    <strong>Er zijn geen entries</strong>
   {% endif %}
  </div>
 {% endblock %}

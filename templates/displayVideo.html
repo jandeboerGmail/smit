@@ -13,7 +13,7 @@
     </div>
    
    <div class="col-1">
-    <input type="button" class="btn btn-primary btn-sm" value="Back" onclick="history.back()">
+    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
   </div>
 
   <div class="col-1">
@@ -26,12 +26,12 @@
   <thead class="text-primary" >
     <tr>
       <th scope="col">Order</th>
-      <th scope="col">Name</th>
+      <th scope="col">Naam</th>
       <th scope="col">Camera</th>
-      <th scope="col">Location</th>
+      <th scope="col">Locatie</th>
       
-      <th scope="col">Record from</th>
-      <th scope="col">Record end</th>
+      <th scope="col">Record van</th>
+      <th scope="col">Record tot</th>
     </tr>
   </thead>
   {% if results %}
@@ -42,6 +42,7 @@
        <th> {{video.camera}} </th>
        <th> {{video.opname_van}} </th>
        <th> {{video.opname_tot}} </th>
+       <th scope="col">Acties</th>
        <th><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></th>
        <!--<th><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></th> -->
        <!--<th><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></th> -->

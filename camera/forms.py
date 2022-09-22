@@ -1,5 +1,7 @@
+from re import L
 from django import forms
 from .models import Adress, Gebruiker, Bedrijf, Locatie, Camera, Video
+
 #Adress
 class AdressForm(forms.ModelForm):
     class Meta:
@@ -47,41 +49,46 @@ class BedrijfForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
-'''
-class WijkForm(forms.ModelForm):
+# locatie
+class LocatieForm(forms.ModelForm):
     class Meta:
-        model = Wijk
+        model = Locatie
 
-        fields = ['naam','bedrijf','plaats','contact','memo'] 
+        fields = ['naam','adres','bedrijf','contact','image','memo'] 
         
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
-            'plaats': forms.TextInput(attrs={'class': 'form-control'}),
+            'adres': forms.Select(attrs={'class': 'form-control'}),
+            'bedrijf': forms.Select(attrs={'class': 'form-control'}),
+            'contact': forms.Select(attrs={'class': 'form-control'}),
+            'image': forms.FileInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
-'''
      
-
 class CameraForm(forms.ModelForm):
     class Meta:
         model = Camera
 
-        fields = ['naam','memo']
-
+        fields = ['naam','locatie','type','gps_locatie','datum_geplaatst','memo']
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
+            'locatie': forms.Select(attrs={'class': 'form-control'}),
+            'type': forms.TextInput(attrs={'class': 'form-control'}),
+            'gps_locatie': forms.TextInput(attrs={'class': 'form-control'}), 
+            'datum_geplaatst': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
-
+   
         fields = ['ordernr','naam','camera','opname_van','opname_tot','video_link','codec','memo']
 
         widgets = {
             'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
+            'camera': forms.Select(attrs={'class': 'form-control'}),
             'opname_van': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'opname_tot': forms.DateTimeInput(attrs={'class': 'form-control'}),   
             #'video_image': forms.FileInput(attrs={'class': 'form-control'}), 

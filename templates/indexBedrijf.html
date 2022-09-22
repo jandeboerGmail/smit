@@ -2,22 +2,26 @@
 {% block head_title %} {% endblock %}
 {% block content %}
 {% load static %}
-<h2 class='container'>Company</h2>
+<h2 class='container'>Bedrijf</h2>
 <ul>
+ 
   <div class="nav-index">
-    <a class="nav-index" href="/camera/createBedrijf">Add Company</a>
-  </div>
-  <hr> 
-  <div class="nav-index">
-      <a class="nav-index" href="/camera/allBedrijf">All Companies</a>
+      <a class="nav-index" href="/camera/allBedrijf">Alle bedrijven</a>
   </div>
   <hr>
   <div class="nav-index">
-      <a class="nav-index" href="/camera/zNaamBedrijf">Search on Name</a>
+      <a class="nav-index" href="/camera/zNaamBedrijf">Zoek op naam</a>
   </div>
+  <!-- 
   <div class="nav-index">
-    <a class="nav-index" href="/camera/zPlaatsBedrijf">Search on City</a>
-</div>
+       <a class="nav-index" href="/camera/zPlaatsBedrijf">Zoek op plaats</a>
+  </div>
+  -->
+  
+  <hr>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/createBedrijf">Voeg bedrijf toe</a>
+  </div>
   <hr>
 </ul>
 {% endblock %}

@@ -5,7 +5,7 @@
 <div class="container-fluid">
   <div class="row align-items-end">
     <div class="col-9">
-      <h2>Users</h2> 
+      <h2>Gebruiker</h2> 
     </div>
    
     <div class="col-1">
@@ -13,7 +13,7 @@
     </div>
    
    <div class="col-1">
-    <input type="button" class="btn btn-primary btn-sm" value="Back" onclick="history.back()">
+    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
   </div>
 
   <div class="col-1">
@@ -26,12 +26,12 @@
   <thead class="text-primary" >
     <tr>
       <!-- <th scope="col">#</th> -->
-      <th scope="col">Name</th>
+      <th scope="col">Naam</th>
       <th scope="col">User</th>
       <th scope="col">Email</th>
-      <th scope="col">Telephone</th>
-      <th scope="col">Kind</th>
-      <th scope="col">Aktion</th>
+      <th scope="col">Telefoon</th>
+      <th scope="col">Soort</th>
+      <th scope="col">Acties</th>
     </tr>
   </thead>
   <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
@@ -50,7 +50,7 @@
    {% endfor %}
   </table>
   {% else %}
-    <strong>Thera are no entrries</strong>
+    <strong>Er zijn geen entries</strong>
   {% endif %}
  </div>
 {% endblock %}

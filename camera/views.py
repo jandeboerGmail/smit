@@ -9,7 +9,7 @@ from django.utils import timezone
 import os,time,shutil
 
 from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video , Log, Parameter
-from camera.forms import AdressForm, GebruikerForm, BedrijfForm, CameraForm, VideoForm
+from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, VideoForm
 #from camera.process import *
 
 import datetime
@@ -224,12 +224,9 @@ def indexBedrijf(request):
 def indexAdress(request):
     return render(request,'../templates/indexAdress.html', {} )
 
-
-''' 
 @login_required
-def indexWijk(request):
-    return render(request,'../templates/indexWijk.html', {} )
-'''
+def indexLocatie(request):
+    return render(request,'../templates/indexLocatie.html', {} )
 
 @login_required
 def indexCamera(request):
@@ -415,7 +412,7 @@ def zNaamBedrijf (request):
         qset = (
             Q(naam__icontains=query)         
         )       
-        bedrijf_list = Bedrijf.objects.filter(qset).distinct().order_by('naam','plaats')
+        bedrijf_list = Bedrijf.objects.filter(qset).distinct().order_by('naam')
         aantal = bedrijf_list.count
         bedrijf_dict  = {'results' : bedrijf_list , 'aantal' : aantal, "query": query}
     else:
@@ -427,12 +424,13 @@ def zPlaatsBedrijf(request):
     query = request.GET.get('q','')
     if query:
         qset = ( Q(plaats__icontains=query))       
-        bedrijf_list = Bedrijf.objects.filter(qset).distinct().order_by('naam','plaats')
+        bedrijf_list = Bedrijf.objects.filter(qset).distinct().order_by('naam')
         aantal = bedrijf_list.count
         bedrijf_dict  = {'results' : bedrijf_list , 'aantal' : aantal, "query": query}
     else:
         bedrijf_dict = {}
-    return render(request,"../templates/zPlaatsBedrijf.html", bedrijf_dict)
+    return render(request,'../templates/zNaamBedrijf.html', bedrijf_dict ) 
+    #return render(request,"../templates/zPlaatsBedrijf.html", bedrijf_dict)
 
 #Export
 @login_required
@@ -512,50 +510,50 @@ def deleteBedrijf(request,pk):
         template_name = 'deleteRecord.html'
         context = {'item' : bedrijf , 'title': 'Verwijder Bedrijf'}
         return render(request,template_name,context)
-'''
-# --- Wijk -----------------
+
+# --- Locatie -----------------
 @login_required
-def allWijk(request):
-    wijk_list = Wijk.objects.order_by('naam')
-    aantal =  wijk_list.count
-    wijk_dict  = {'results' : wijk_list , 'aantal' : aantal}
-    return render(request,'../templates/displayWijk.html',wijk_dict )
+def allLocatie(request):
+    Locatie_list = Locatie.objects.order_by('naam')
+    aantal =  Locatie_list.count
+    Locatie_dict  = {'results' : Locatie_list , 'aantal' : aantal}
+    return render(request,'../templates/displayLocatie.html',Locatie_dict )
 
 # Zoek
 @login_required
-def zNaamWijk (request):
+def zNaamLocatie (request):
     query = request.GET.get('q','')
     if query:
         qset = (Q(naam__icontains=query))       
-        wijk_list = Wijk.objects.filter(qset).distinct().order_by('naam')
-        aantal = wijk_list.count
-        wijk_dict  = {'results' : wijk_list , 'aantal' : aantal, "query": query}
+        Locatie_list = Locatie.objects.filter(qset).distinct().order_by('naam')
+        aantal = Locatie_list.count
+        Locatie_dict  = {'results' : Locatie_list , 'aantal' : aantal, "query": query}
     else:
-        wijk_dict = {}
-    return render(request,'../templates/zNaamWijk.html', wijk_dict ) 
+        Locatie_dict = {}
+    return render(request,'../templates/zoekLocatie.html', Locatie_dict ) 
 
 # Export
 @login_required
-def exportWijk(request):
+def exportLocatie(request):
         response = HttpResponse(content_type='application/ms-excel')
         now = datetime.datetime.now()
-        response['Content-Disposition']  = 'attachment; filename=Wijken_' + \
+        response['Content-Disposition']  = 'attachment; filename=Locatie_' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
         wb = xlwt.Workbook(encoding='utf-8')
-        ws = wb.add_sheet('Wijken')
+        ws = wb.add_sheet('Locatie')
         row_num = 0
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
 
-        columns = ['naam','contact','telefoon','bedrijf','memo']
+        columns = ['naam','adres','bedrijf','contact','memo']
 
         for col_num in range(len(columns)):
             ws.write(row_num, col_num, columns[col_num], font_style)
 
         font_style = xlwt.XFStyle()
 
-        rows = Wijk.objects.order_by('naam').values_list('naam','contact','telefoon','bedrijf.naam','memo')
+        rows = Locatie.objects.order_by('naam').values_list('naam','adres.naam','bedrijf.naam','contact.naam','memo')
         for row in rows:
             row_num +=1
 
@@ -567,49 +565,48 @@ def exportWijk(request):
 
 #CRUD
 @login_required
-def createWijk(request):
-    form = WijkForm(request.POST or None)
+def createLocatie(request):
+    form = LocatieForm(request.POST or None)
     if form.is_valid():
         form.save()
-        form = WijkForm()
+        form = LocatieForm()
     template_name = 'inputForm.html'
-    context = {'form' : form, 'title': 'Wijk Toevoegen'}
+    context = {'form' : form, 'title': 'Locatie Toevoegen'}
     return render(request,template_name,context)
 
 @login_required
-def editWijk(request,pk):
+def editLocatie(request,pk):
     try :
-        wijk = Wijk.objects.get(id=pk)
-    except Wijk.DoesNotExist:
-        return redirect('indexWijk')
+        Locatie = Locatie.objects.get(id=pk)
+    except Locatie.DoesNotExist:
+        return redirect('indexLocatie')
 
-    form = WijkForm(request.POST or None,instance = wijk)
+    form = LocatieForm(request.POST or None,instance = Locatie)
     # print('Request Method:',request.method)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-        return ( redirect('indexWijk'))
+        return ( redirect('indexLocatie'))
 
     template_name = 'inputForm.html'
-    context = {'form' : form, 'title': 'Wijzig Wijk'}
+    context = {'form' : form, 'title': 'Wijzig Locatie'}
     return render(request,template_name,context)
 
 @login_required
-def deleteWijk(request,pk):
+def deleteLocatie(request,pk):
     try :
-        wijk = Wijk.objects.get(id=pk)
-    except Wijk.DoesNotExist:
-        return redirect('/camera/indexWijk')
+        Locatie = Locatie.objects.get(id=pk)
+    except Locatie.DoesNotExist:
+        return redirect('/camera/indexLocatie')
 
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
-        wijk.delete()
-        return ( redirect('/camera/indexWijk'))
+        Locatie.delete()
+        return ( redirect('/camera/indexLocatie'))
 
     template_name = 'deleteRecord.html'
-    context = {'item' : wijk , 'title': 'Verwijder Wijk'}
+    context = {'item' : Locatie , 'title': 'Verwijder Locatie'}
     return render(request,template_name,context)
-    '''
 
 # --- Camera -----------------
 @login_required
