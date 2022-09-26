@@ -26,9 +26,10 @@
   <thead class="text-primary">
     <tr>
       <!-- <th scope="col">#</th> -->
-        <th scope="col">Naam</th>
+        <th scope="col">Camera</th>
         <th scope="col">Type</th>
         <th scope="col">Locatie</th>
+        <th scope="col">Adres</th>
         <th scope="col">Gps</th>
         <th scope="col">Instalatie</th>
         <th scope="col">Acties</th>
@@ -39,8 +40,9 @@
   <tbody>
     {% for camera in results %}
        <th> {{camera.naam}} </th>
-       <th> {{camera.locatie.naam}} </th>
        <th> {{camera.type}} </th>
+       <th> {{camera.locatie.naam}} </th>
+       <th> {{camera.locatie.adres}} </th>
        <th> {{camera.gps_locatie}} </th> 
        <th> {{camera.datum_geplaatst}} </th> 
  

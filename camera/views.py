@@ -514,7 +514,9 @@ def deleteBedrijf(request,pk):
 # --- Locatie -----------------
 @login_required
 def allLocatie(request):
-    Locatie_list = Locatie.objects.order_by('naam')
+    #Locatie_list = Locatie.objects.order_by('naam')
+    Locatie_list = Locatie.objects.order_by('adres')
+   
     aantal =  Locatie_list.count
     Locatie_dict  = {'results' : Locatie_list , 'aantal' : aantal}
     return render(request,'../templates/displayLocatie.html',Locatie_dict )
@@ -525,7 +527,8 @@ def zNaamLocatie (request):
     query = request.GET.get('q','')
     if query:
         qset = (Q(naam__icontains=query))       
-        Locatie_list = Locatie.objects.filter(qset).distinct().order_by('naam')
+        #Locatie_list = Locatie.objects.filter(qset).distinct().order_by('naam')
+        Locatie_list = Locatie.objects.filter(qset).distinct().order_by('adres')
         aantal = Locatie_list.count
         Locatie_dict  = {'results' : Locatie_list , 'aantal' : aantal, "query": query}
     else:

@@ -28,11 +28,11 @@ for root, dirs, files in os.walk(inpath, topdown=True):
                 if ".MP4" in filename or ".mp4" in filename and "._" not in filename:
                     after = substring_after(filename,"2Convert/") or substring_after(filename,"2convert/")
             
-                    if (after and size_changed(filename,5)) and (os.path.getsize(filename)) > 0:
+                    if (after and size_changed(filename,0.5)) and (os.path.getsize(filename)) > 0:
                         #print('After :',after)
     
                         request = after[0:after.find("/")]
-                        print('request:',request)
+                        #print('request:',request)
                         newDir = os.path.join(outpath,request)
                         #if not os.path.isdir(newDir):
                         #    os.mkdir(newDir)
@@ -46,60 +46,44 @@ for root, dirs, files in os.walk(inpath, topdown=True):
                         inFile = filename.replace(" ", "\ ")
 
 
-                        print('Converting :' ,inFile, 'to', outFile) 
-    
-                        command = "ffmpeg  -i " + inFile 
-                        command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
-                        #print('Command :',command) 
-                        #os.system(command)
-
-                        #ffile_isize
-                        #file_stats = os.stat(filename)
-                        #print(file_stats)
-                        #print(f'File Size in Bytes is {file_stats.st_size}')
-                        #print('File Size in MegaBytes is {file_stats.st_size / (1024 * 1024)}')
-            
-                        #move the original file
-                        #destFile = filename.replace("2convert","done")
-                        #destFile = destFile.replace("2CONVERT","done")
-
-                        #make/check output dir before move
-                        #destDir = substring_before(destFile, "done") + "done/"
-                        #print('destDir :',destDir)
-                        #if not os.path.isdir(destDir):
-                         #   os.mkdir(destDir)
-                        #destDir = destDir + request
-                        #if not os.path.isdir(destDir):
-                         #   os.mkdir(destDir)
-                        #print('Dest :',destFile)
-                        #shutil.move(filename,destFile)
-
+                        print('Converting:  ',inFile, 'to', outFile) 
+                        print ("Out location:", outFile)
+                   
+                        print('Request: ',request)
+                        # extract bedrijf
+                        bedrijf = substring_after(inFile, inpath)
+                        bedrijf = substring_before(bedrijf, "/")
+                        print ("Bedrijf: ", bedrijf)
+                        #extract locatie
+                        locatie = substring_after(inFile, bedrijf + '/')
+                        locatie = substring_before(locatie, "/")
+                        print ("Locatie: ", locatie)
+                    
+                        #extract Naaam
                         s = outFile
                         while substring_after(s, "/"):
                                 s = substring_after(s, "/")
-                                print ("s" ,s)
+                                #print ("s" ,s)
                         naam = substring_before(s, ".webm")
+                        print ("Naam:    ",naam)
 
-                        print ("Naam: ",naam)
-                        print ("Request: ",request)
-                        print ("Location: ", outFile)
-                        print ("Codec: vb9")
-                        '''
-                        
-                       
-                        print ("Recordingfrom: " , recordingFrom)
-                        print ("RecordingTo: " , recordingTo)
-                
-                        print ("Codec: vb9")
+                        #extract camera
+                        camera= substring_before(naam, "_2")
+                        print ("Camera:  ", camera)
 
+                        # extract recorded from till
+                        recTill = naam
+                        while substring_after(recTill, "_"):
+                                recTill = substring_after(recTill, "_")
+                                #print("recTill: ",recTill)
 
-                        
-                        '''
-                       
-                
-                
+                        #extract recorded from
+                        recFrom = substring_before(naam, recTill)
+                        recFrom = substring_after(recFrom,camera + "_")
+                        recFrom = substring_before(recFrom,"_")
 
-
-
+                        print ("recFrom: " , recFrom)
+                        print ("RecTill: " , recTill)
+                        print ("Codec:    vb9\n\n")
 
 

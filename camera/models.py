@@ -100,16 +100,16 @@ class Locatie(models.Model):
     class Meta:
         verbose_name_plural = 'locatie'
         ordering = ['naam']
-        unique_together = ('naam','bedrijf')
+        unique_together = ('naam','adres')
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
 
 class Camera(models.Model):
     naam  = models.CharField(max_length=50,blank = False,unique=True)
-    gps_locatie = models.CharField(max_length=50,blank = True)
+    gps_locatie = models.CharField(max_length=50,blank = True,default="Latitude: 52.377956 Longitude: 4.897070")
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
-    locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
+    locatie = models.ForeignKey(Adress,on_delete=models.CASCADE)
     type = models.CharField(max_length=50,blank = False,unique=False)
     datum_geplaatst = models.DateTimeField(default=timezone.now, blank=False)
     memo = models.TextField(blank = True)

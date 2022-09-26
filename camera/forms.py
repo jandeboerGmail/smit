@@ -58,8 +58,8 @@ class LocatieForm(forms.ModelForm):
         
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
-            'adres': forms.Select(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
+            'adres': forms.Select(attrs={'class': 'form-control'}),
             'contact': forms.Select(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),

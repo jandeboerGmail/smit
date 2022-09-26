@@ -26,11 +26,10 @@
   <thead class="text-primary" >
     <tr>
       <!-- <th scope="col">#</th> -->
-      <th scope="col">Naam</th>
-      <th scope="col">Adres</th>
-      <th scope="col">Bedrijf</th>
-      <th scope="col">Telefoon</th>
+      <th scope="col">Locatie</th>
+      <th scope="col">Camera</th>
       <th scope="col">Contact</th>
+      <th scope="col">Telefoon</th>
       <th scope="col">Acties</th>
     </tr>
   </thead>
@@ -38,11 +37,10 @@
   {% if results %}
   <tbody>
     {% for locatie in results %}
-       <!-- <th scope="row">{{contact.id}}</th> -->
-       <th> {{locatie.naam}} </th>
        <th> {{locatie.adres.naam}} </th>
-       <th> {{locatie.bedrif.naam} </th>
+       <th> {{locatie.naam}} </th>
        <th> {{locatie.contact.naam}} </th>
+       <th> {{locatie.contact.telefoon}} </th>
        <th><a class="btn btn-sm btn-info" href="{% url 'editLocatie' locatie.id %}">Edit</a></th>
        <th><a class="btn btn-sm btn-danger" href="{% url 'deleteLocatie' locatie.id %}">Delete</a></th>
     </tbody> 
