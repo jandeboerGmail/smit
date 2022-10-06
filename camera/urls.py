@@ -14,13 +14,13 @@ urlpatterns = [
     path('zoekVideo',views.zoekVideo,name='zoekVideo'),
 
     path('indexGebruiker',views.indexGebruiker,name='indexGebruiker'),
-    path('indexAdress',views.indexAdress,name='indexAdress'),
+    path('indexAdres',views.indexAdres,name='indexAdres'),
     path('indexBedrijf',views.indexBedrijf,name='indexBedrijf'),
     path('indexLocatie',views.indexLocatie,name='indexLocatie'),
     path('indexCamera',views.indexCamera,name='indexCamera'),
     path('indexVideo',views.indexVideo,name='indexVideo'),
     path('indexLog',views.indexLog,name='indexLog'),
-    path('indexAkties',views.indexAkties,name='indexAkties'),
+    path('indexActies',views.indexActies,name='indexActies'),
 
 # Gebruiker
     path('allGebruiker/',views.allGebruiker,name='allGebruiker'),
@@ -80,9 +80,11 @@ urlpatterns = [
     path('zOrderLog/',views.zOrderLog,name='zOrderLog'),
     path('exportLog/',views.exportLog,name='exportLog'),
 
-# Akties
-    path('aktionDisplayConversionStatus/',views.aktionDisplayConversionStatus,name='aktionDisplayConversionStatus'),
-    path('aktionGetVideoLocation/',views.aktionGetVideoLocation,name='aktionGetVideoLocation'),
-    path('aktionConvertVideo/',views.aktionConvertVideo,name='aktionConvertVideo'),
+# Akcties
+    path('actieDisplayConversionStatus/',views.actieDisplayConversionStatus,name='actieDisplayConversionStatus'),
+    path('actieToggleConversionStatus/',views.actieToggleConversionStatus,name='actieToggleConversionStatus'),
+    path('actieGetVideoLocation/',views.actieGetVideoLocation,name='actieGetVideoLocation'),
+    path('actieConvertVideo/',views.actieConvertVideo,name='actieConvertVideo'),
+    path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
 
 ]

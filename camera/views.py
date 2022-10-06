@@ -1,3 +1,4 @@
+from re import A
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -5,6 +6,7 @@ from django.conf import settings
 from django.db.models import Q
 from django import forms
 from operator import eq
+#from itertools import chain 
 from django.utils import timezone
 import os,time,shutil
 
@@ -30,7 +32,7 @@ def getVideoLocation():
     aParameter =  Parameter.objects.get(id=1)
     return str(aParameter.videoPath)
 
-def runningStatus():
+def getRunningStatus():
     aParameter =  Parameter.objects.get(id=1)
     return aParameter.conversion_running
 
@@ -39,7 +41,75 @@ def setRunningStatus(status):
     aParameter.conversion_running = status
     aParameter.datum_updated = timezone.now()
     aParameter.save()
+    print("Running status: ",status)
     return
+
+# Add video Content 
+# Adress 
+def addAdress(orderNr,naam):
+    #print("addAdress: ",naam)
+    aAdress = Adress.objects.get(naam=naam)
+    if not aAdress:
+        aAdress = Adress()
+        aAdress.naam = naam
+        aAdress.save ()
+    
+        message = "WARNING: Default values added for adress: "  + naam 
+        addLogEntry(orderNr,message)
+    return aAdress
+
+#Bedrijf
+def addBedrijf(orderNr,naam):
+    aAdress = addAdress(orderNr,naam)
+
+    aBedrijf = Bedrijf.objects.get(naam=naam)
+    if not aBedrijf:
+        aBedrijf = Bedrijf()
+        aBedrijf.naam = naam
+        aBedrijf.adres = aAdress
+        aBedrijf.save()
+
+        message = "WARNING: Default values added for bedrijf: "  + naam 
+        addLogEntry(orderNr,message)
+    return aBedrijf   
+
+
+#Gebruiker
+def addGebruiker(orderNr,naam):
+    aAdress = addAdress(orderNr,naam)
+
+    aGebruiker = Gebruiker.objects.get(naam=naam)
+    if not aGebruiker:
+        aGebruiker = Gebruiker()
+        aGebruiker.naam = naam
+        aGebruiker.adres = aAdress
+        aGebruiker.save()
+
+        message = "WARNING: Default values added for gebruiker: "  + naam 
+        addLogEntry(orderNr,message)
+    return aGebruiker   
+
+#Locatie
+def addLocatie(orderNr,locatieNaam,bedrijfNaam):
+
+    aBedrijf   = addBedrijf(orderNr,bedrijfNaam)
+    aGebruiker = addGebruiker(orderNr,"Default")
+    aAdress    = addAdress(orderNr,locatieNaam)
+
+    aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')
+    if not aLocatie:
+        print("not found location;  ",locatieNaam,bedrijfNaam)
+        aLocatie = Locatie()
+        aLocatie.naam    = locatieNaam
+        aLocatie.adres   = aAdress
+        aLocatie.bedrijf = aBedrijf
+        aLocatie.contact = aGebruiker
+        aLocatie.save()
+
+        message = "WARNING: Default values added for locatie: "  + locatieNaam 
+        addLogEntry(orderNr,message)
+    return aLocatie 
+
 
 # Log generic functions
 def addLogEntry(orderNr,message):
@@ -162,8 +232,8 @@ def ConvertingVideos():
                         # removeFile(outFile) # uncomment in production
 
                         startTime = time.time()
-                        result = os.system(command)
-                        #result = 0
+                        #result = os.system(command)
+                        result = 0
 
                         #print('Result :',result)
                         if result ==  0: # 256 error
@@ -186,7 +256,7 @@ def ConvertingVideos():
                             #addVideoEntry(request,"default",outFileName,"vb9")
                         else:
                             addLogEntry(request,"ERROR : Not Converted")
-        setRunningStatus(False)
+    setRunningStatus(False)
 
 # Create your views here.
 def current_datetime(request):
@@ -221,8 +291,8 @@ def indexBedrijf(request):
     return render(request,'../templates/indexBedrijf.html', {} )
 
 @login_required
-def indexAdress(request):
-    return render(request,'../templates/indexAdress.html', {} )
+def indexAdres(request):
+    return render(request,'../templates/indexAdres.html', {} )
 
 @login_required
 def indexLocatie(request):
@@ -241,8 +311,8 @@ def indexLog(request):
     return render(request,'../templates/indexLog.html', {} )
 
 @login_required
-def indexAkties(request):
-    return render(request,'../templates/indexAkties.html', {} )
+def indexActies(request):
+    return render(request,'../templates/indexActies.html', {} )
 
 # --- Gebruiker
 @login_required
@@ -358,7 +428,7 @@ def createAdress(request):
         form.save()
         form = AdressForm()
     template_name = 'inputForm.html'
-    context = {'form' : form, 'title': 'Adding Adress'}
+    context = {'form' : form, 'title': 'Toevoegen Adres'}
     return render(request,template_name,context)
 
 
@@ -367,17 +437,17 @@ def editAdress(request,pk):
         try :
             adress = Adress.objects.get(id=pk)
         except Adress.DoesNotExist:
-            return redirect('indexAdress')
+            return redirect('indexAdres')
 
         form = AdressForm(request.POST or None,instance = adress)
         # print('Request Method:',request.method)
         if request.method == 'POST':
             if form.is_valid():
                 form.save()
-                return ( redirect('indexAdress'))
+                return ( redirect('indexAdres'))
 
         template_name = 'inputForm.html'
-        context = {'form' : form, 'title': 'Change Adress'}
+        context = {'form' : form, 'title': 'Wijzig Adres'}
         return render(request,template_name,context)
 
 @login_required
@@ -385,7 +455,7 @@ def deleteAdress(request,pk):
         try :
             adress = Adress.objects.get(id=pk)
         except Adress.DoesNotExist:
-            return redirect('/camera/indexAdress')
+            return redirect('/camera/indexAdres')
 
         if request.method == 'POST':
             #print('Deleting Post:',request.POST)
@@ -393,7 +463,7 @@ def deleteAdress(request,pk):
             return ( redirect('/camera/indexAdres'))
 
         template_name = 'deleteRecord.html'
-        context = {'item' : adress , 'title': 'Delete Bedrijf'}
+        context = {'item' : adress , 'title': 'Verwijder Bedrijf'}
         return render(request,template_name,context)
 
 # --- Bedrijf
@@ -580,11 +650,11 @@ def createLocatie(request):
 @login_required
 def editLocatie(request,pk):
     try :
-        Locatie = Locatie.objects.get(id=pk)
+        locatie = Locatie.objects.get(id=pk)
     except Locatie.DoesNotExist:
         return redirect('indexLocatie')
 
-    form = LocatieForm(request.POST or None,instance = Locatie)
+    form = LocatieForm(request.POST or None,instance = locatie)
     # print('Request Method:',request.method)
     if request.method == 'POST':
         if form.is_valid():
@@ -594,21 +664,21 @@ def editLocatie(request,pk):
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Locatie'}
     return render(request,template_name,context)
-
+    
 @login_required
 def deleteLocatie(request,pk):
     try :
-        Locatie = Locatie.objects.get(id=pk)
+        locatie = Locatie.objects.get(id=pk)
     except Locatie.DoesNotExist:
         return redirect('/camera/indexLocatie')
 
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
-        Locatie.delete()
+        locatie.delete()
         return ( redirect('/camera/indexLocatie'))
 
     template_name = 'deleteRecord.html'
-    context = {'item' : Locatie , 'title': 'Verwijder Locatie'}
+    context = {'item' : locatie , 'title': 'Verwijder Locatie'}
     return render(request,template_name,context)
 
 # --- Camera -----------------
@@ -671,7 +741,7 @@ def createCamera(request):
         form.save()
         form = CameraForm()
     template_name = 'inputForm.html'
-    context = {'form' : form, 'title': 'Camera Toevoegen'}
+    context = {'form' : form, 'title': 'Toevoegen Camera'}
     return render(request,template_name,context)
 
 login_required
@@ -780,7 +850,7 @@ def createVideo(request):
         form.save()
         form = VideoForm()
     template_name = 'inputForm.html'
-    context = {'form' : form, 'title': 'Video Toevoegen'}
+    context = {'form' : form, 'title': 'Toevoegen Video'}
     return render(request,template_name,context)
 
 @login_required
@@ -917,8 +987,8 @@ def exportLog(request):
 
 # ---- Aktie ---------------
 @login_required
-def aktionDisplayConversionStatus(request):
-    if runningStatus():
+def actieDisplayConversionStatus(request):
+    if getRunningStatus():
         message  = "Running"
     else:
         message  = "NOT Running"
@@ -926,18 +996,46 @@ def aktionDisplayConversionStatus(request):
     html = "<html><body>Converion is %s.</body></html>" % message
     return HttpResponse(html)
     #return HttpResponse("Hello, world. You're at the Camera About index")
-    #return redirect('indexAkties')
+    #return redirect('indexActies')
 
 @login_required
-def aktionGetVideoLocation(request):
+def actieToggleConversionStatus(request):
+    if getRunningStatus():
+        setRunningStatus(False)
+    else:
+       setRunningStatus(True)
+    html = "<html><body>Toggeld Conversion status</body></html>"
+    return HttpResponse(html)
+    #return HttpResponse("Hello, world. You're at the Camera About index")
+    #return redirect('indexActies')
+
+@login_required
+def actieGetVideoLocation(request):
     videolocation = getVideoLocation()
     print('Videolocation :',videolocation)
-    return redirect('indexAkties')
+    return redirect('indexActies')
 
 @login_required
-def aktionConvertVideo(request):
-    ConvertingVideos()
-    return redirect('indexAkties')
+def actieConvertVideo(request):
+    if getRunningStatus() == False:
+        ConvertingVideos()
+    return redirect('indexActies')
+
+@login_required
+def actieAddVideo(request):
+
+    #addBedrijf("Order S01","Stadgenoot")
+    #addBedrijf("Order S02","Stadgenoot1")
+
+    addLocatie("Order S01","Stadspark","Stadgenoot")
+    addLocatie("Order S02","Dorpsplein","Stadgenoot")
+    #addLocatie("Order S01","Nooduitgang","Stadgenoot")
+    #addLocatie("Order S01","Remijden","Stadgenoot")
+    
+    
+
+
+    return redirect('indexActies')
 
 '''
 @login_required
