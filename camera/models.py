@@ -4,7 +4,7 @@ from django.template.defaultfilters import slugify
 
 class Adress (models.Model):
     naam = models.CharField(max_length=50,blank = False)
-    straat = models.CharField(max_length=50,blank = False,default = 'Straatmaam 1')
+    straat = models.CharField(max_length=50,blank = False,default = 'Straatnaam 1')
     postcode = models.CharField(max_length=6,blank = False,default = '0000AA')
     plaats = models.CharField(max_length=50,blank = False,default = 'Plaats')
     land = models.CharField(max_length=50,default='Nederland',blank = False)
@@ -29,9 +29,9 @@ class Bedrijf(models.Model):
     naam = models.CharField(max_length=50,blank = False)
     adres = models.ForeignKey(Adress,on_delete=models.CASCADE)
     email = models.EmailField(default='info@bedrijf.nl',max_length=254,blank = False)
-    website = models.URLField(max_length=200,blank=True)
+    website = models.URLField(max_length=200,blank=True,default="www.bedrijf.nl")
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
-    telefoon = models.CharField(max_length=16,blank = True)
+    telefoon = models.CharField(max_length=16,blank = True,default="000 1234567")
     #contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
