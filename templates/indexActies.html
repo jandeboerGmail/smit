@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+<h2 class='container'>Acties</h2>
+<ul>
+
+<hr>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/actieDisplayConversionStatus">Toon Huidige Conversion Status</a>
+  </div>
+
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/actieToggleConversionStatus">Toggle Conversion Status</a>
+  </div>
+
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/actieGetVideoLocation">Get Video Locatie</a>
+  </div>
+  <hr>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/actieConvertVideo">Converteer Video's met Service Order Nummer</a>
+  </div>
+
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/actieConvertVideo">Converteer Alle Video's</a>
+  </div>
+
+<!--
+  <div class="nav-index">
+      <a class="nav-index" href="/smit/VerkoopTicket">Verkoop Overzicht</a>
+  </div>
+
+  <hr>
+  <div class="nav-index">
+      <a class="nav-index" href="/smit/sNaamBand">Zoek op Naam</a>
+  </div>
+  <div class="nav-Index">
+      <a class="nav-index" href="/smit/sGenreBand">Zoek op Genre</a>
+  </div>
+  <div class="nav-Index">
+    <a class="nav-index" href="/smit/sAantalLedenBand">Zoek op Aantal leden</a>
+  </div>
+  <div class="nav-Index">
+    <a class="nav-index" href="/smit/sBedragBand">Zoek op Gage bedrag</a>
+  </div>
+    -->
+  <hr>
+</ul>
+{% endblock %}
