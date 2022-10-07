@@ -7,14 +7,16 @@
 
 <div class="form-group">
     <form method='POST' action ="" enctype='multipart/form-data'>   
-        <button type="submit" class="btn btn-success">Update</button>
+        <div class="form-row text-center">
+            <button type="submit" class="btn btn-success">Update</button>
+        </div>
         <hr>
         {% csrf_token %}
         <!--- {{ form.media }} --->
         {{ form.as_p }}
         <hr>
         <div class="form-row text-center">
-            <button type="submit" class="btn btn-success">Toevoegen</button>
+            <button type="submit" class="btn btn-success">Update</button>
         </div>
     </form>
 </div>

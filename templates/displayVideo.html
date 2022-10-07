@@ -29,9 +29,10 @@
       <th scope="col">Naam</th>
       <th scope="col">Camera</th>
       <th scope="col">Locatie</th>
-      
+      <th scope="col">Plaats</th>
       <th scope="col">Record van</th>
       <th scope="col">Record tot</th>
+      <th scope="col">Acties</th>
     </tr>
   </thead>
   {% if results %}
@@ -39,10 +40,11 @@
     {% for video in results %}
        <th> {{video.ordernr}} </th>
        <th> {{video.naam}} </th>
-       <th> {{video.camera}} </th>
+       <th> {{video.camera.naam}} </th>
+       <th> {{video.camera.locatie.naam}} </th>
+       <th> {{video.camera.plaats}} </th>
        <th> {{video.opname_van}} </th>
        <th> {{video.opname_tot}} </th>
-       <th scope="col">Acties</th>
        <th><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></th>
        <!--<th><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></th> -->
        <!--<th><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></th> -->
@@ -52,7 +54,7 @@
    {% endfor %}
   </table>
   {% else %}
-    <strong>Thera are no entries</strong>
+    <strong>Er zijn geen entries</strong>
   {% endif %}
 
  </div>

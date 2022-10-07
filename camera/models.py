@@ -1,3 +1,4 @@
+from curses import def_shell_mode
 from django.db import models
 from django.utils import timezone
 from django.template.defaultfilters import slugify
@@ -107,10 +108,11 @@ class Locatie(models.Model):
 
 class Camera(models.Model):
     naam  = models.CharField(max_length=50,blank = False,unique=True)
-    gps_locatie = models.CharField(max_length=50,blank = True,default="Latitude: 52.377956 Longitude: 4.897070")
-    image =  models.ImageField(upload_to ='images/',null=True,blank=True)
-    locatie = models.ForeignKey(Adress,on_delete=models.CASCADE)
+    locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
     type = models.CharField(max_length=50,blank = False,unique=False)
+    plaats = models.CharField(max_length=50,blank = True,unique=False)
+    gps_locatie = models.CharField(max_length=50,blank = True)
+    image =  models.ImageField(upload_to ='images/',null=True,blank=True)
     datum_geplaatst = models.DateTimeField(default=timezone.now, blank=False)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
@@ -140,7 +142,7 @@ class Video(models.Model):
     video_link= models.CharField(max_length=500,blank=True)
     # video_link= models.URLField(max_length=500,blank=True)
     duration = models.CharField(max_length=10,blank = True)
-    codec = models.CharField(max_length=50,blank = True)
+    codec = models.CharField(max_length=50,blank = True,default='vb9')
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
@@ -153,8 +155,8 @@ class Video(models.Model):
 
     class Meta:
         verbose_name_plural = 'video'
-        ordering = ['ordernr','naam','codec']
-        unique_together = ('naam','codec')
+        ordering = ['ordernr','naam','camera','codec']
+        unique_together = ('naam','camera')
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam

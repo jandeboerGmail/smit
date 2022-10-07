@@ -1,4 +1,5 @@
 from re import A
+from sqlite3 import Date
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
@@ -96,7 +97,7 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam):
     aGebruiker = addGebruiker(orderNr,"Default")
     aAdress    = addAdress(orderNr,locatieNaam)
 
-    aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')
+    aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')[0]
     if not aLocatie:
         print("not found location;  ",locatieNaam,bedrijfNaam)
         aLocatie = Locatie()
@@ -109,6 +110,49 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam):
         message = "WARNING: Default values added for locatie: "  + locatieNaam 
         addLogEntry(orderNr,message)
     return aLocatie 
+
+#Camera
+def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam):
+
+    aLocatie  = addLocatie(orderNr,locatieNaam,bedrijfNaam)
+  
+    aCamera   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
+    if not aCamera:
+        print("not found aCamera;  ",cameraNaam, locatieNaam)
+        aCamera = Camera()
+        aCamera.naam    = locatieNaam
+        aCamera.locatie   = aLocatie
+        aCamera.save()
+
+        message = "WARNING: Default values added for camera: "  + cameraNaam 
+        addLogEntry(orderNr,message)
+    return aCamera 
+
+#Video
+#def addVideo(orderNr,videoNaam,fromDate,tillDate,codec,cameraNaam,locatieNaam,bedrijfNaam):
+def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink):
+
+    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam)
+  
+    #aVideo   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
+    aVideo   = Video.objects.filter(naam=videoNaam)
+    if not aVideo:
+        print("not found aVideo;  ",videoNaam, aCamera.naam)
+        aVideo = Video()
+        aVideo.naam         = videoNaam
+        aVideo.camera       = aCamera
+        aVideo.ordernr      = orderNr
+        aVideo.video_link   = videoLink
+        #aVideo.opname_van   = fromDate
+        #aVideo.opname_tot   = tillDate
+        #aVideo.codec        = codec
+        aVideo.save()
+
+        message = "WARNING: Default values added for video: "  + videoNaam 
+        addLogEntry(orderNr,message)
+    else:
+        print("Found aVideo;  ",videoNaam, aCamera.naam)
+    return aVideo
 
 
 # Log generic functions
@@ -664,7 +708,7 @@ def editLocatie(request,pk):
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Locatie'}
     return render(request,template_name,context)
-    
+
 @login_required
 def deleteLocatie(request,pk):
     try :
@@ -1023,6 +1067,7 @@ def actieConvertVideo(request):
 
 @login_required
 def actieAddVideo(request):
+    videoLink = "/home/jan/video/Stadgenoot/Dorpstraat 1/Converted/Ordernr001/bunny360.webm"
 
     #addBedrijf("Order S01","Stadgenoot")
     #addBedrijf("Order S02","Stadgenoot1")
@@ -1031,10 +1076,12 @@ def actieAddVideo(request):
     addLocatie("Order S02","Dorpsplein","Stadgenoot")
     #addLocatie("Order S01","Nooduitgang","Stadgenoot")
     #addLocatie("Order S01","Remijden","Stadgenoot")
-    
-    
 
-
+    #addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam)
+    #addCamera("Order S01","NVR 1","Remijden","Stadgenoot")
+    #addVideo(orderNr,videoNaam,fromDate,tillDate,codec,cameraNaam,locatieNaam,bedrijfNaam,):
+    #addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink):
+    addVideo("Order S01","video 1","NVR 1","Remijden","Stadgenoot",videoLink)
     return redirect('indexActies')
 
 '''
