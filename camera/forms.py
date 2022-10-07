@@ -69,16 +69,18 @@ class CameraForm(forms.ModelForm):
     class Meta:
         model = Camera
 
-        fields = ['naam','locatie','type','gps_locatie','datum_geplaatst','memo']
+        fields = ['naam','locatie','type','plaats','gps_locatie','datum_geplaatst','memo']
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'locatie': forms.Select(attrs={'class': 'form-control'}),
             'type': forms.TextInput(attrs={'class': 'form-control'}),
-            'gps_locatie': forms.TextInput(attrs={'class': 'form-control'}), 
-            'datum_geplaatst': forms.DateTimeInput(attrs={'class': 'form-control'}),
+            'plaats': forms.TextInput(attrs={'class': 'form-control'}),
+            'gps': forms.TextInput(attrs={'class': 'form-control'}),
+            'datum_geplaats': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
+#
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
@@ -91,8 +93,8 @@ class VideoForm(forms.ModelForm):
             'camera': forms.Select(attrs={'class': 'form-control'}),
             'opname_van': forms.DateTimeInput(attrs={'class': 'form-control'}),
             'opname_tot': forms.DateTimeInput(attrs={'class': 'form-control'}),   
-            #'video_image': forms.FileInput(attrs={'class': 'form-control'}), 
             'video_link': forms.TextInput(attrs={'class': 'form-control'}), 
+            'codec': forms.TextInput(attrs={'class': 'form-control'}), 
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
