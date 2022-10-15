@@ -48,23 +48,25 @@ def setRunningStatus(status):
 # Add video Content 
 # Adress 
 def addAdress(orderNr,naam):
-    #print("addAdress: ",naam)
-    aAdress = Adress.objects.get(naam=naam)
-    if not aAdress:
+    #print("add Adress: ",naam)
+    aAdressen = Adress.objects.filter(naam=naam)
+    if not aAdressen:
         aAdress = Adress()
         aAdress.naam = naam
         aAdress.save ()
     
         message = "WARNING: Default values added for adress: "  + naam 
         addLogEntry(orderNr,message)
+    else:
+        aAdress = aAdressen[0]
     return aAdress
 
 #Bedrijf
 def addBedrijf(orderNr,naam):
     aAdress = addAdress(orderNr,naam)
 
-    aBedrijf = Bedrijf.objects.get(naam=naam)
-    if not aBedrijf:
+    aBedrijven = Bedrijf.objects.filter(naam=naam)
+    if not aBedrijven:
         aBedrijf = Bedrijf()
         aBedrijf.naam = naam
         aBedrijf.adres = aAdress
@@ -72,15 +74,16 @@ def addBedrijf(orderNr,naam):
 
         message = "WARNING: Default values added for bedrijf: "  + naam 
         addLogEntry(orderNr,message)
+    else:
+        aBedrijf = aBedrijven[0]
     return aBedrijf   
-
 
 #Gebruiker
 def addGebruiker(orderNr,naam):
     aAdress = addAdress(orderNr,naam)
 
-    aGebruiker = Gebruiker.objects.get(naam=naam)
-    if not aGebruiker:
+    aGebruikers = Gebruiker.objects.filter(naam=naam)
+    if not aGebruikers:
         aGebruiker = Gebruiker()
         aGebruiker.naam = naam
         aGebruiker.adres = aAdress
@@ -88,18 +91,26 @@ def addGebruiker(orderNr,naam):
 
         message = "WARNING: Default values added for gebruiker: "  + naam 
         addLogEntry(orderNr,message)
+    else:
+        aGebruiker =  aGebruikers[0]
     return aGebruiker   
 
 #Locatie
-def addLocatie(orderNr,locatieNaam,bedrijfNaam):
+def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
     aBedrijf   = addBedrijf(orderNr,bedrijfNaam)
     aGebruiker = addGebruiker(orderNr,"Default")
-    aAdress    = addAdress(orderNr,locatieNaam)
+    aAdress    = addAdress(orderNr,adressNaam)
 
-    aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')[0]
-    if not aLocatie:
-        print("not found location;  ",locatieNaam,bedrijfNaam)
+    #print ("Locatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aGebruiker.naam)
+
+    #aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')[0]
+    #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
+    #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam)
+    aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
+
+    if not aLocaties:
+        #print("not found location;  ",locatieNaam,bedrijfNaam)
         aLocatie = Locatie()
         aLocatie.naam    = locatieNaam
         aLocatie.adres   = aAdress
@@ -107,37 +118,54 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam):
         aLocatie.contact = aGebruiker
         aLocatie.save()
 
-        message = "WARNING: Default values added for locatie: "  + locatieNaam 
+        message = "WARNING: Default values added for locatie: "  + locatieNaam + " | " + adressNaam + " | " + bedrijfNaam  + " | " + gebruikerNaam
         addLogEntry(orderNr,message)
+    else:
+       aLocatie = aLocaties[0] 
     return aLocatie 
 
 #Camera
-def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam):
+def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
-    aLocatie  = addLocatie(orderNr,locatieNaam,bedrijfNaam)
-  
-    aCamera   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
-    if not aCamera:
-        print("not found aCamera;  ",cameraNaam, locatieNaam)
+    aLocatie  = addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam)
+    #print ('aLocatie: ', aLocatie.naam)
+
+    #print("Finding aCamera: ",cameraNaam,"-", aLocatie.naam)
+    #aCamera    = Camera.objects.get(naam=cameraNaam,locatie__naam=aLocatie.naam)
+    aCameras    = Camera.objects.filter(naam=cameraNaam,locatie__naam=aLocatie.naam)
+
+    if not aCameras:
+        #print("not found aCamera: ",cameraNaam, locatieNaam)
         aCamera = Camera()
-        aCamera.naam    = locatieNaam
+        aCamera.naam      = cameraNaam
         aCamera.locatie   = aLocatie
+        aCamera.type      = "default"
+        aCamera.plaats    = "default"
         aCamera.save()
+        #print('saved aCamera name: ',aCamera.naam)
 
-        message = "WARNING: Default values added for camera: "  + cameraNaam 
+        message = "WARNING: Default values added for camera: "  + cameraNaam +  " | " + locatieNaam
         addLogEntry(orderNr,message)
+    else:
+        aCamera = aCameras[0]
+        #print("Found aCamera: ", aCamera.naam  , aCamera.locatie)
     return aCamera 
 
 #Video
-#def addVideo(orderNr,videoNaam,fromDate,tillDate,codec,cameraNaam,locatieNaam,bedrijfNaam):
 def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink):
+    
+    #print("---------- addVideo -------------")
+    aAdress = addAdress(orderNr,locatieNaam)
+    #print ("Adress: ",aAdress.naam)
 
-    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam)
-  
+    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,aAdress.naam,"default")
+    #print ("Camera: ",aCamera.naam)
+
     #aVideo   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
-    aVideo   = Video.objects.filter(naam=videoNaam)
-    if not aVideo:
-        print("not found aVideo;  ",videoNaam, aCamera.naam)
+    aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam)
+    
+    if not aVideos:
+        #print("not found aVideo;  ",videoNaam, aCamera.naam)
         aVideo = Video()
         aVideo.naam         = videoNaam
         aVideo.camera       = aCamera
@@ -148,10 +176,13 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink):
         #aVideo.codec        = codec
         aVideo.save()
 
-        message = "WARNING: Default values added for video: "  + videoNaam 
+        message = "WARNING: Default values added for video: "  + videoNaam + " | " + aCamera.naam
         addLogEntry(orderNr,message)
     else:
-        print("Found aVideo;  ",videoNaam, aCamera.naam)
+        aVideo = aVideos[0]
+        #print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
+
+    #print ("Video: ",aVideo.naam)
     return aVideo
 
 
@@ -164,7 +195,6 @@ def addLogEntry(orderNr,message):
     return
 
 def addVideoEntry(ordernr,cameraNaam,fileLocation,codec):
-
     s = fileLocation
     while substring_after(s, "/"):
             s = substring_after(s, "/")
@@ -172,7 +202,7 @@ def addVideoEntry(ordernr,cameraNaam,fileLocation,codec):
     naam = substring_before(s, ".webm")
 
     aCamera = Camera.objects.get(naam=cameraNaam)  
-    print ('Naam', aCamera.naam)
+    #print ('Naam', aCamera.naam)
 
     now = datetime.datetime.now()
 
@@ -206,14 +236,84 @@ def substring_after(s, delim):
 def substring_before(s, delim):
         return s.split(delim)[0]
 
+def extractDBitems(filename):
+    inpath=getVideoLocation() + '/'
+    #print("Inpath: ",inpath)
+    inFile = filename.replace(" ", "\ ")
+    #extract videoLink
+    video_link = substring_after(inFile,inpath)
+    video_link = video_link.replace("\ ", " ")
+    #print("video_link: ", video_link) 
+
+    #extract ordernr
+    ordernr = substring_after(inFile,"Converted/")
+    ordernr = substring_before(ordernr,'/')
+    #print('ordernr: ',ordernr)
+    
+    # extract bedrijf
+    bedrijf = substring_after(inFile, inpath)
+    bedrijf = substring_before(bedrijf, "/")
+    #print ("Bedrijf: ", bedrijf)
+                        
+    #extract locatie
+    locatie = substring_after(inFile, bedrijf + '/')
+    locatie = substring_before(locatie, "/")
+    locatie = locatie.replace("\ ", " ")
+    #print ("Locatie: ", locatie)
+                    
+    #extract Naaam
+    s = filename
+    while substring_after(s, "/"):
+        s = substring_after(s, "/")
+        #print ("s" ,s)
+        naam = substring_before(s, ".webm")
+    #print ("Naam:    ",naam)
+
+    #extract camera
+    camera= substring_before(naam, "_2")
+    #print ("Camera:  ", camera)
+
+    # extract recorded from till
+    recTill = naam
+    while substring_after(recTill, "_"):
+        recTill = substring_after(recTill, "_")
+    #print("recTill: ",recTill)
+
+    #extract recorded from
+    recFrom = substring_before(naam, recTill)
+    recFrom = substring_after(recFrom,camera + "_")
+    recFrom = substring_before(recFrom,"_")
+
+    #print ("recFrom: " , recFrom)
+    #print ("RecTill: " , recTill)
+    #print ("Codec:    vb9\n\n")
+    addVideo(ordernr,naam,camera,locatie,bedrijf,video_link)
+    return
+
+def insertConvertedVideos():
+    #inpath='/home/jan/video/'
+    inpath=getVideoLocation() + '/'
+    for root, dirs, files in os.walk(inpath, topdown=True):
+        for name in files:
+            filename = os.path.join(root, name)
+            #print("Filename: ",filename)
+            #print("Files :",os.path.join(root, name))
+            if "Converted" in filename:
+                #print('Filename :',filename)
+                if ".webm" in filename and "._" not in filename:
+                    extractDBitems(filename)
+    return   
+
+                   
 def ConvertingVideos():
     print('Conversion')
     videolocation = getVideoLocation()
     message = "Looking for New Videos in " + videolocation
     addLogEntry(" ", message)
     setRunningStatus(True)
-    videoPath='/home/jan/video/'
-    #videoPath = getVideoLocation
+    #videoPath='/home/jan/video/'
+    videoPath=getVideoLocation() + '/'
+    
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
@@ -296,11 +396,13 @@ def ConvertingVideos():
                             addLogEntry(request,message)
                             #print("Converted ", inFile )
                             # removeFile(inFileName) # uncommend for production
-                        
+
+                            #(ordernr,naam,camera,locatie,bedrijf,video_link)
                             #addVideoEntry(request,"default",outFileName,"vb9")
                         else:
                             addLogEntry(request,"ERROR : Not Converted")
     setRunningStatus(False)
+    return
 
 # Create your views here.
 def current_datetime(request):
@@ -746,6 +848,18 @@ def zNaamCamera (request):
         camera_dict = {}
     return render(request,'../templates/zNaamCamera.html', camera_dict ) 
 
+@login_required
+def zLocatieCamera (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(locatie__naam__icontains=query))       
+        camera_list = Camera.objects.filter(qset).distinct().order_by('naam')
+        aantal = camera_list.count
+        camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
+    else:
+        camera_dict = {}
+    return render(request,'../templates/zLocatieCamera.html', camera_dict ) 
+
 # Export
 @login_required
 def exportCamera(request):
@@ -834,6 +948,7 @@ def allVideo(request):
 @login_required
 def zNaamVideo (request):
     query = request.GET.get('q','')
+    print ("query: ", query)
     if query:
         qset = (Q(naam__icontains=query))       
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
@@ -846,10 +961,13 @@ def zNaamVideo (request):
 @login_required
 def zOrderVideo (request):
     query = request.GET.get('q','')
+    print ("query: ", query)
     if query:
+        print ("querry: ", query)
         qset = (Q(ordernr__icontains=query))       
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
         aantal = video_list.count
+        print ("aantal: ",aantal)
         video_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
@@ -1066,14 +1184,25 @@ def actieConvertVideo(request):
     return redirect('indexActies')
 
 @login_required
+def actieConvertVideo(request):
+    if getRunningStatus() == False:
+        ConvertingVideos()
+    return redirect('indexActies')
+
+@login_required
+def actieInsertConvertedVideos(request):
+    insertConvertedVideos()
+    return redirect('indexActies')
+
+@login_required
 def actieAddVideo(request):
-    videoLink = "/home/jan/video/Stadgenoot/Dorpstraat 1/Converted/Ordernr001/bunny360.webm"
+    videoLink = "default/earth.webm"
 
     #addBedrijf("Order S01","Stadgenoot")
     #addBedrijf("Order S02","Stadgenoot1")
 
-    addLocatie("Order S01","Stadspark","Stadgenoot")
-    addLocatie("Order S02","Dorpsplein","Stadgenoot")
+    #addLocatie("Order S01","Stadspark","Stadgenoot")
+    #addLocatie("Order S02","Dorpsplein","Stadgenoot")
     #addLocatie("Order S01","Nooduitgang","Stadgenoot")
     #addLocatie("Order S01","Remijden","Stadgenoot")
 
@@ -1081,7 +1210,11 @@ def actieAddVideo(request):
     #addCamera("Order S01","NVR 1","Remijden","Stadgenoot")
     #addVideo(orderNr,videoNaam,fromDate,tillDate,codec,cameraNaam,locatieNaam,bedrijfNaam,):
     #addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink):
-    addVideo("Order S01","video 1","NVR 1","Remijden","Stadgenoot",videoLink)
+    #addVideo("Order S01","video 1","NVR 1","Remijden","Stadgenoot",videoLink)
+    
+    #addVideo("Order S3","video 5","NVR 4","Stadspark","Stadgenoot",videoLink)
+    addVideo("Order SN3","video 7","NVR 41","Stadspark","Stadgenoot",videoLink)
+    #addVideo("Order S02","video 4 repeat","NVR9 2","Remijden","Stadgenoot",videoLink)
     return redirect('indexActies')
 
 '''
