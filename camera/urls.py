@@ -58,6 +58,7 @@ urlpatterns = [
 # Camera
     path('allCamera/',views.allCamera,name='allCamera'),
     path('zNaamCamera/',views.zNaamCamera,name='zNaamCamera'),
+    path('zLocatieCamera/',views.zLocatieCamera,name='zLocatieCamera'),
     path('exportCamera/',views.exportCamera,name='exportCamera'),
     path('createCamera/',views.createCamera,name='createCamera'),
     path('editCamera/<int:pk>',views.editCamera,name='editCamera'),

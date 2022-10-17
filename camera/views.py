@@ -238,7 +238,10 @@ def substring_before(s, delim):
 
 def extractDBitems(filename):
     inpath=getVideoLocation()
+    print("extractDBitems")
+    print("filename: ",filename)
     print("Inpath: ",inpath)
+
     inFile = filename.replace(" ", "\ ")
     #extract videoLink
     video_link = substring_after(inFile,inpath)
@@ -293,13 +296,13 @@ def extractDBitems(filename):
 
 def insertConvertedVideos():
     inpath=getVideoLocation()
-    print('ADD ConvertdE Videos to DB from:',inpath)
+    print('Add Converted Videos to DB from:',inpath)
     for root, dirs, files in os.walk(inpath, topdown=True):
         for name in files:
             filename = os.path.join(root, name)
             #print("Filename: ",filename)
             #print("Files :",os.path.join(root, name))
-            if "Converted" in filename:
+            if "Converted" in filename and "x_" not in filename:
                 #print('Filename :',filename)
                 if ".webm" in filename and "._" not in filename:
                     extractDBitems(filename)
@@ -844,7 +847,7 @@ def deleteLocatie(request,pk):
 # --- Camera -----------------
 @login_required
 def allCamera(request):
-    camera_list = Camera.objects.order_by('naam')
+    camera_list = Camera.objects.order_by('naam','locatie')
     aantal =  camera_list.count
     camera_dict  = {'results' : camera_list , 'aantal' : aantal}
     return render(request,'../templates/displayCamera.html',camera_dict )
@@ -867,7 +870,7 @@ def zLocatieCamera (request):
     query = request.GET.get('q','')
     if query:
         qset = (Q(locatie__naam__icontains=query))       
-        camera_list = Camera.objects.filter(qset).distinct().order_by('naam')
+        camera_list = Camera.objects.filter(qset).distinct().order_by('locatie','naam')
         aantal = camera_list.count
         camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
     else:

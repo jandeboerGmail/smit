@@ -134,7 +134,7 @@ class Camera(models.Model):
      
 class Video(models.Model):
     naam = models.CharField(max_length=50,blank = False,unique=True) #format bedrijflocatieddmmyyhhmmss  (utc)
-    ordernr = models.CharField(max_length=50,blank = False,unique=False)
+    ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
     opname_van = models.DateTimeField(default=timezone.now, blank=False)
     opname_tot = models.DateTimeField(default=timezone.now, blank=False)
     camera = models.ForeignKey(Camera,on_delete=models.CASCADE)
@@ -163,7 +163,7 @@ class Video(models.Model):
 
 class Log(models.Model):
     id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
-    ordernr = models.CharField(max_length=50,blank = False,unique=False)
+    ordernr = models.CharField(max_length=50,blank = True,unique=False)
     message = models.CharField(max_length=500,blank = False,default="empty")
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
     datum_updated = models.DateTimeField(default=timezone.now, blank=False)
