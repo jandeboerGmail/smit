@@ -32,6 +32,7 @@ urlpatterns = [
 
 # Adresss
     path('allAdress/',views.allAdress,name='allAdress'),
+    path('zNaamAdress/',views.zNaamAdress,name='zNaamAdress'),
     path('createAdress/',views.createAdress,name='createAdress'),
     path('editAdress/<int:pk>',views.editAdress,name='editAdress'),
     path('deleteAdress/<int:pk>',views.deleteAdress,name='deleteAdress'),
@@ -85,6 +86,8 @@ urlpatterns = [
     path('actieToggleConversionStatus/',views.actieToggleConversionStatus,name='actieToggleConversionStatus'),
     path('actieGetVideoLocation/',views.actieGetVideoLocation,name='actieGetVideoLocation'),
     path('actieConvertVideo/',views.actieConvertVideo,name='actieConvertVideo'),
+    path('actieConvertVideoOrder/',views.actieConvertVideoOrder,name='actieConvertVideoOrder'),
     path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
+    path('insertConvertedVideos/',views.insertConvertedVideos,name='insertConvertedVideos'),
 
 ]

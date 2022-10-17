@@ -42,7 +42,7 @@ def setRunningStatus(status):
     aParameter.conversion_running = status
     aParameter.datum_updated = timezone.now()
     aParameter.save()
-    print("Running status: ",status)
+    #print("Running status: ",status)
     return
 
 # Add video Content 
@@ -311,24 +311,25 @@ def ConvertingVideos():
     message = "Looking for New Videos in " + videolocation
     addLogEntry(" ", message)
     setRunningStatus(True)
-    #videoPath='/home/jan/video/'
-    videoPath=getVideoLocation() + '/'
+    videoPath='/home/jan/video/'
+    #videoPath=getVideoLocation() + '/'
     
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
             inFileName = os.path.join(root, name)
-            # print("Files :",os.path.join(root, name))
+            #print("Files :",os.path.join(root, name))
             if "2Convert" in inFileName:
-                #print('inFile :',inFileName)YY
+                #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
+                    print('inFile :',inFileName)
                     after = substring_after(inFileName,"2Convert/") 
             
                     if (after and size_changed(inFileName,5)) and (os.path.getsize(inFileName)) > 0:
                       
-                        #print('After :',after)
+                        print('After :',after)
                         request = after[0:after.find("/")]
-                        #print('request:',request)
+                        print('request:',request)
                         
                         #make/check output dir
                         destDir = substring_before(inFileName, "2Convert") + "Converted/" 
@@ -381,7 +382,7 @@ def ConvertingVideos():
 
                         #print('Result :',result)
                         if result ==  0: # 256 error
-                            # Elapsed Timeß
+                            # Elapsed Time
                             endTime = time.time()
                             elapsedTime = endTime - startTime
                             elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
@@ -565,6 +566,18 @@ def allAdress(request):
     aantal =  adress_list.count
     adress_dict  = {'adresses' : adress_list , 'aantal' : aantal}
     return render(request,'../templates/displayAdress.html',adress_dict )
+
+@login_required
+def zNaamAdress (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(naam__icontains=query))       
+        adress_list = Adress.objects.filter(qset).distinct().order_by('naam')
+        aantal = adress_list.count
+        adress_dict  = {'results' : adress_list , 'aantal' : aantal, "query": query}
+    else:
+        adress_dict = {}
+    return render(request,'../templates/zNaamAdress.html', adress_dict ) 
 
 #CRUD
 @login_required
@@ -1166,7 +1179,7 @@ def actieToggleConversionStatus(request):
         setRunningStatus(False)
     else:
        setRunningStatus(True)
-    html = "<html><body>Toggeld Conversion status</body></html>"
+    html = "<html><body>Conversie status: %s </body></html>" % getRunningStatus()
     return HttpResponse(html)
     #return HttpResponse("Hello, world. You're at the Camera About index")
     #return redirect('indexActies')
@@ -1183,11 +1196,23 @@ def actieConvertVideo(request):
         ConvertingVideos()
     return redirect('indexActies')
 
+'''
 @login_required
 def actieConvertVideo(request):
     if getRunningStatus() == False:
         ConvertingVideos()
     return redirect('indexActies')
+'''
+
+@login_required
+def actieConvertVideoOrder(request):
+    # TODO 
+    context  = {}
+    return render(request,'todo.html',context )
+    
+    #if getRunningStatus() == False:
+    #   ConvertingVideos()
+    #return redirect('indexActies')
 
 @login_required
 def actieInsertConvertedVideos(request):

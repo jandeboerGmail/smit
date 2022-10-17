@@ -1,4 +1,5 @@
 camera/static/media/
+/static/
 convert/*.mp4
 ._*
 .DS_Store
