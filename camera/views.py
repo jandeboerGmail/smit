@@ -381,8 +381,8 @@ def ConvertingVideos():
                         # removeFile(outFile) # uncomment in production
 
                         startTime = time.time()
-                        #result = os.system(command)
-                        result = 0
+                        result = os.system(command)
+                        #ßresult = 0
 
                         #print('Result :',result)
                         if result ==  0: # 256 error
