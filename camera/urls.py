@@ -89,6 +89,6 @@ urlpatterns = [
     path('actieConvertVideo/',views.actieConvertVideo,name='actieConvertVideo'),
     path('actieConvertVideoOrder/',views.actieConvertVideoOrder,name='actieConvertVideoOrder'),
     path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
-    path('insertConvertedVideos/',views.insertConvertedVideos,name='insertConvertedVideos'),
+    path('actieInsertConvertedVideos/',views.actieInsertConvertedVideos,name='actieInsertConvertedVideos'),
 
 ]

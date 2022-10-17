@@ -237,29 +237,30 @@ def substring_before(s, delim):
         return s.split(delim)[0]
 
 def extractDBitems(filename):
-    inpath=getVideoLocation() + '/'
-    #print("Inpath: ",inpath)
+    inpath=getVideoLocation()
+    print("Inpath: ",inpath)
     inFile = filename.replace(" ", "\ ")
     #extract videoLink
     video_link = substring_after(inFile,inpath)
     video_link = video_link.replace("\ ", " ")
-    #print("video_link: ", video_link) 
+    print("video_link: ", video_link) 
 
     #extract ordernr
     ordernr = substring_after(inFile,"Converted/")
     ordernr = substring_before(ordernr,'/')
-    #print('ordernr: ',ordernr)
+    ordernr = ordernr.replace("\ ", " ")
+    print('ordernr: ',ordernr)
     
     # extract bedrijf
     bedrijf = substring_after(inFile, inpath)
     bedrijf = substring_before(bedrijf, "/")
-    #print ("Bedrijf: ", bedrijf)
+    print ("Bedrijf: ", bedrijf)
                         
     #extract locatie
     locatie = substring_after(inFile, bedrijf + '/')
     locatie = substring_before(locatie, "/")
     locatie = locatie.replace("\ ", " ")
-    #print ("Locatie: ", locatie)
+    print ("Locatie: ", locatie)
                     
     #extract Naaam
     s = filename
@@ -267,11 +268,11 @@ def extractDBitems(filename):
         s = substring_after(s, "/")
         #print ("s" ,s)
         naam = substring_before(s, ".webm")
-    #print ("Naam:    ",naam)
+    print ("Naam:    ",naam)
 
     #extract camera
     camera= substring_before(naam, "_2")
-    #print ("Camera:  ", camera)
+    print ("Camera:  ", camera)
 
     # extract recorded from till
     recTill = naam
@@ -291,8 +292,8 @@ def extractDBitems(filename):
     return
 
 def insertConvertedVideos():
-    #inpath='/home/jan/video/'
-    inpath=getVideoLocation() + '/'
+    inpath=getVideoLocation()
+    print('ADD ConvertdE Videos to DB from:',inpath)
     for root, dirs, files in os.walk(inpath, topdown=True):
         for name in files:
             filename = os.path.join(root, name)
@@ -302,18 +303,18 @@ def insertConvertedVideos():
                 #print('Filename :',filename)
                 if ".webm" in filename and "._" not in filename:
                     extractDBitems(filename)
+
     return   
 
-                   
 def ConvertingVideos():
     print('Conversion')
-    videolocation = getVideoLocation()
-    message = "Looking for New Videos in " + videolocation
+    #videoPath='/home/jan/video/'
+    videoPath=getVideoLocation()
+    
+    message = "Looking for New Videos in " + videoPath
     addLogEntry(" ", message)
     setRunningStatus(True)
-    videoPath='/home/jan/video/'
-    #videoPath=getVideoLocation() + '/'
-    
+
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
@@ -404,7 +405,7 @@ def ConvertingVideos():
                             addLogEntry(request,"ERROR : Not Converted")
     setRunningStatus(False)
     return
-
+                   
 # Create your views here.
 def current_datetime(request):
     now = datetime.datetime.now()
@@ -464,7 +465,7 @@ def indexActies(request):
 # --- Gebruiker
 @login_required
 def allGebruiker(request):
-    gebruiker_list = Gebruiker.objects.order_by('soort','naam')
+    gebruiker_list = Gebruiker.objects.order_by('naam')
     aantal =  gebruiker_list.count
     gebruiker_dict  = {'results' : gebruiker_list , 'aantal' : aantal}
     return render(request,'../templates/displayGebruiker.html',gebruiker_dict )
@@ -1186,7 +1187,7 @@ def actieDisplayConversionStatus(request):
     else:
         message  = "NOT Running"
 
-    html = "<html><body>Converion is %s.</body></html>" % message
+    html = "<html><body><strong><center>Conversion is %s. </center></strong><body></html>" % message
     return HttpResponse(html)
     #return HttpResponse("Hello, world. You're at the Camera About index")
     #return redirect('indexActies')
@@ -1197,16 +1198,16 @@ def actieToggleConversionStatus(request):
         setRunningStatus(False)
     else:
        setRunningStatus(True)
-    html = "<html><body>Conversie status: %s </body></html>" % getRunningStatus()
+    html = "<html><body><strong><center>Conversie status: %s </center></strong><body></html>" % getRunningStatus()
     return HttpResponse(html)
     #return HttpResponse("Hello, world. You're at the Camera About index")
     #return redirect('indexActies')
 
 @login_required
 def actieGetVideoLocation(request):
-    videolocation = getVideoLocation()
-    print('Videolocation :',videolocation)
-    return redirect('indexActies')
+    html = "<html><body><strong><center>Video location: %s </center></strong></body></html>" % getVideoLocation()
+    return HttpResponse(html)
+    #return redirect('indexActies')
 
 @login_required
 def actieConvertVideo(request):
@@ -1239,7 +1240,7 @@ def actieInsertConvertedVideos(request):
 
 @login_required
 def actieAddVideo(request):
-    videoLink = "default/earth.webm"
+    videoLink = "Default/earth.webm"
 
     #addBedrijf("Order S01","Stadgenoot")
     #addBedrijf("Order S02","Stadgenoot1")
@@ -1256,6 +1257,7 @@ def actieAddVideo(request):
     #addVideo("Order S01","video 1","NVR 1","Remijden","Stadgenoot",videoLink)
     
     #addVideo("Order S3","video 5","NVR 4","Stadspark","Stadgenoot",videoLink)
+
     addVideo("Order SN3","video 7","NVR 41","Stadspark","Stadgenoot",videoLink)
     #addVideo("Order S02","video 4 repeat","NVR9 2","Remijden","Stadgenoot",videoLink)
     return redirect('indexActies')
