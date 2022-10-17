@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+
+<form action="." method="GET">
+  <div class="row form-inline">
+    
+    <div class="col-2">
+      <h3>Camera</h3> 
+    </div>
+
+    <div class="form-group col-2">
+      <input type="text" class="form-control form-control-sm" name="q"  value="{{ query|escape }}" placeholder="Naam">
+    </div>
+
+    <div class="form-group col-1">
+      <button type="submit" class="btn btn-primary btn-sm">Zoek</button>
+    </div>
+    
+    <div class="form-group col-1">
+      <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
+    </div>
+
+    <!---
+    <div class="col-1">
+      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
+    </div>
+  -->
+  </div>
+</form>
+<hr>
+  {% if query %}
+  <table class="table">
+    <thead class="text-primary">
+      <tr>
+        <!-- <th scope="col">#</th> -->
+          <th scope="col">Naam</th>
+          <th scope="col">Locatie</th>
+          <th scope="col">Type</th>
+          <th scope="col">Plaats</th>
+          <th scope="col">Instalatie</th>
+          <th scope="col">Gps</th>
+          <th scope="col">Acties</th>
+      </div>
+      </tr>
+    </thead>
+    {% if results %}
+    <tbody>
+      {% for camera in results %}
+         <th> {{camera.naam}} </th>
+         <th> {{camera.locatie.naam}} </th>
+         <th> {{camera.type}} </th>
+         <th> {{camera.plaats}} </th>
+         <th> {{camera.datum_geplaatst}} </th> 
+         <th> {{camera.gps_locatie}} </th> 
+    
+         <th><a class="btn btn-sm btn-info" href="{% url 'editCamera' camera.id %}">Edit</a></th>
+         <th><a class="btn btn-sm btn-danger" href="{% url 'deleteCamera' camera.id %}">Delete</a></th>
+      </tbody>
+     {% endfor %}
+    </table>
+    {% else %}
+      <p>Niks gevonden</p>
+    {% endif %}
+  {% endif %}
+{% endblock %}
