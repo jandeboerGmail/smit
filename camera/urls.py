@@ -67,6 +67,7 @@ urlpatterns = [
     path('allVideo/',views.allVideo,name='allVideo'),
     path('zNaamVideo/',views.zNaamVideo,name='zNaamVideo'),
     path('zOrderVideo/',views.zOrderVideo,name='zOrderVideo'),
+    path('zCameraVideo/',views.zCameraVideo,name='zCameraVideo'),
     path('exportVideo/',views.exportVideo,name='exportVideo'),
     path('createVideo/',views.createVideo,name='createVideo'),
     path('editVideo/<int:pk>',views.editVideo,name='editVideo'),

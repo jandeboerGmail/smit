@@ -986,6 +986,24 @@ def zOrderVideo (request):
         video_dict = {}
     return render(request,'../templates/zOrderVideo.html', video_dict )
 
+@login_required
+def zCameraVideo (request):
+    query = request.GET.get('q','')
+    print ("query: ", query)
+    if query:
+        print ("querry: ", query)
+        qset = (Q(camera__naam__icontains=query))    
+        #qset = (Q(locatie__naam__icontains=query))   
+        #qset = (Q(naam__icontains=query))  
+        #video_list = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam)   
+        video_list = Video.objects.filter(qset).distinct().order_by('naam')
+        aantal = video_list.count
+        print ("aantal: ",aantal)
+        video_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
+    else:
+        video_dict = {}
+    return render(request,'../templates/zCameraVideo.html', video_dict )
+
 # Export
 @login_required
 def exportVideo(request):
