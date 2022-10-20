@@ -28,8 +28,8 @@
   <thead class="text-primary">
     <tr>
       <!-- <th scope="col">#</th> -->
-        <th scope="col">Naam</th>
         <th scope="col">Locatie</th>
+        <th scope="col">Naam</th>
         <th scope="col">Type</th>
         <th scope="col">Plaats</th>
         <th scope="col">Instalatie</th>
@@ -41,8 +41,8 @@
   {% if results %}
   <tbody>
     {% for camera in results %}
-       <th> {{camera.naam}} </th>
        <th> {{camera.locatie.naam}} </th>
+       <th> {{camera.naam}} </th>
        <th> {{camera.type}} </th>
        <th> {{camera.plaats}} </th>
        <th> {{camera.datum_geplaatst}} </th> 

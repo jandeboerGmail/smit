@@ -257,6 +257,7 @@ def extractDBitems(filename):
     # extract bedrijf
     bedrijf = substring_after(inFile, inpath)
     bedrijf = substring_before(bedrijf, "/")
+    bedrijf = bedrijf.replace("\ ", " ")
     print ("Bedrijf: ", bedrijf)
                         
     #extract locatie
@@ -314,7 +315,7 @@ def ConvertingVideos():
     #videoPath='/home/jan/video/'
     videoPath=getVideoLocation()
     
-    message = "Looking for New Videos in " + videoPath
+    message = "Converting Looking for New Videos in " + videoPath
     addLogEntry(" ", message)
     setRunningStatus(True)
 
@@ -382,7 +383,7 @@ def ConvertingVideos():
 
                         startTime = time.time()
                         result = os.system(command)
-                        #ßresult = 0
+                        #result = 0
 
                         #print('Result :',result)
                         if result ==  0: # 256 error
@@ -406,6 +407,8 @@ def ConvertingVideos():
                             #addVideoEntry(request,"default",outFileName,"vb9")
                         else:
                             addLogEntry(request,"ERROR : Not Converted")
+    message = "Converting Ended "
+    addLogEntry(" ", message)
     setRunningStatus(False)
     return
                    
@@ -847,7 +850,7 @@ def deleteLocatie(request,pk):
 # --- Camera -----------------
 @login_required
 def allCamera(request):
-    camera_list = Camera.objects.order_by('naam','locatie')
+    camera_list = Camera.objects.order_by('locatie','naam')
     aantal =  camera_list.count
     camera_dict  = {'results' : camera_list , 'aantal' : aantal}
     return render(request,'../templates/displayCamera.html',camera_dict )
@@ -978,9 +981,9 @@ def zNaamVideo (request):
 @login_required
 def zOrderVideo (request):
     query = request.GET.get('q','')
-    print ("query: ", query)
+    #print ("query: ", query)
     if query:
-        print ("querry: ", query)
+        #print ("querry: ", query)
         qset = (Q(ordernr__icontains=query))       
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
         aantal = video_list.count
@@ -1007,6 +1010,18 @@ def zCameraVideo (request):
     else:
         video_dict = {}
     return render(request,'../templates/zCameraVideo.html', video_dict )
+
+@login_required
+def zLocatieVideo (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(video__camera__locatie__naam__icontains=query))       
+        video_list = Video.objects.filter(qset).distinct().order_by('locatie','naam')
+        aantal = video_list.count
+        camera_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
+    else:
+        camera_dict = {}
+    return render(request,'../templates/zLocatieVideo.html', camera_dict ) 
 
 # Export
 @login_required
