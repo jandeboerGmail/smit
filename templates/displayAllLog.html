@@ -2,6 +2,21 @@
 {% block head_title %} 
 {% endblock %}
 {% block content %}
+<style>
+  .main {
+      text-align:center; 
+  }
+  .GFG {
+      color:#009900;
+      font-size:50px;
+      font-weight:bold;
+  }
+  .geeks {
+      font-style:bold;
+      font-size:20px;
+  }
+</style>
+
 <div class="container-fluid">
   <div class="row align-items-end">
     
@@ -34,13 +49,16 @@
     </tr>
   </thead>
   {% if results %}
+  <div class ="geeks">
   <tbody>
     {% for log in results %}
        <th> {{log.ordernr}} </th>
        <th> {{log.message}} </th>
        <th> {{log.datum_inserted}} </th>
     </tbody> 
+    
    {% endfor %}
+  </div>
   </table>
   {% else %}
     <strong>Er zijn geen entries</strong>

@@ -9,6 +9,7 @@ from django import forms
 from operator import eq
 #from itertools import chain 
 from django.utils import timezone
+
 import os,time,shutil
 
 from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video , Log, Parameter
@@ -400,9 +401,9 @@ def ConvertingVideos():
 
                             message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
                             addLogEntry(request,message)
-                            #print("Converted ", inFile )
+                        
                             # removeFile(inFileName) # uncommend for production
-
+                            extractDBitems(outFileName)
                             #(ordernr,naam,camera,locatie,bedrijf,video_link)
                             #addVideoEntry(request,"default",outFileName,"vb9")
                         else:
