@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Oct 21, 2022 at 03:15 PM
+-- Generation Time: Oct 24, 2022 at 09:35 AM
 -- Server version: 10.6.7-MariaDB-2ubuntu1.1
 -- PHP Version: 8.1.2
 
@@ -144,7 +144,7 @@ CREATE TABLE `auth_user` (
 --
 
 INSERT INTO `auth_user` (`id`, `password`, `last_login`, `is_superuser`, `username`, `first_name`, `last_name`, `email`, `is_staff`, `is_active`, `date_joined`) VALUES
-(1, 'pbkdf2_sha256$390000$pSKdyTt50QpZoSZJRA5asI$4hgLSdySnrUDW9B5lWCSzsuszAJ0HpXFO5B4j0azHqk=', '2022-10-21 12:33:28.073945', 1, 'django', '', '', 'jandeboer@gmail.com', 1, 1, '2022-09-20 17:52:09.829279');
+(1, 'pbkdf2_sha256$390000$pSKdyTt50QpZoSZJRA5asI$4hgLSdySnrUDW9B5lWCSzsuszAJ0HpXFO5B4j0azHqk=', '2022-10-23 11:04:57.081742', 1, 'django', '', '', 'jandeboer@gmail.com', 1, 1, '2022-09-20 17:52:09.829279');
 
 -- --------------------------------------------------------
 
@@ -196,22 +196,20 @@ CREATE TABLE `camera_adress` (
 INSERT INTO `camera_adress` (`id`, `naam`, `straat`, `postcode`, `plaats`, `land`, `memo`, `slug`, `datum_inserted`, `datum_updated`) VALUES
 (1, 'Stadgenoot', 'Stadsplein 1', '1000AA', 'Amsterdam', 'Nederland', '', 'stadgenoot', '2022-09-21 08:35:37.547255', '2022-09-21 08:35:37.548133'),
 (2, 'Smit Electrotechniek', 'Bellstraat 3', '1131JV', 'Volendam', 'Nederland', '', 'smit-electrotechniek', '2022-09-21 09:00:02.426444', '2022-09-21 09:00:02.427923'),
-(3, 'Remijden', 'Remijden 1', '1000AA', 'Amsterdam', 'Nederland', '', 'remijden', '2022-09-23 12:35:17.672524', '2022-09-23 12:45:53.466989'),
 (4, 'Brandweer Volendam', 'Brandstraat 1', '1131AD', 'Volendam', 'Nederland', '', 'brandweer-volendam', '2022-09-23 12:49:56.078694', '2022-09-23 12:55:41.828225'),
 (5, 'Politie Purmerend', 'Snelweg 5', '1441AD', 'Purmerend', 'Nederland', '', 'politie-purmerend', '2022-09-23 12:52:14.644682', '2022-09-23 12:52:14.645584'),
 (6, 'Zuidgorsstraat', 'Zuidgorsstraat 9', '1025AW', 'Amsterdam', 'Nederland', '', 'zuidgorsstraat', '2022-09-23 12:54:49.946164', '2022-09-23 12:54:49.947149'),
 (7, 'Berkhout', 'Kerkebuurt 167', '1647ME', 'Berkhout', 'Nederland', '', 'berkhout', '2022-09-23 13:23:45.142609', '2022-09-23 13:35:44.216391'),
 (14, 'Default', 'Straatnaam 1', '0000AA', 'Plaats', 'Nederland', '', 'default', '2022-10-06 12:14:13.964973', '2022-10-06 12:14:13.965054'),
-(19, 'Dorpsplein', 'Brink 1', '1234AA', 'Ons Dorp', 'Nederland', '', 'dorpsplein', '2022-10-06 15:03:05.665315', '2022-10-06 17:33:20.856627'),
+(19, 'Dorpsplein', 'Plein  1', '1234AA', 'Berkhout', 'Nederland', '', 'dorpsplein', '2022-10-06 15:03:05.665315', '2022-10-24 06:48:33.373871'),
 (22, 'Stadspark', 'Stadspark 1', '0000AA', 'Den Haag', 'Nederland', '', 'stadspark', '2022-10-17 13:10:17.136692', '2022-10-18 11:47:30.479513'),
-(25, 'Dorpstraat 1', 'Straatnaam 1', '0000AA', 'Ons Dorp', 'Nederland', '', 'dorpstraat-1', '2022-10-17 13:42:51.766215', '2022-10-18 11:47:59.698956'),
+(25, 'Dorpstraat', 'Brink 1', '2100AA', 'Berkhout', 'Nederland', '', 'dorpstraat', '2022-10-17 13:42:51.766215', '2022-10-24 06:49:05.919656'),
 (27, 'Kerkebuurt', 'Straatnaam 1', '1647ME', 'Berkhout', 'Nederland', '', 'kerkebuurt', '2022-10-17 16:07:57.866982', '2022-10-18 11:48:54.145614'),
-(31, 'wasborn 36', 'Straatnaam 1', '0000AA', 'Plaats', 'Nederland', '', 'wasborn-36', '2022-10-18 11:57:38.339272', '2022-10-18 11:57:38.339350'),
-(32, 'Remijden 1', 'Straatnaam 1', '0000AA', 'Plaats', 'Nederland', '', 'remijden-1', '2022-10-18 11:57:38.496371', '2022-10-18 11:57:38.496441'),
-(35, 'Thuis', 'Straatnaam 1', '0000AA', 'Plaats', 'Nederland', '', 'thuis', '2022-10-20 14:50:44.423227', '2022-10-20 14:50:44.423313'),
-(37, 'Abraham Kuyperstraat 1-73', 'Straatnaam 1', '0000AA', 'Plaats', 'Nederland', '', 'abraham-kuyperstraat-1-73', '2022-10-20 14:50:45.181941', '2022-10-20 14:50:45.182018'),
-(39, 'zuidgorsstraat 9', 'Straatnaam 1', '0000AA', 'Plaats', 'Nederland', '', 'zuidgorsstraat-9', '2022-10-20 15:41:51.261887', '2022-10-20 15:41:51.261961'),
-(40, '', 'Straatnaam 1', '0000AA', 'Plaats', 'Nederland', '', '', '2022-10-20 15:41:51.525392', '2022-10-20 15:41:51.525454');
+(31, 'Wasborn', 'wasborn 36', '1025CB', 'Amsterdam', 'Nederland', '', 'wasborn', '2022-10-18 11:57:38.339272', '2022-10-24 07:04:00.389398'),
+(32, 'Remijden', 'Remijden 22', '1068XB', 'Amsterddam', 'Nederland', '', 'remijden', '2022-10-18 11:57:38.496371', '2022-10-24 07:11:29.865937'),
+(35, 'Thuis', 'Kerkebuurt 167', '1647ME', 'Berkhout', 'Nederland', '', 'thuis', '2022-10-20 14:50:44.423227', '2022-10-24 07:12:46.082742'),
+(37, 'Abraham Kuyperstraat', 'Abraham Kuyperstraat 1-73', '1067DH', 'Amsterdam', 'Nederland', '', 'abraham-kuyperstraat', '2022-10-20 14:50:45.181941', '2022-10-24 07:06:23.595017'),
+(43, 'Til garnalen', 'Haven 102', '1131AD', 'Volendam', 'Nederland', '', 'til-garnalen', '2022-10-24 06:52:14.388130', '2022-10-24 06:52:14.389046');
 
 -- --------------------------------------------------------
 
@@ -271,22 +269,12 @@ CREATE TABLE `camera_camera` (
 --
 
 INSERT INTO `camera_camera` (`id`, `naam`, `type`, `gps_locatie`, `image`, `datum_geplaatst`, `memo`, `slug`, `datum_inserted`, `datum_updated`, `locatie_id`, `plaats`) VALUES
-(7, 'nvr 4', 'Dahua 2002', '', '', '2022-10-10 08:39:57.000000', '', 'nvr-4', '2022-10-10 08:39:57.505738', '2022-10-17 15:38:26.939821', 9, 'Fietsenstalling'),
-(14, 'nvr 41', 'Dahau 2002', '', '', '2022-10-17 13:10:17.000000', '', 'nvr-41', '2022-10-17 13:10:17.241871', '2022-10-17 15:39:55.077498', 14, 'Bij de Ingang'),
 (63, 'recorder', 'Videomaster', '', '', '2022-10-17 17:51:13.000000', '', 'recorder', '2022-10-17 17:51:13.224405', '2022-10-18 11:53:40.205184', 31, 'Op het scherm'),
 (71, 'Camera Entree', 'Omega', '', '', '2022-10-18 11:57:38.000000', '', 'camera-entree', '2022-10-18 11:57:38.433338', '2022-10-20 14:44:32.717142', 32, 'Entree'),
 (72, 'cam1_nooduitgang', 'default', '', '', '2022-10-18 11:57:38.000000', '', 'cam1_nooduitgang', '2022-10-18 11:57:38.553373', '2022-10-19 09:50:12.792828', 33, 'Nooduitgang'),
-(73, 'achter', 'default', '', '', '2022-10-18 11:57:38.000000', '', 'achter', '2022-10-18 11:57:38.611361', '2022-10-21 13:01:13.104058', 34, 'Parkeerplaats'),
-(75, 'dahua2', 'default', '', '', '2022-10-18 12:20:08.000000', '', 'dahua2', '2022-10-18 12:20:08.137729', '2022-10-21 12:57:11.752406', 27, 'Buro'),
-(76, 'dahua1', 'default', '', '', '2022-10-18 12:20:08.000000', '', 'dahua1', '2022-10-18 12:20:08.209592', '2022-10-20 14:45:49.951949', 27, 'Werkkamer'),
 (78, 'NVR_ch1_main', 'Dahua 100', '', '', '2022-10-18 12:22:59.000000', '', 'nvr_ch1_main', '2022-10-18 12:22:59.956475', '2022-10-18 12:26:56.796027', 31, 'Werkkamer'),
 (86, 'Remijden 1_ch7', 'Dahua 1000', '', '', '2022-10-19 09:09:36.000000', '', 'remijden-1_ch7', '2022-10-19 09:09:36.034228', '2022-10-20 14:43:10.082501', 33, 'Lift Rechts'),
-(87, 'bunnyfull', 'default', '', '', '2022-10-20 14:50:44.000000', '', 'bunnyfull', '2022-10-20 14:50:44.540736', '2022-10-21 12:45:51.749420', 38, 'Boom'),
-(88, 'bunny', 'default', '', '', '2022-10-20 14:50:44.000000', '', 'bunny', '2022-10-20 14:50:44.615572', '2022-10-21 12:47:09.909931', 38, 'Filmzaal'),
-(89, 'earth', 'default', '', '', '2022-10-20 14:50:44.000000', '', 'earth', '2022-10-20 14:50:44.707119', '2022-10-21 13:02:34.330029', 38, 'Buiten'),
-(90, 'NVR_ch1_main', 'Dahua 200', '', '', '2022-10-20 14:50:44.774378', '', 'nvr_ch1_main', '2022-10-20 14:50:44.774393', '2022-10-20 14:50:44.774507', 38, 'Werkkamer'),
 (92, 'Abraham Kuyperstraat 1-73_ch4', 'default', '', '', '2022-10-20 14:50:45.000000', '', 'abraham-kuyperstraat-1-73_ch4', '2022-10-20 14:50:45.257733', '2022-10-20 15:06:56.076324', 40, 'Garage 2'),
-(97, 'zuidgorsstraat 9_ch1', 'default', '', '', '2022-10-20 15:41:51.000000', '', 'zuidgorsstraat-9_ch1', '2022-10-20 15:41:51.359845', '2022-10-21 13:14:29.553038', 42, 'Voordeur'),
 (98, 'CCTV_ch9_H264', 'default', '', '', '2022-10-20 15:41:51.000000', '', 'cctv_ch9_h264', '2022-10-20 15:41:51.585058', '2022-10-21 08:46:45.719219', 45, 'Voordeur'),
 (99, 'voordeur', 'default', '', '', '2022-10-20 15:41:51.000000', '', 'voordeur', '2022-10-20 15:41:51.699273', '2022-10-21 08:47:35.656352', 45, 'Voordeur'),
 (100, 'auto', 'default', '', '', '2022-10-20 15:41:51.000000', '', 'auto', '2022-10-20 15:41:51.759003', '2022-10-21 08:45:11.527627', 45, 'Parkeerplaats'),
@@ -353,23 +341,13 @@ CREATE TABLE `camera_locatie` (
 --
 
 INSERT INTO `camera_locatie` (`id`, `naam`, `image`, `memo`, `slug`, `datum_inserted`, `datum_updated`, `adres_id`, `bedrijf_id`, `contact_id`) VALUES
-(2, 'Hoogbouw Remijden', '', '', 'hoogbouw-remijden', '2022-09-23 12:44:51.451229', '2022-10-06 18:00:23.377709', 3, 4, 9),
-(3, 'Laagbouw Remijden', '', '', 'laagbouw-remijden', '2022-09-23 12:56:49.669472', '2022-10-06 18:00:58.348866', 3, 1, 4),
-(8, 'Dorpsplein', '', '', 'dorpsplein', '2022-10-06 17:14:35.255324', '2022-10-07 09:35:02.425977', 7, 1, 2),
-(9, 'Remijden', '', '', 'remijden', '2022-10-07 07:04:49.165642', '2022-10-07 09:30:26.563956', 3, 1, 12),
-(14, 'Stadspark', '', '', 'stadspark', '2022-10-17 13:10:17.193564', '2022-10-17 17:38:19.596609', 22, 1, 6),
-(16, 'Dorpstraat 1', '', '', 'dorpstraat-1', '2022-10-17 13:42:51.826537', '2022-10-17 14:29:57.018356', 25, 1, 2),
-(27, 'Dorpstraat 1', '', '', 'dorpstraat-1', '2022-10-17 17:51:12.928543', '2022-10-17 17:51:12.929121', 25, 1, 13),
+(8, 'Dorpsplein', '', '', 'dorpsplein', '2022-10-06 17:14:35.255324', '2022-10-24 07:16:35.127313', 7, 7, 2),
 (31, 'Berkhout', '', '', 'berkhout', '2022-10-18 11:39:31.796227', '2022-10-18 11:39:31.821176', 7, 7, 2),
-(32, 'wasborn 36', '', '', 'wasborn-36', '2022-10-18 11:57:38.377116', '2022-10-18 11:57:38.377253', 31, 1, 13),
-(33, 'Remijden 1', '', '', 'remijden-1', '2022-10-18 11:57:38.535416', '2022-10-18 11:57:38.535544', 32, 1, 13),
-(34, 'Dorpsplein', '', '', 'dorpsplein', '2022-10-18 11:57:38.595515', '2022-10-20 15:02:09.903802', 19, 1, 8),
-(38, 'Kerkebuurt', '', '', 'kerkebuurt', '2022-10-20 14:50:44.490770', '2022-10-20 14:50:44.490919', 27, 7, 13),
-(40, 'Abraham Kuyperstraat 1-73', '', '', 'abraham-kuyperstraat-1-73', '2022-10-20 14:50:45.234588', '2022-10-20 15:01:43.295433', 37, 1, 9),
-(42, 'zuidgorsstraat 9', '', '', 'zuidgorsstraat-9', '2022-10-20 15:41:51.302704', '2022-10-20 15:41:51.302854', 39, 1, 13),
-(43, 'Dorpsplein', '', '', 'dorpsplein', '2022-10-20 15:41:51.431855', '2022-10-20 15:41:51.431996', 19, 1, 13),
-(44, 'Abraham Kuyperstraat 1-73', '', '', 'abraham-kuyperstraat-1-73', '2022-10-20 15:41:51.495418', '2022-10-20 15:41:51.495566', 37, 1, 13),
-(45, 'Smit', '', '', 'smit', '2022-10-20 15:41:51.553030', '2022-10-21 08:43:21.240689', 2, 18, 3);
+(32, 'Wasborn', '', '', 'wasborn', '2022-10-18 11:57:38.377116', '2022-10-24 07:18:52.507783', 31, 1, 12),
+(33, 'Remijden', '', '', 'remijden', '2022-10-18 11:57:38.535416', '2022-10-24 06:59:21.988568', 32, 1, 9),
+(40, 'Abraham Kuyperstraat', '', '', 'abraham-kuyperstraat', '2022-10-20 14:50:45.234588', '2022-10-24 06:56:18.289694', 37, 1, 9),
+(45, 'Smit', '', '', 'smit', '2022-10-20 15:41:51.553030', '2022-10-21 08:43:21.240689', 2, 18, 3),
+(46, 'Dorpsplein', '', '', 'dorpsplein', '2022-10-24 06:43:59.444711', '2022-10-24 07:18:31.425041', 19, 7, 2);
 
 -- --------------------------------------------------------
 
@@ -598,7 +576,19 @@ INSERT INTO `camera_log` (`id`, `ordernr`, `datum_inserted`, `datum_updated`, `m
 (206, 'Order TH02', '2022-10-21 11:41:03.909980', '2022-10-21 11:41:03.910008', 'Converting   /home/jan/video/Thuis/Kerkebuurt/2Convert/Order TH02/NVR_ch1_main_20221021104000_20221021104030.mp4 Size: 13.95541 MB'),
 (207, 'Order TH02', '2022-10-21 11:46:45.115734', '2022-10-21 11:46:45.115771', 'Converted to /home/jan/video/Thuis/Kerkebuurt/Converted/Order TH02/NVR_ch1_main_20221021104000_20221021104030.webm Size: 8.47912 MB Time: 00:05:41'),
 (208, 'Order TH02', '2022-10-21 11:46:45.166105', '2022-10-21 11:46:45.166132', 'WARNING: Default values added for video: NVR_ch1_main_20221021104000_20221021104030 | NVR_ch1_main'),
-(209, ' ', '2022-10-21 11:46:45.178087', '2022-10-21 11:46:45.178115', 'Converting Ended ');
+(209, ' ', '2022-10-21 11:46:45.178087', '2022-10-21 11:46:45.178115', 'Converting Ended '),
+(210, 'Order 002', '2022-10-24 06:43:59.457288', '2022-10-24 06:43:59.457339', 'WARNING: Default values added for locatie: Dorpsplein | Dorpsplein | Thuis | default'),
+(211, 'Order003', '2022-10-24 06:43:59.524098', '2022-10-24 06:43:59.524125', 'WARNING: Default values added for adress: Dorpstraat'),
+(212, 'Order003', '2022-10-24 06:43:59.565606', '2022-10-24 06:43:59.565633', 'WARNING: Default values added for locatie: Dorpstraat | Dorpstraat | Thuis | default'),
+(213, 'Order003', '2022-10-24 06:43:59.590651', '2022-10-24 06:43:59.590677', 'WARNING: Default values added for camera: dahua2 | Dorpstraat'),
+(214, 'Order003', '2022-10-24 06:43:59.665630', '2022-10-24 06:43:59.665657', 'WARNING: Default values added for camera: dahua1 | Dorpstraat'),
+(215, 'Order Abra 001', '2022-10-24 06:43:59.832349', '2022-10-24 06:43:59.832373', 'WARNING: Default values added for locatie: Abraham Kuyperstraat 1-73 | Abraham Kuyperstraat 1-73 | Stadgenoot | default'),
+(216, 'Order Sm001', '2022-10-24 06:43:59.857382', '2022-10-24 06:43:59.857409', 'WARNING: Default values added for adress: '),
+(217, 'Order Sm001', '2022-10-24 06:43:59.890807', '2022-10-24 06:43:59.890833', 'WARNING: Default values added for locatie:  |  | Smit Electrotechniek | default'),
+(218, 'Order Sm001', '2022-10-24 06:43:59.907462', '2022-10-24 06:43:59.907488', 'WARNING: Default values added for camera: CCTV_ch9_H264 | '),
+(219, 'Order 001', '2022-10-24 06:43:59.974178', '2022-10-24 06:43:59.974204', 'WARNING: Default values added for camera: voordeur | '),
+(220, 'Order 001', '2022-10-24 06:44:00.015863', '2022-10-24 06:44:00.015890', 'WARNING: Default values added for camera: auto | '),
+(221, 'Order 001', '2022-10-24 06:44:00.057544', '2022-10-24 06:44:00.057570', 'WARNING: Default values added for camera: brommer | ');
 
 -- --------------------------------------------------------
 
@@ -648,20 +638,10 @@ CREATE TABLE `camera_video` (
 --
 
 INSERT INTO `camera_video` (`id`, `naam`, `opname_van`, `opname_tot`, `video_link`, `codec`, `memo`, `slug`, `datum_inserted`, `datum_updated`, `camera_id`, `ordernr`, `duration`) VALUES
-(31, 'Camera Entree_20190323_232439', '2022-10-18 11:57:38.478946', '2022-10-18 11:57:38.478956', 'Stadgenoot/wasborn 36/Converted/Order Was001/Camera Entree_20190323_232439.webm', 'vb9', '', 'camera-entree_20190323_232439', '2022-10-18 11:57:38.478983', '2022-10-18 11:57:38.479082', 71, 'Order Was001', ''),
+(31, 'Camera Entree_20190323_232439', '2022-10-18 11:57:38.000000', '2022-10-18 11:57:38.000000', 'Stadgenoot/Wasborn 36/Converted/Order Was001/Camera Entree_20190323_232439.webm', 'vb9', '', 'camera-entree_20190323_232439', '2022-10-18 11:57:38.478983', '2022-10-24 07:28:24.780367', 71, 'Order Was001', ''),
 (32, 'cam1_nooduitgang', '2022-10-18 11:57:38.570368', '2022-10-18 11:57:38.570377', 'Stadgenoot/Remijden 1/Converted/Order 001/cam1_nooduitgang.webm', 'vb9', '', 'cam1_nooduitgang', '2022-10-18 11:57:38.570404', '2022-10-18 11:57:38.570494', 72, 'Order 001', ''),
-(33, 'achter', '2022-10-18 11:57:38.628438', '2022-10-18 11:57:38.628445', 'Stadgenoot/Dorpsplein/Converted/Order 002/achter.webm', 'vb9', '', 'achter', '2022-10-18 11:57:38.628466', '2022-10-18 11:57:38.628537', 73, 'Order 002', ''),
-(36, 'dahua1', '2022-10-18 12:20:08.235443', '2022-10-18 12:20:08.235452', 'Stadgenoot/Dorpstraat 1/Converted/Order003/dahua1.webm', 'vb9', '', 'dahua1', '2022-10-18 12:20:08.235479', '2022-10-18 12:20:08.235573', 76, 'Order003', ''),
 (47, 'Remijden 1_ch7_20220620062650_20220620075316', '2022-10-19 09:09:36.052252', '2022-10-19 09:09:36.052263', 'Stadgenoot/Remijden 1/Converted/Order rem 002/Remijden 1_ch7_20220620062650_20220620075316.webm', 'vb9', '', 'remijden-1_ch7_20220620062650_20220620075316', '2022-10-19 09:09:36.052291', '2022-10-19 09:09:36.052394', 86, 'Order rem 002', ''),
-(48, 'bunnyfull', '2022-10-20 14:50:44.000000', '2022-10-20 14:50:44.000000', 'Thuis/Kerkebuurt/Converted/bunnyfull.webm', 'vb9', '', 'bunnyfull', '2022-10-20 14:50:44.583039', '2022-10-21 11:57:57.819957', 87, '01', ''),
-(49, 'bunny', '2022-10-20 14:50:44.632970', '2022-10-20 14:50:44.632980', 'Thuis/Kerkebuurt/Converted/Order 004/bunny.webm', 'vb9', '', 'bunny', '2022-10-20 14:50:44.633009', '2022-10-20 14:50:44.633101', 88, 'Order 004', ''),
-(50, 'earth', '2022-10-20 14:50:44.724670', '2022-10-20 14:50:44.724680', 'Thuis/Kerkebuurt/Converted/Order 004/earth.webm', 'vb9', '', 'earth', '2022-10-20 14:50:44.724708', '2022-10-20 14:50:44.724802', 89, 'Order 004', ''),
-(51, 'NVR_ch1_main_20220926074805_20220926082402', '2022-10-20 14:50:44.791464', '2022-10-20 14:50:44.791474', 'Thuis/Kerkebuurt/Converted/Order K 001/NVR_ch1_main_20220926074805_20220926082402.webm', 'vb9', '', 'nvr_ch1_main_20220926074805_20220926082402', '2022-10-20 14:50:44.791503', '2022-10-20 14:50:44.791600', 90, 'Order K 001', ''),
-(52, 'NVR_ch1_main_20221018102500_20221018102800', '2022-10-20 14:50:44.827182', '2022-10-20 14:50:44.827192', 'Thuis/Kerkebuurt/Converted/Order K 001/NVR_ch1_main_20221018102500_20221018102800.webm', 'vb9', '', 'nvr_ch1_main_20221018102500_20221018102800', '2022-10-20 14:50:44.827221', '2022-10-20 14:50:44.827319', 90, 'Order K 001', ''),
-(53, 'NVR_ch1_main_20221018102400_20221018102500', '2022-10-20 14:50:44.869558', '2022-10-20 14:50:44.869568', 'Thuis/Kerkebuurt/Converted/Order K 001/NVR_ch1_main_20221018102400_20221018102500.webm', 'vb9', '', 'nvr_ch1_main_20221018102400_20221018102500', '2022-10-20 14:50:44.869598', '2022-10-20 14:50:44.869695', 90, 'Order K 001', ''),
 (56, 'Abraham Kuyperstraat 1-73_ch4_20190702174346_20190702175537', '2022-10-20 14:58:49.834362', '2022-10-20 14:58:49.834374', 'Stadgenoot/Abraham Kuyperstraat 1-73/Converted/Order Abra 001/Abraham Kuyperstraat 1-73_ch4_20190702174346_20190702175537.webm', 'vb9', '', 'abraham-kuyperstraat-1-73_ch4_20190702174346_20190702175537', '2022-10-20 14:58:49.834418', '2022-10-20 14:58:49.834838', 92, 'Order Abra 001', ''),
-(61, 'dahua2', '2022-10-20 15:41:51.000000', '2022-10-20 15:41:51.000000', 'Stadgenoot/Dorpstraat 1/Converted/Order003/dahua2.webm', 'vb9', '', 'dahua2', '2022-10-20 15:41:51.085226', '2022-10-21 12:56:01.935128', 75, 'Order003', ''),
-(62, 'zuidgorsstraat 9_ch1_20220405155243_20220405155619', '2022-10-20 15:41:51.402015', '2022-10-20 15:41:51.402025', 'Stadgenoot/zuidgorsstraat 9/Converted/Order Z001/zuidgorsstraat 9_ch1_20220405155243_20220405155619.webm', 'vb9', '', 'zuidgorsstraat-9_ch1_20220405155243_20220405155619', '2022-10-20 15:41:51.402053', '2022-10-20 15:41:51.402153', 97, 'Order Z001', ''),
 (63, 'CCTV_ch9_H264', '2022-10-20 15:41:51.618869', '2022-10-20 15:41:51.618879', 'Smit Electrotechniek/Bellstraat/Converted/Order Sm001/CCTV_ch9_H264.webm', 'vb9', '', 'cctv_ch9_h264', '2022-10-20 15:41:51.618907', '2022-10-20 15:41:51.619000', 98, 'Order Sm001', ''),
 (64, 'voordeur', '2022-10-20 15:41:51.727261', '2022-10-20 15:41:51.727271', 'Smit Electrotechniek/Bellstraat/Converted/Order 001/voordeur.webm', 'vb9', '', 'voordeur', '2022-10-20 15:41:51.727299', '2022-10-20 15:41:51.727392', 99, 'Order 001', ''),
 (65, 'auto', '2022-10-20 15:41:51.777221', '2022-10-20 15:41:51.777230', 'Smit Electrotechniek/Bellstraat/Converted/Order 001/auto.webm', 'vb9', '', 'auto', '2022-10-20 15:41:51.777258', '2022-10-20 15:41:51.777350', 100, 'Order 001', ''),
@@ -792,10 +772,14 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 ('9vbysqt5tg92elmn1m66byxcbj4j9szs', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1olrDM:Xz7wwRU9itn0hsnt_DlIFtV1m5LNi319lQlrCynOsxQ', '2022-11-04 12:33:28.096143'),
 ('aw3wj2rxxjl4vvvoqpe11fhdix6vmpbi', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1okkp6:jtl8gm0QezVfM2uZtzYyrXeTNmcGMf69aWm7XVBv8Z0', '2022-11-01 11:31:52.362839'),
 ('awg4n9w121g0adog0xq3ywn0n4gfei16', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1ognvE:lPZDUzkCb6eJZrN6uxXs2F031ZD5yKpQWyrgU_W1umc', '2022-10-21 14:01:52.019231'),
+('donjfqqa6mg6u8avgnjf42g34q4iy5ng', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1olxUY:xRIiFv50IJ2GYMTRpe4ay5_LVqB4owHRmZsZ9wXzDP0', '2022-11-04 19:15:38.650165'),
 ('dtrw5guqp21reymdq0c15ff5l8mfvhw3', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1olnWL:nN53bQcMWKg-o0Nz6goQGFmBxLDlBzLV2lIxFJKv35Y', '2022-11-04 08:36:49.944374'),
 ('ewynojxsnqqjbbuxb261kajrri1j1s9y', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1obiUf:H2_Fg8dp89Hc7CAor5TKafAF1HEtdiL0eNx7_VxU9B8', '2022-10-07 13:13:25.853991'),
+('fp8unvex2yg9g3nrogfz6qwngtzms903', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1olxbQ:nIc-TcyxJkFHX-MTQLT9i0oYyuDR6AH-C9mZsELjek4', '2022-11-04 19:22:44.829027'),
+('j16kgqogpuqzol60c5ujgenqj3uq1i77', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1olwlH:yQqndTwlEO-t1nKtESzbJdtP7xMh83rJ2zp3K-Ajex4', '2022-11-04 18:28:51.289035'),
 ('jc5q88a6m0k64wq3kpjo5geuapvd5sjh', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1ob13W:ixqGo0j1GWB4APDolJiYZeQr1U6ZbQ6-7wUsUNwSnRA', '2022-10-05 14:50:30.327328'),
 ('jdijonm3r3zqklwbl0alwzs3up5dtql2', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1obilY:n093mBcjJlH26yDeXUxSnuE3Q7yr50c-7kydU0O1nMk', '2022-10-07 13:30:52.002415'),
+('vq4jv0x4d30aowagof91qigf6cv4dm51', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1omYmn:eLXUumZrm3ghLJgfTDRpvRallQ9famf0SVGU6_HmLgU', '2022-11-06 11:04:57.098778'),
 ('ymij39607cpw24tbono4fz846rtqvmzy', '.eJxVjDsOwjAQBe_iGln-Lg4lfc5grXdXOIAcKU4qxN0hUgpo38y8l8q4rTVvXZY8sbooq06_W0F6SNsB37HdZk1zW5ep6F3RB-16nFme18P9O6jY67d2jiH4gOlsAEsBAow2okmuiPUEkihYQJE4sGEWz4mBLAyF2AQv6v0B4H44UQ:1ojnOG:wzUqRqfg_1VjX8ng0EswgFJ_kOhdLrEsHf6iyZ400i4', '2022-10-29 20:04:12.524021');
 
 --
@@ -983,7 +967,7 @@ ALTER TABLE `auth_user_user_permissions`
 -- AUTO_INCREMENT for table `camera_adress`
 --
 ALTER TABLE `camera_adress`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `camera_bedrijf`
@@ -995,7 +979,7 @@ ALTER TABLE `camera_bedrijf`
 -- AUTO_INCREMENT for table `camera_camera`
 --
 ALTER TABLE `camera_camera`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 
 --
 -- AUTO_INCREMENT for table `camera_gebruiker`
@@ -1007,13 +991,13 @@ ALTER TABLE `camera_gebruiker`
 -- AUTO_INCREMENT for table `camera_locatie`
 --
 ALTER TABLE `camera_locatie`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `camera_log`
 --
 ALTER TABLE `camera_log`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=210;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=222;
 
 --
 -- AUTO_INCREMENT for table `camera_parameter`

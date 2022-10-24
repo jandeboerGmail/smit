@@ -570,7 +570,7 @@ def deleteGebruiker(request,pk):
 # --- Adress
 @login_required
 def allAdress(request):
-    adress_list = Adress.objects.order_by('naam')
+    adress_list = Adress.objects.order_by('plaats','naam')
     aantal =  adress_list.count
     adress_dict  = {'adresses' : adress_list , 'aantal' : aantal}
     return render(request,'../templates/displayAdress.html',adress_dict )
@@ -752,7 +752,7 @@ def deleteBedrijf(request,pk):
 @login_required
 def allLocatie(request):
     #Locatie_list = Locatie.objects.order_by('naam')
-    Locatie_list = Locatie.objects.order_by('adres')
+    Locatie_list = Locatie.objects.order_by('bedrijf','adres')
    
     aantal =  Locatie_list.count
     Locatie_dict  = {'results' : Locatie_list , 'aantal' : aantal}
@@ -765,7 +765,7 @@ def zNaamLocatie (request):
     if query:
         qset = (Q(naam__icontains=query))       
         #Locatie_list = Locatie.objects.filter(qset).distinct().order_by('naam')
-        Locatie_list = Locatie.objects.filter(qset).distinct().order_by('adres')
+        Locatie_list = Locatie.objects.filter(qset).distinct().order_by('bedrijf','adres')
         aantal = Locatie_list.count
         Locatie_dict  = {'results' : Locatie_list , 'aantal' : aantal, "query": query}
     else:
@@ -960,7 +960,7 @@ def deleteCamera(request,pk):
 # ---- Video ---------------
 @login_required
 def allVideo(request):
-    video_list = Video.objects.order_by('ordernr','naam')
+    video_list = Video.objects.order_by('camera','ordernr','naam')
     aantal =  video_list.count
     video_dict  = {'results' : video_list , 'aantal' : aantal}
     return render(request,'../templates/displayVideo.html',video_dict )
