@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 #DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 DEBUG = True
 
-ALLOWED_HOSTS = ['192.168.1.11','berkhout.ddns.net']
+ALLOWED_HOSTS = ['192.168.1.11','jupiter','berkhout.ddns.net']
 ALLOWED_HOSTS.extend(
     filter(
         None,
@@ -88,7 +88,7 @@ DATABASES = {
         'NAME': 'smitvideo_dev',
         'USER': 'django',
         'PASSWORD': 'Django2020Pwd!',
-        'HOST': 'localhost',
+        'HOST': '192.168.1.11',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
