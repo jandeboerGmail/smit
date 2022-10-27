@@ -965,6 +965,13 @@ def allVideo(request):
     video_dict  = {'results' : video_list , 'aantal' : aantal}
     return render(request,'../templates/displayVideo.html',video_dict )
 
+@login_required
+def allVideoThuis(request):
+    video_list = Video.objects.filter(video__camera="NVR").distinct().order_by('camera','ordernr','naam')
+    aantal =  video_list.count
+    video_dict  = {'results' : video_list , 'aantal' : aantal}
+    return render(request,'../templates/displayVideo.html',video_dict )
+
 # Zoek
 @login_required
 def zNaamVideo (request):

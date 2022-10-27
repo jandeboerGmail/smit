@@ -20,6 +20,8 @@ font-size: 10px;
 
 .smit-line {
   color: blue;
+  text-align: left; 
+  font-size: 15px;  
 }
 
 .smit-about {
