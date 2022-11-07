@@ -4,6 +4,11 @@ from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 
+#flavicon
+#from django.contrib.staticfiles.storage import staticfiles_storage
+#from django.views.generic.base import RedirectView
+#path('favicon.ico', RedirectView.as_view(url=staticfiles_storage.url('img/favicon.ico'))),
+
 urlpatterns = [
     path('time/',views.current_datetime,name='current_datetime'),
     path('about/',views.about,name='about'),
@@ -46,7 +51,6 @@ urlpatterns = [
     path('editBedrijf/<int:pk>',views.editBedrijf,name='editBedrijf'),
     path('deleteBedrijf/<int:pk>',views.deleteBedrijf,name='deleteBedrijf'),
 
-    
 # Locatie
     path('allLocatie/',views.allLocatie,name='allLocatie'),
     path('zNaamLocatie/',views.zNaamLocatie,name='zNaamLocatie'),
@@ -66,6 +70,7 @@ urlpatterns = [
 
 # Video
     path('allVideo/',views.allVideo,name='allVideo'),
+    path('allVideoThuis/',views.allVideoThuis,name='allVideoThuis'),
     path('zNaamVideo/',views.zNaamVideo,name='zNaamVideo'),
     path('zOrderVideo/',views.zOrderVideo,name='zOrderVideo'),
     path('zCameraVideo/',views.zCameraVideo,name='zCameraVideo'),
@@ -93,4 +98,4 @@ urlpatterns = [
     path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
     path('actieInsertConvertedVideos/',views.actieInsertConvertedVideos,name='actieInsertConvertedVideos'),
 
-]
+] # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

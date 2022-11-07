@@ -11,16 +11,31 @@
   <hr>  
   </div>
 -->
-  <div class="col-4">  
-    
-     <video controls muted src="{% static '/media/' %}{{video.video_link}}" width="640" height="480"> 
+<div class="container">
+  <div class="row justify-content-center fw-bold">
+    <div class="col">
+      <p> {{video.naam}}</p> 
+    </div>
+    <div class="col-4">
+      <p>{{video.camera.naam}}</p> 
+    </div>
+    <div class="col-4">
+      <p>{{video.camera.plaats}}</p> 
+    </div>
+  </div>
+
+  <div class="col">  
+     <video controls autoplay muted src="{% static '/media/' %}{{video.video_link}}" width="1024" height="768"> 
       <p>This is fallback content to display for user agents that do not support the video tag.</p>
      </video>
   </div>
-  <div class="col-4 ">   
+  <div class="col text-primary">   
       <!-- {{video.video_link}} --->
       <h7>Play {% static '/media/' %}{{video.video_link}} </h7>
   </div>
+</div>
+
+  
    <!-- 
   <div class="video-player video ">
     <video

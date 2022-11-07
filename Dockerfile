@@ -1,5 +1,5 @@
 FROM python:3
-#FROM python:3-slim-buster
+#FROM python:3.8-alpine
 
 ENV PYTHONUNBUFFERED=1
 
@@ -22,7 +22,7 @@ RUN chmod +x /scripts/*
 RUN mkdir -p /vol/web/media
 RUN mkdir -p /vol/web/static
 
-#RUN adduser user
+#RUN adduser -D user
 #RUN adduser --disabled-password --no-create-home user
 #RUN chown -R user:user /vol
 
