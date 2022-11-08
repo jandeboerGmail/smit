@@ -107,7 +107,7 @@ class Locatie(models.Model):
         return self.naam
 
 class Camera(models.Model):
-    naam  = models.CharField(max_length=50,blank = False,unique=True)
+    naam  = models.CharField(max_length=50,blank = False)
     locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
     type = models.CharField(max_length=50,blank = False,unique=False)
     plaats = models.CharField(max_length=50,blank = True,unique=False)
@@ -133,7 +133,7 @@ class Camera(models.Model):
         return self.naam
      
 class Video(models.Model):
-    naam = models.CharField(max_length=100,blank = False,unique=True) #format bedrijflocatieddmmyyhhmmss  (utc)
+    naam = models.CharField(max_length=100,blank = False) #format bedrijflocatieddmmyyhhmmss  (utc)
     ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
     opname_van = models.DateTimeField(default=timezone.now, blank=False)
     opname_tot = models.DateTimeField(default=timezone.now, blank=False)

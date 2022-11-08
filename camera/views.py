@@ -9,6 +9,7 @@ from django import forms
 from operator import eq
 #from itertools import chain 
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 import os,time,shutil
 
@@ -129,14 +130,14 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
     aLocatie  = addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam)
-    #print ('aLocatie: ', aLocatie.naam)
+    print ('aLocatie: ', aLocatie.naam)
 
-    #print("Finding aCamera: ",cameraNaam,"-", aLocatie.naam)
-    #aCamera    = Camera.objects.get(naam=cameraNaam,locatie__naam=aLocatie.naam)
+    print("Finding aCamera: ",cameraNaam,"-", aLocatie.naam)
+    #aCameras    = Camera.objects.get(naam=cameraNaam,locatie__naam=aLocatie.naam)
     aCameras    = Camera.objects.filter(naam=cameraNaam,locatie__naam=aLocatie.naam)
 
     if not aCameras:
-        #print("not found aCamera: ",cameraNaam, locatieNaam)
+        print("not found aCamera: ",cameraNaam, aLocatie.naam)
         aCamera = Camera()
         aCamera.naam      = cameraNaam
         aCamera.locatie   = aLocatie
@@ -149,24 +150,24 @@ def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaa
         addLogEntry(orderNr,message)
     else:
         aCamera = aCameras[0]
-        #print("Found aCamera: ", aCamera.naam  , aCamera.locatie)
+        print("Found aCamera: ", aCamera.naam, aLocatie.naam)
     return aCamera 
 
 #Video
 def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink):
     
-    #print("---------- addVideo -------------")
+    print("---------- addVideo -------------")
     aAdress = addAdress(orderNr,locatieNaam)
-    #print ("Adress: ",aAdress.naam)
+    print ("Adress: ",aAdress.naam)
 
     aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,aAdress.naam,"default")
-    #print ("Camera: ",aCamera.naam)
+    print ("Camera: ",aCamera.naam)
 
     #aVideo   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
     aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam)
-    
+
     if not aVideos:
-        #print("not found aVideo;  ",videoNaam, aCamera.naam)
+        print("not found aVideo;  ",videoNaam, aCamera.naam)
         aVideo = Video()
         aVideo.naam         = videoNaam
         aVideo.camera       = aCamera
@@ -181,7 +182,7 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink):
         addLogEntry(orderNr,message)
     else:
         aVideo = aVideos[0]
-        #print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
+        print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
 
     #print ("Video: ",aVideo.naam)
     return aVideo
@@ -241,31 +242,31 @@ def extractDBitems(filename):
     inpath=getVideoLocation()
     print("extractDBitems")
     print("filename: ",filename)
-    print("Inpath: ",inpath)
+    #print("Inpath: ",inpath)
 
     inFile = filename.replace(" ", "\ ")
     #extract videoLink
     video_link = substring_after(inFile,inpath)
     video_link = video_link.replace("\ ", " ")
-    print("video_link: ", video_link) 
+    #print("video_link: ", video_link) 
 
     #extract ordernr
     ordernr = substring_after(inFile,"Converted/")
     ordernr = substring_before(ordernr,'/')
     ordernr = ordernr.replace("\ ", " ")
-    print('ordernr: ',ordernr)
+    #print('ordernr: ',ordernr)
     
     # extract bedrijf
     bedrijf = substring_after(inFile, inpath)
     bedrijf = substring_before(bedrijf, "/")
     bedrijf = bedrijf.replace("\ ", " ")
-    print ("Bedrijf: ", bedrijf)
+    #print ("Bedrijf: ", bedrijf)
                         
     #extract locatie
     locatie = substring_after(inFile, bedrijf + '/')
     locatie = substring_before(locatie, "/")
     locatie = locatie.replace("\ ", " ")
-    print ("Locatie: ", locatie)
+    #print ("Locatie: ", locatie)
                     
     #extract Naaam
     s = filename
@@ -273,11 +274,11 @@ def extractDBitems(filename):
         s = substring_after(s, "/")
         #print ("s" ,s)
         naam = substring_before(s, ".webm")
-    print ("Naam:    ",naam)
+    #print ("Naam:    ",naam)
 
     #extract camera
     camera= substring_before(naam, "_2")
-    print ("Camera:  ", camera)
+    #print ("Camera:  ", camera)
 
     # extract recorded from till
     recTill = naam
@@ -313,7 +314,7 @@ def insertConvertedVideos():
 
 def ConvertingVideos():
     print('Conversion')
-    #videoPath='/home/jan/video/'
+   
     videoPath=getVideoLocation()
     
     message = "Converting Looking for New Videos in " + videoPath
@@ -572,7 +573,13 @@ def deleteGebruiker(request,pk):
 def allAdress(request):
     adress_list = Adress.objects.order_by('plaats','naam')
     aantal =  adress_list.count
-    adress_dict  = {'adresses' : adress_list , 'aantal' : aantal}
+
+
+    paginator = Paginator(adress_list,12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    adress_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'../templates/displayAdress.html',adress_dict )
 
 @login_required
@@ -962,21 +969,31 @@ def deleteCamera(request,pk):
 def allVideo(request):
     video_list = Video.objects.order_by('camera','ordernr','naam')
     aantal =  video_list.count
-    video_dict  = {'results' : video_list , 'aantal' : aantal}
+
+    paginator = Paginator(video_list,10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'../templates/displayVideo.html',video_dict )
 
 @login_required
 def allVideoThuis(request):
     video_list = Video.objects.filter(video__camera="NVR").distinct().order_by('camera','ordernr','naam')
     aantal =  video_list.count
-    video_dict  = {'results' : video_list , 'aantal' : aantal}
+
+    paginator = Paginator(video_list,10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'../templates/displayVideo.html',video_dict )
 
 # Zoek
 @login_required
 def zNaamVideo (request):
     query = request.GET.get('q','')
-    print ("query: ", query)
+    #print ("query: ", query)
     if query:
         qset = (Q(naam__icontains=query))       
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
@@ -1004,7 +1021,7 @@ def zOrderVideo (request):
 @login_required
 def zCameraVideo (request):
     query = request.GET.get('q','')
-    print ("query: ", query)
+    #print ("query: ", query)
     if query:
         print ("querry: ", query)
         qset = (Q(camera__naam__icontains=query))    
@@ -1157,8 +1174,13 @@ def zoekVideo(request):
 def allLog(request):
     log_list = Log.objects.order_by('-id')
     aantal =  log_list.count
-    video_dict  = {'results' : log_list , 'aantal' : aantal}
-    return render(request,'../templates/displayAllLog.html',video_dict )
+
+    paginator = Paginator(log_list,20)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    log_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    return render(request,'../templates/displayAllLog.html',log_dict )
 
 # Zoek
 @login_required
@@ -1169,10 +1191,10 @@ def zOrderLog (request):
      
         log_list = Log.objects.filter(qset).distinct().order_by('id')
         aantal = log_list.count
-        video_dict  = {'results' : log_list , 'aantal' : aantal, "query": query}
+        log_dict  = {'results' : log_list , 'aantal' : aantal, "query": query}
     else:
-        video_dict = {}
-    return render(request,'../templates/zOrderLog.html', video_dict )
+        log_dict = {}
+    return render(request,'../templates/zOrderLog.html', log_dict )
 
 # Export
 @login_required
