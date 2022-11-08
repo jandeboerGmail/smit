@@ -25,8 +25,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = bool(int(os.environ.get('DEBUG', 0)))
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+#DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.1.11','jupiter','berkhout.ddns.net','192.168.2.62','portal','sgportal','sgportal.smitelektrotechniek.nl']
 ALLOWED_HOSTS.extend(
@@ -129,11 +129,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 #develop 
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+#MEDIA_ROOT = '/home/jan/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+STATIC_ROOT = os.path.join(BASE_DIR,'staticfiles')
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+
 
 #STATICFILES_DIRS = (
-#    os.path.join(BASE_DIR,'static'),
+ #   os.path.join(BASE_DIR,'static'),
 #)

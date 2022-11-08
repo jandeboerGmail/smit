@@ -6,6 +6,7 @@ services:
       context: .
     volumes:
       - static_data:/vol/web
+      - /home/jan/media/:/code/camera/static/media
     environment:
       - SECRET_KEY=samplesecret123
       - ALLOWED_HOSTS=192.168.1.10,192.168.1.11,192.168.2.62,127.0.0.1,localhost,sgportal,sgportal.smitelectra.nl
@@ -17,7 +18,7 @@ services:
     volumes:
       - static_data:/vol/static
     ports:
-      - "9080:9080"
+      - "8080:8080"
     depends_on:
       - app
 
