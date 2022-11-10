@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+<h2 class='container'>Service Order</h2>
+<hr>
+<ul>
+  <div class="nav-index">
+      <a class="nav-index" href="/camera/allOrder">Alle Orders</a>
+  </div>
+
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/zNrOrder">Zoek op Service order nummer</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/zContactOrder">Zoek op Gebruiker</a>
+  </div>
+  <hr>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
+  </div>
+  <hr>
+</ul>
+{% endblock %}
