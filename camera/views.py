@@ -9,18 +9,26 @@ from django import forms
 from operator import eq
 #from itertools import chain 
 from django.utils import timezone
+from datetime import datetime
+
 from django.core.paginator import Paginator
 
 import os,time,shutil,re
 
-from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video , Log, Parameter
-from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, VideoForm
+from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video ,ServiceOrder, Log, Parameter
+from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm
 #from camera.process import *
 
-import datetime
+# import datetime
 import locale
 #import camera.process
 import xlwt
+
+# generic functions
+def validDate(dateIn):
+    #  CCYYMMDDHHmmss
+    date_pattern = "^[1-9][0-9][0-9][0-9][0-2][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]$"
+    return  re.match(date_pattern, dateIn) # Returns Match object
 
 # Log functions
 def addLogEntry(orderNr,message):
@@ -33,6 +41,17 @@ def addLogEntry(orderNr,message):
 # Parameter functions
 def getVideoLocation():
     aParameter =  Parameter.objects.get(id=1)
+    ''' testcode
+    if validDate("20190702174346"):
+        Test = datetime.strptime('20190702174346','%Y%m%d%H%M%S')
+        print("valid")
+    else:
+        print("INVALID")
+    if validDate("2019070217434"):
+        print("valid")
+    else:
+        print("INVALID")
+    '''
     return str(aParameter.videoPath)
 
 def getRunningStatus():
@@ -179,8 +198,10 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
         aVideo.camera       = aCamera
         aVideo.ordernr      = orderNr
         aVideo.video_link   = videoLink
-        #aVideo.opname_van   = fromDate
-        #aVideo.opname_tot   = tillDate
+        if validDate(recFrom):
+            aVideo.opname_van   = datetime.strptime(recFrom, '%Y%m%d%H%M%S')
+        if validDate(recTill):
+            aVideo.opname_tot   = datetime.strptime(recTill, '%Y%m%d%H%M%S') 
         #aVideo.codec        = codec
         aVideo.save()
 
@@ -200,30 +221,6 @@ def addLogEntry(orderNr,message):
     aLog.ordernr = orderNr
     aLog.message = message
     aLog.save()
-    return
-
-def addVideoEntry(ordernr,cameraNaam,fileLocation,codec):
-    s = fileLocation
-    while substring_after(s, "/"):
-            s = substring_after(s, "/")
-            #print ("s" ,s)
-    naam = substring_before(s, ".webm")
-
-    aCamera = Camera.objects.get(naam=cameraNaam)  
-    #print ('Naam', aCamera.naam)
-
-    now = datetime.datetime.now()
-
-    aVideo = Video()
-    aVideo.naam = naam
-    aVideo.ordernr = ordernr
-    #aVideo.opname_van = now
-    #aVideo.opname_tot = now
-    aVideo.camera = aCamera
-    aVideo.video_link= fileLocation
-    aVideo.codec = codec
-    #aVideo. datum_inserted = now
-    aVideo.save()
     return
 
 def removeFile(fileName):
@@ -246,10 +243,10 @@ def substring_before(s, delim):
 
 def extractDBitems(filename):
     inpath=getVideoLocation()
-    print("----------- extractDBitems -----")
+    # print("----------- extractDBitems -----")
    
     inFile = filename.replace(" ", "\ ")
-    print("filename: ",inFile)
+    #print("filename: ",inFile)
     fileItems = re.split("/",inFile)
 
     '''
@@ -263,7 +260,7 @@ def extractDBitems(filename):
     #extract videoLink
     video_link = substring_after(inFile,inpath)
     video_link = video_link.replace("\ ", " ")
-    print("video_link: ", video_link) 
+    #print("video_link: ", video_link) 
 
     ordernr   = fileItems[7].replace("\ ", " ")
     bedrijf   = fileItems[4].replace("\ ", " ")
@@ -304,8 +301,8 @@ def extractDBitems(filename):
     recFrom = substring_after(recFrom,camera + "_")
     recFrom = substring_before(recFrom,"_")
 
-    print ("recFrom: " , recFrom)
-    print ("RecTill: " , recTill)
+    #print ("recFrom: " , recFrom)
+    #print ("RecTill: " , recTill)
     #print ("Codec:    vb9\n\n")
 
     addVideo(ordernr,naam,camera,locatie,bedrijf,video_link,recFrom,recTill)
@@ -419,8 +416,7 @@ def ConvertingVideos():
                         
                             # removeFile(inFileName) # uncommend for production
                             extractDBitems(outFileName)
-                            #(ordernr,naam,camera,locatie,bedrijf,video_link)
-                            #addVideoEntry(request,"default",outFileName,"vb9")
+            
                         else:
                             addLogEntry(request,"ERROR : Not Converted")
     message = "Converting Ended "
@@ -475,6 +471,10 @@ def indexCamera(request):
 @login_required
 def indexVideo(request):
     return render(request,'../templates/indexVideo.html', {} )
+
+@login_required
+def indexOrder(request):
+    return render(request,'../templates/indexOrder.html', {} )
 
 @login_required
 def indexLog(request):
@@ -1182,6 +1182,120 @@ def zoekVideo(request):
     # TODO 
     context  = {}
     return render(request,'todo.html',context )
+
+# -----Orders ---
+@login_required
+def allOrder(request):
+    list = ServiceOrder.objects.order_by('ordernr')
+    aantal =  list.count
+
+    paginator = Paginator(list,10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    return render(request,'../templates/displayOrder.html',dict )
+
+@login_required
+def zNrOrder (request):
+    query = request.GET.get('q','')
+
+    if query:
+        qset = (Q(ordernr__icontains=query))       
+        list = ServiceOrder.objects.filter(qset).distinct().order_by('ordernr')
+        aantal = list.count
+        dict  = {'results' : list , 'aantal' : aantal, "query": query}
+    else:
+        dict = {}
+    return render(request,'../templates/zNrOrder.html', dict )
+
+def zContactOrder (request):
+    query = request.GET.get('q','')
+
+    if query:
+        qset = (Q(gcontact__naam__icontain=query))       
+        list = ServiceOrder.objects.filter(qset).distinct().order_by('ordernr')
+        aantal = list.count
+        dict  = {'results' : list , 'aantal' : aantal, "query": query}
+    else:
+        dict = {}
+    return render(request,'../templates/zContactOrder.html', dict )
+
+# Export
+@login_required
+def exportOrder(request):
+        response = HttpResponse(content_type='application/ms-excel')
+        now = datetime.datetime.now()
+        response['Content-Disposition']  = 'attachment; filename=ServiceOrder' + \
+            now.strftime ("%Y%m%d_%H%M%S") +'.xls'
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('ServiceOrder')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+
+        columns = ['ordernr','bedrijf','contact','conversion_started','conversion_ready','memo']
+
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+
+        font_style = xlwt.XFStyle()
+
+        rows = ServiceOrder.objects.order_by('ordernr').values_list('ordernr','bedrijf','contact','conversion_started','conversion_ready','memo')
+        for row in rows:
+            row_num +=1
+
+            for col_num in range(len(columns)):
+                ws.write(row_num, col_num, str(row[col_num]), font_style)
+
+        wb.save(response)
+        return response
+
+#CRUD
+@login_required
+def createOrder(request):
+    form = OrderForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        form = OrderForm()
+    template_name = 'inputForm.html'
+    context = {'form' : form, 'title': 'Toevoegen Service Order'}
+    return render(request,template_name,context)
+
+@login_required
+def editOrder(request,pk):
+    try :
+        order = ServiceOrder.objects.get(id=pk)
+    except ServiceOrder.DoesNotExist:
+        return redirect('indexOrdr')
+
+    form = OrderForm(request.POST or None,instance = order)
+    # print('Request Method:',request.method)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+        return ( redirect('indexOrder'))
+
+    template_name = 'inputForm.html'
+    context = {'form' : form, 'title': 'Wijzig Service Order'}
+    return render(request,template_name,context)
+
+@login_required
+def deleteOrder(request,pk):
+    try :
+        order = ServiceOrder.objects.get(id=pk)
+    except ServiceOrder.DoesNotExist:
+        return redirect('/camera/indexOrder')
+
+    if request.method == 'POST':
+        #print('Deleting Post:',request.POST)
+        order.delete()
+        return ( redirect('/camera/indexOrder'))
+
+    template_name = 'deleteRecord.html'
+    context = {'item' : order , 'title': 'Verwijder Service Order'}
+    return render(request,template_name,context)
 
 # ---- Log ---------------
 @login_required

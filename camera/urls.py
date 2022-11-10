@@ -19,6 +19,7 @@ urlpatterns = [
     path('indexLocatie',views.indexLocatie,name='indexLocatie'),
     path('indexCamera',views.indexCamera,name='indexCamera'),
     path('indexVideo',views.indexVideo,name='indexVideo'),
+    path('indexOrder',views.indexOrder,name='indexOrder'),
     path('indexLog',views.indexLog,name='indexLog'),
     path('indexActies',views.indexActies,name='indexActies'),
 
@@ -79,12 +80,22 @@ urlpatterns = [
     path('convertVideo/<int:pk>',views.convertVideo,name='convertVideo'),
     path('downloadVideo/<int:pk>',views.downloadVideo,name='downloadVideo'),
 
+# Order
+    path('allOrder/',views.allOrder,name='allOrder'),
+    path('zNrOrder/',views.zNrOrder,name='zNrOrder'),
+    path('zContactOrder/',views.zContactOrder,name='zContactOrder'),
+    
+    path('exportOrder/',views.exportOrder,name='exportOrder'),
+    path('createOrder/',views.createOrder,name='createOrder'),
+    path('editOrder/<int:pk>',views.editOrder,name='editOrder'),
+    path('deleteOrder/<int:pk>',views.deleteOrder,name='deleteOrder'),
+
 # Log
     path('allLog/',views.allLog,name='allLog'),
     path('zOrderLog/',views.zOrderLog,name='zOrderLog'),
     path('exportLog/',views.exportLog,name='exportLog'),
 
-# Akcties
+# Acies
     path('actieDisplayConversionStatus/',views.actieDisplayConversionStatus,name='actieDisplayConversionStatus'),
     path('actieToggleConversionStatus/',views.actieToggleConversionStatus,name='actieToggleConversionStatus'),
     path('actieGetVideoLocation/',views.actieGetVideoLocation,name='actieGetVideoLocation'),

@@ -1,6 +1,6 @@
 from re import L
 from django import forms
-from .models import Adress, Gebruiker, Bedrijf, Locatie, Camera, Video
+from .models import Adress, Gebruiker, Bedrijf, Locatie, Camera, Video, ServiceOrder
 
 #Adress
 class AdressForm(forms.ModelForm):
@@ -97,6 +97,23 @@ class VideoForm(forms.ModelForm):
             'codec': forms.TextInput(attrs={'class': 'form-control'}), 
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
+class OrderForm(forms.ModelForm):
+    class Meta:
+        model = ServiceOrder
+
+        fields = ['ordernr','bedrijf','contact','conversion_started','conversion_ready','keep_original','auto_cleanup','memo']
+        widgets = {
+            'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
+            'bedrijf': forms.Select(attrs={'class': 'form-control'}),
+            'contact': forms.Select(attrs={'class': 'form-control'}),
+            'conversion_started': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'conversion_ready': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'auto_cleanup': forms.CheckboxInput(attrs={'class': 'form-control'}),
+         
+            'memo': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
 
 class ZoekVideoForm(forms.ModelForm):
     class Meta:

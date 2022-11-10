@@ -193,11 +193,13 @@ class Parameter(models.Model):
     def __str__(self): # For Python 2, use __unicode__ too
         return self.videoPath
 
-    class ServiceOrder(models.Model):
+class ServiceOrder(models.Model):
         id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
         ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
         bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
         contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
+        conversion_started =  models.BooleanField(default=False)
+        conversion_ready =  models.BooleanField(default=False)
         keep_original =  models.BooleanField(default=False)
         auto_cleanup =  models.BooleanField(default=False)
         memo = models.TextField(blank = True)
@@ -205,14 +207,14 @@ class Parameter(models.Model):
         datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
         datum_updated = models.DateTimeField(default=timezone.now, blank=False)
 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
-        super(Video, self).save(*args, **kwargs)     
+        def save(self, *args, **kwargs):
+            self.slug = slugify(self.naam)
+            self.datum_updated = timezone.now()
+            super(Video, self).save(*args, **kwargs)     
 
-    class Meta:
-        verbose_name_plural = 'ServiceOrder'
-        ordering = ['id']
+        class Meta:
+            verbose_name_plural = 'ServiceOrder'
+            ordering = ['ordernr']
 
-    def __str__(self): # For Python 2, use __unicode__ too
-        return self.ordernr
+        def __str__(self): # For Python 2, use __unicode__ too
+            return self.ordernr
