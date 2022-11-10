@@ -26,9 +26,9 @@
   <thead class="text-primary" >
     <tr>
       <!-- <th scope="col">#</th> -->
+      <th scope="col">Bedrijf</th>
       <th scope="col">Locatie</th>
       <th scope="col">Adres</th>
-      <th scope="col">Bedrijf</th>
       <th scope="col">Contact</th>
       <th scope="col">Telefoon</th>
       <th scope="col">Acties</th>
@@ -38,9 +38,9 @@
   {% if results %}
   <tbody>
     {% for locatie in results %}
+       <th> {{locatie.bedrijf.naam}} </th>
        <th> {{locatie.naam}} </th>
        <th> {{locatie.adres.naam}} </th>
-       <th> {{locatie.bedrijf.naam}} </th>
        <th> {{locatie.contact.naam}} </th>
        <th> {{locatie.contact.telefoon}} </th>
        <th><a class="btn btn-sm btn-info" href="{% url 'editLocatie' locatie.id %}">Edit</a></th>

@@ -11,7 +11,7 @@ from operator import eq
 from django.utils import timezone
 from django.core.paginator import Paginator
 
-import os,time,shutil
+import os,time,shutil,re
 
 from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video , Log, Parameter
 from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, VideoForm
@@ -52,7 +52,7 @@ def setRunningStatus(status):
 def addAdress(orderNr,naam):
     #print("add Adress: ",naam)
     aAdressen = Adress.objects.filter(naam=naam)
-    if not aAdressen:
+    if not aAdressen and naam:
         aAdress = Adress()
         aAdress.naam = naam
         aAdress.save ()
@@ -68,7 +68,7 @@ def addBedrijf(orderNr,naam):
     aAdress = addAdress(orderNr,naam)
 
     aBedrijven = Bedrijf.objects.filter(naam=naam)
-    if not aBedrijven:
+    if not aBedrijven and naam:
         aBedrijf = Bedrijf()
         aBedrijf.naam = naam
         aBedrijf.adres = aAdress
@@ -85,7 +85,7 @@ def addGebruiker(orderNr,naam):
     aAdress = addAdress(orderNr,naam)
 
     aGebruikers = Gebruiker.objects.filter(naam=naam)
-    if not aGebruikers:
+    if not aGebruikers and naam:
         aGebruiker = Gebruiker()
         aGebruiker.naam = naam
         aGebruiker.adres = aAdress
@@ -111,7 +111,7 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
     #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam)
     aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
 
-    if not aLocaties:
+    if not aLocaties and locatieNaam:
         #print("not found location;  ",locatieNaam,bedrijfNaam)
         aLocatie = Locatie()
         aLocatie.naam    = locatieNaam
@@ -136,7 +136,7 @@ def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaa
     #aCameras    = Camera.objects.get(naam=cameraNaam,locatie__naam=aLocatie.naam)
     aCameras    = Camera.objects.filter(naam=cameraNaam,locatie__naam=aLocatie.naam)
 
-    if not aCameras:
+    if not aCameras and  cameraNaam:
         print("not found aCamera: ",cameraNaam, aLocatie.naam)
         aCamera = Camera()
         aCamera.naam      = cameraNaam
@@ -144,7 +144,7 @@ def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaa
         aCamera.type      = "default"
         aCamera.plaats    = "default"
         aCamera.save()
-        #print('saved aCamera name: ',aCamera.naam)
+        print('add aCamera name: ',aCamera.naam)
 
         message = "WARNING: Default values added for camera: "  + cameraNaam +  " | " + locatieNaam
         addLogEntry(orderNr,message)
@@ -154,9 +154,15 @@ def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaa
     return aCamera 
 
 #Video
-def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink):
+def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recFrom,recTill):
     
     print("---------- addVideo -------------")
+    print("ordernr:    ",orderNr)
+    print("videonaam:  ",videoNaam)
+    print("cameranaam: ",cameraNaam)
+    print("locatienaam: ",locatieNaam)
+    print("bedrijfnaam: ",bedrijfNaam)
+
     aAdress = addAdress(orderNr,locatieNaam)
     print ("Adress: ",aAdress.naam)
 
@@ -240,34 +246,41 @@ def substring_before(s, delim):
 
 def extractDBitems(filename):
     inpath=getVideoLocation()
-    print("extractDBitems")
-    print("filename: ",filename)
-    #print("Inpath: ",inpath)
-
+    print("----------- extractDBitems -----")
+   
     inFile = filename.replace(" ", "\ ")
+    print("filename: ",inFile)
+    fileItems = re.split("/",inFile)
+
+    '''
+    itr = 0
+    #print("Inpath: ",inpath)
+    for item in fileItems:
+        print ("fileItems :",itr,item)
+        itr += 1
+    '''
+    
     #extract videoLink
     video_link = substring_after(inFile,inpath)
     video_link = video_link.replace("\ ", " ")
-    #print("video_link: ", video_link) 
+    print("video_link: ", video_link) 
 
-    #extract ordernr
-    ordernr = substring_after(inFile,"Converted/")
-    ordernr = substring_before(ordernr,'/')
-    ordernr = ordernr.replace("\ ", " ")
-    #print('ordernr: ',ordernr)
-    
-    # extract bedrijf
-    bedrijf = substring_after(inFile, inpath)
-    bedrijf = substring_before(bedrijf, "/")
-    bedrijf = bedrijf.replace("\ ", " ")
-    #print ("Bedrijf: ", bedrijf)
-                        
-    #extract locatie
-    locatie = substring_after(inFile, bedrijf + '/')
-    locatie = substring_before(locatie, "/")
-    locatie = locatie.replace("\ ", " ")
-    #print ("Locatie: ", locatie)
-                    
+    ordernr   = fileItems[7].replace("\ ", " ")
+    bedrijf   = fileItems[4].replace("\ ", " ")
+    locatie   = fileItems[5].replace("\ ", " ")
+    videoNaam = fileItems[8].replace("\ ", " ")
+
+    #extract videonaam
+    naam = substring_before(videoNaam, ".webm")
+ 
+    #extract camera, record, till, from
+    naamItems = re.split("_",videoNaam)
+
+    itr = 0
+    for item in naamItems:
+        print ("naamItems :",itr,item)
+        itr += 1
+
     #extract Naaam
     s = filename
     while substring_after(s, "/"):
@@ -291,10 +304,11 @@ def extractDBitems(filename):
     recFrom = substring_after(recFrom,camera + "_")
     recFrom = substring_before(recFrom,"_")
 
-    #print ("recFrom: " , recFrom)
-    #print ("RecTill: " , recTill)
+    print ("recFrom: " , recFrom)
+    print ("RecTill: " , recTill)
     #print ("Codec:    vb9\n\n")
-    addVideo(ordernr,naam,camera,locatie,bedrijf,video_link)
+
+    addVideo(ordernr,naam,camera,locatie,bedrijf,video_link,recFrom,recTill)
     return
 
 def insertConvertedVideos():

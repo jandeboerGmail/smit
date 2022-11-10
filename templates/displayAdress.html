@@ -22,22 +22,23 @@
   <thead class="text-primary">
     <tr>
       <!-- <th scope="col">#</th> -->
+        <th scope="col">Plaats</th>
         <th scope="col">Naam</th>
         <th scope="col">Straat</th>
         <th scope="col">Postcode</th>
         <th scope="col">Plaats</th>
         <th scope="col">Acties</th>
     </div>
-    </tr>
+    
   </thead>
   {% if page_obj %}
   <tbody>
     {% for adress in page_obj %}
        <!-- <th scope="row">{{bedrijf.id}}</th> -->
+       <th> {{adress.plaats}} </th>
        <th> {{adress.naam}} </th>
        <th> {{adress.straat}} </th> 
        <th> {{adress.postcode}} </th> 
-       <th> {{adress.plaats}} </th>
     
        <th><a class="btn btn-sm btn-info" href="{% url 'editAdress' adress.id %}">Edit</a></th>
        <th><a class="btn btn-sm btn-danger" href="{% url 'deleteAdress' adress.id %}">Delete</a></th>
