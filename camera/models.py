@@ -195,6 +195,7 @@ class Parameter(models.Model):
 
 class ServiceOrder(models.Model):
         id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
+      
         ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
         bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
         contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
@@ -208,9 +209,9 @@ class ServiceOrder(models.Model):
         datum_updated = models.DateTimeField(default=timezone.now, blank=False)
 
         def save(self, *args, **kwargs):
-            self.slug = slugify(self.naam)
+            self.slug = slugify(self.ordernr)
             self.datum_updated = timezone.now()
-            super(Video, self).save(*args, **kwargs)     
+            super(ServiceOrder, self).save(*args, **kwargs)     
 
         class Meta:
             verbose_name_plural = 'ServiceOrder'

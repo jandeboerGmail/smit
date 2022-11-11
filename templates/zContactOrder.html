@@ -30,57 +30,56 @@
   </div>
 </form>
 <hr>
-{% if query %}
+  {% if query %}
   <table class="table">
-  <thead class="text-primary">
-    <tr>
-      <!-- <th scope="col">#</th> -->
+    <thead class="text-primary">
+      <tr>
+        <!-- <th scope="col">#</th> -->
         <th scope="col">OrderNr</th>
         <th scope="col">Bedrijf</th>
         <th scope="col">Contact</th>
-        <th scope="col">Gestart</th>
+        <th scope="col">Geopend</th>
         <th scope="col">Gesloten<th></th>
         <th scope="col">Acties</th>
-    </div>
-    </tr>
-  </thead>
+      </div>
+      </tr>
+    </thead>
+    {% if page_obj %}
+    <tbody">
+      {% for order in page_obj %}
+         <th> {{order.ordernr}} </th>
+         <th> {{order.bedrijf}} </th>
+         <th> {{order.contact}} </th>
+         <th> {{order.conversion_started}} </th>
+         <th> {{order.conversion_ready}} </th>
+     
+         <th><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></th>
+         <th><a class="btn btn-sm btn-danger" href="{% url 'deleteOrder' order.id %}">Delete</a></th>
+      </tbody>  
+    </tbody>
+    {% endfor %}
+   </table>
 
-  {% if page_obj %}
-  <tbody">
-    {% for order in page_obj %}
-       <th> {{order.ordernr}} </th>
-       <th> {{order.bedrijf}} </th>
-       <th> {{order.conversion_started} </th>
-       <th> {{order.conversion_ready}} </th>
-       <th> {{order.contact}} </th>
-       <th><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></th>
-       <th><a class="btn btn-sm btn-danger" href="{% url 'deleteOrder' order.id %}">Delete</a></th>
-    </tbody>  
-   {% endfor %}
-  </div>
- </table>
-</div>
-
-<div class="pagination">
+   <div class="pagination">
     <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; eerste</a>
-            <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
-        {% endif %}
+      {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; eerste</a>
+        <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
+      {% endif %}
 
-        <span class="current">
-            Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
-        </span>
+    <span class="current">
+        Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
+    </span>
 
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">volgende</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
-        {% endif %}
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">volgende</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
+    {% endif %}
     </span>
   </div>
-  {% else %}
-    <strong>Er zijn geen entries</strong>
-  {% endif %}
 
- </div>
+   {% else %}
+     <p>Niks gevonden</p>
+   {% endif %}
+ {% endif %}
 {% endblock %}

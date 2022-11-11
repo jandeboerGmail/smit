@@ -107,10 +107,12 @@ class OrderForm(forms.ModelForm):
             'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
             'contact': forms.Select(attrs={'class': 'form-control'}),
+            '''
             'conversion_started': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'conversion_ready': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'conversion_ready': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'auto_cleanup': forms.CheckboxInput(attrs={'class': 'form-control'}),
-         
+            '''
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
 

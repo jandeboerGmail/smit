@@ -43,9 +43,10 @@
     {% for order in page_obj %}
        <th> {{order.ordernr}} </th>
        <th> {{order.bedrijf}} </th>
-       <th> {{order.conversion_started} </th>
-       <th> {{order.conversion_ready}} </th>
        <th> {{order.contact}} </th>
+       <th> {{order.conversion_started}} </th>
+       <th> {{order.conversion_ready}} </th>
+   
        <th><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></th>
        <th><a class="btn btn-sm btn-danger" href="{% url 'deleteOrder' order.id %}">Delete</a></th>
     </tbody>  

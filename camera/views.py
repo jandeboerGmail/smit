@@ -1204,7 +1204,12 @@ def zNrOrder (request):
         qset = (Q(ordernr__icontains=query))       
         list = ServiceOrder.objects.filter(qset).distinct().order_by('ordernr')
         aantal = list.count
-        dict  = {'results' : list , 'aantal' : aantal, "query": query}
+
+        paginator = Paginator(list,10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         dict = {}
     return render(request,'../templates/zNrOrder.html', dict )
@@ -1213,10 +1218,15 @@ def zContactOrder (request):
     query = request.GET.get('q','')
 
     if query:
-        qset = (Q(gcontact__naam__icontain=query))       
+        qset = (Q(contact__naam__contains=query))       
         list = ServiceOrder.objects.filter(qset).distinct().order_by('ordernr')
         aantal = list.count
-        dict  = {'results' : list , 'aantal' : aantal, "query": query}
+
+        paginator = Paginator(list,10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         dict = {}
     return render(request,'../templates/zContactOrder.html', dict )
