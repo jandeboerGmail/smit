@@ -30,7 +30,7 @@
 
   </div>
 </form>
-<hr>
+
 {% if query %}
   <table class="table">
     <thead class="text-primary" >
@@ -45,9 +45,9 @@
         <th scope="col">Acties</th>
       </tr>
     </thead>
-    {% if results %}
+    {% if page_obj %}
     <tbody>
-      {% for video in results %}
+      {% for video in page_obj %}
          <th> {{video.naam}} </th>
          <th> {{video.ordernr}} </th>
          <th> {{video.camera.naam}} </th>
@@ -63,6 +63,25 @@
       </tbody> 
      {% endfor %}
     </table>
+
+    <div class="pagination">
+      <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page=1">&laquo; eerste</a>
+              <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
+          {% endif %}
+  
+          <span class="current">
+              Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
+          </span>
+  
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">volgende</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
+          {% endif %}
+      </span>
+    </div>
+
     {% else %}
       <strong>Er zijn geen entries</strong>
     {% endif %}

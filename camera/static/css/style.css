@@ -7,9 +7,9 @@ h1, h2, h3 {
   text-align: center;
 }
 
-h2 {
-  color: #0d6efd;
-  text-align: center;
+.smit-h2 {
+  color: blue;
+  text-align: left;
 }
 
 h7 {
@@ -18,14 +18,19 @@ text-align: center;
 font-size: 10px;  
 }
 
+.smit-header {
+  color: blue;
+  text-align: left; 
+  font-size: 13px;  
+}
 .smit-line {
   color: blue;
   text-align: left; 
-  font-size: 15px;  
+  font-size: 12px;  
 }
 
 .smit-about {
-  color: green;
+  color: blue;
   font-size: 30px;  
   font-weight: bolder;
   text-align: center; 
@@ -37,13 +42,6 @@ font-size: 10px;
 }
 
 .smit-log {
-  color: green;
-  text-align: left;
-  font-size: 10px;  
-}
-
-.smit-videos {
-  color: green;
   text-align: left;
   font-size: 12px;  
 }

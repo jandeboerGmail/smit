@@ -2,32 +2,22 @@
 {% block head_title %} 
 {% endblock %}
 {% block content %}
-<div class="container">
-  <div class="row align-items-end text-primary">
-    <div class="col-9">
-      <h2>Camera</h2> 
-    </div>
+<div class="container-fluid">
+  <div class="row align-items-end">
+      <h2 class="col-10 smit-h2">Camera</h2> 
    
-    <div class="col-1">
-      <a class="btn btn-sm btn-dark" href="{% url 'exportCamera' %}">Export </a>
-    </div>
+      <div class="col-1">
+        <a class="btn btn-sm btn-dark" href="{% url 'exportCamera' %}">Export </a>
+      </div>
 
-    <!--
-    <div class="col-1">
-    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
+     <div class="col-1 smit-h2">
+       {{aantal}} 
     </div>
-    -->
+ </div>
 
-  <div class="col-1">
-    <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
-  </div>
-  </div>
-</div>
-<hr>
-<table class="table">
-  <thead class="text-primary smit-line">
-    <tr>
-      <!-- <th scope="col">#</th> -->
+  <table class="table table-hover table-sm">
+    <thead class="smit-header">
+     <tr>
         <th scope="col">Locatie</th>
         <th scope="col">Naam</th>
         <th scope="col">Type</th>
@@ -35,25 +25,45 @@
         <th scope="col">Instalatie</th>
         <th scope="col">Gps</th>
         <th scope="col">Acties</th>
-    </div>
-    </tr>
-  </thead>
-  {% if results %}
+     </tr>
+   </thead>
+
+  {% if page_obj %}
   <tbody>
-    {% for camera in results %}
-       <th> {{camera.locatie.naam}} </th>
-       <th> {{camera.naam}} </th>
-       <th> {{camera.type}} </th>
-       <th> {{camera.plaats}} </th>
-       <th> {{camera.datum_geplaatst}} </th> 
-       <th> {{camera.gps_locatie}} </th> 
+    {% for camera in page_obj %}
+    <tr class="smit-line">
+       <td> {{camera.locatie.naam}} </td>
+       <td> {{camera.naam}} </td>
+       <td> {{camera.type}} </td>
+       <td> {{camera.plaats}} </td>
+       <td> {{camera.datum_geplaatst}} </td> 
+       <td> {{camera.gps_locatie}} </td> 
   
- 
-       <th><a class="btn btn-sm btn-info" href="{% url 'editCamera' camera.id %}">Edit</a></th>
-       <th><a class="btn btn-sm btn-danger" href="{% url 'deleteCamera' camera.id %}">Delete</a></th>
-    </tbody>
-   {% endfor %}
-  </table>
+       <td><a class="btn btn-sm btn-info" href="{% url 'editCamera' camera.id %}">Edit</a></td>
+       <td><a class="btn btn-sm btn-danger" href="{% url 'deleteCamera' camera.id %}">Delete</a></td>
+    </tr>
+  </tbody>
+  {% endfor %}
+</table>
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; eerste</a>
+            <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
+        {% endif %}
+
+        <span class="current">
+            Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">volgende</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
   {% else %}
     <strong>Er zijn geen entries</strong>
   {% endif %}

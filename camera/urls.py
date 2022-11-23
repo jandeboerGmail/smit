@@ -67,6 +67,9 @@ urlpatterns = [
 
 # Video
     path('allVideo/',views.allVideo,name='allVideo'),
+    path('allVideoThuis/',views.allVideoThuis,name='allVideoThuis'),
+    path('allVideoStadgenoot/',views.allVideoStadgenoot,name='allVideoStadgenoot'),
+
     path('zNaamVideo/',views.zNaamVideo,name='zNaamVideo'),
     path('zOrderVideo/',views.zOrderVideo,name='zOrderVideo'),
     path('zCameraVideo/',views.zCameraVideo,name='zCameraVideo'),

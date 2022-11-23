@@ -21,7 +21,7 @@
   </div>
   </div>
 </div>
-<hr>
+
 <table class="table">
   <thead class="text-primary" >
     <tr>
@@ -35,9 +35,9 @@
     </tr>
   </thead>
   <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
-  {% if results %}
+  {% if page_obj %}
   <tbody>
-    {% for locatie in results %}
+    {% for locatie in page_obj %}
        <th> {{locatie.bedrijf.naam}} </th>
        <th> {{locatie.naam}} </th>
        <th> {{locatie.adres.naam}} </th>
@@ -48,6 +48,25 @@
     </tbody> 
    {% endfor %}
   </table>
+ 
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; eerste</a>
+            <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
+        {% endif %}
+
+        <span class="current">
+            Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">volgende</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
   {% else %}
     <strong>Er zijn geen entries</strong>
   {% endif %}
