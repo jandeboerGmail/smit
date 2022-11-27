@@ -74,6 +74,7 @@ class CameraForm(forms.ModelForm):
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'locatie': forms.Select(attrs={'class': 'form-control'}),
             'type': forms.TextInput(attrs={'class': 'form-control'}),
+            
             'plaats': forms.TextInput(attrs={'class': 'form-control'}),
             'gps': forms.TextInput(attrs={'class': 'form-control'}),
             'datum_geplaats': forms.DateTimeInput(attrs={'class': 'form-control'}),

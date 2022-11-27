@@ -583,51 +583,42 @@ def allVideo(request):
     video_list = Video.objects.order_by('camera','ordernr','naam')
     aantal =  video_list.count
 
-    paginator = Paginator(video_list,10)
+    paginator = Paginator(video_list,15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'../templates/displayVideo.html',video_dict )
 
-@login_required
-def allVideoThuis(request):
-    video_list = Video.objects.filter(video__camera="NVR").distinct().order_by('camera','ordernr','naam')
-    aantal =  video_list.count
+def allVideoBedrijf(request,bedrijf):
+    qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("ordernr","camera__locatie","camera__eigenaar")
+    print ('qs1: ',str(qs1.query))
+    aantal = qs1.count
 
-    paginator = Paginator(video_list,10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayVideo.html',video_dict )
-
-@login_required
-def allVideoStadgenoot(request):
-    #camera  = Camera.objects.all()
-    #locatie  = Locatie.objects.all()
-    mList = Camera.objects.filter(locatie__bedrijf__naam__icontains="Stad").distinct()
-    video  = Video.objects.select_related('camera')
-
-    #mList = list(chain(camera,video))
-    #mList = camera.union(video)
-
-    #list = Camera.objects.filter(locatie__bedrijf__naam__icontains="Berk").distinct()
-    #list = Camera.objects.filter(locatie__bedrijf__naam="Berkhout").distinct()
-    #list = Camera.objects.filter(locatie__bedrijf__naam="Stadgenoot").distinct()
-
-    #list = Video.objects.filter(camera__naam__icontains="NVR").distinct().order_by('camera','ordernr','naam')
-    #video_list = Video.objects.filter(camera__naam="NVR").distinct().order_by('camera','ordernr','naam')
-    #video_list = Video.objects.order_by('camera','ordernr','naam')
-    aantal = mList.count
-
-    paginator = Paginator(mList,10)
+    paginator = Paginator(qs1,15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
     dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    #return render(request,'../templates/displayVideo.html',dict )
-    return render(request,'../templates/displayCamera.html',dict )
+    return dict
+
+@login_required
+def allVideoStadgenoot(request):
+    bedrijf = 'Stadgenoot'
+    dict = allVideoBedrijf(request, bedrijf)
+    return render(request,'../templates/displayVideo.html',dict )
+
+@login_required
+def allVideoBerkhout(request):
+    bedrijf = 'Berkhout'
+    dict = allVideoBedrijf(request, bedrijf)
+    return render(request,'../templates/displayVideo.html',dict )
+
+@login_required
+def allVideoSmit(request):
+    bedrijf = 'Smit'
+    dict = allVideoBedrijf(request, bedrijf)
+    return render(request,'../templates/displayVideo.html',dict )
 
 # Zoek
 @login_required
