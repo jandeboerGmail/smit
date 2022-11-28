@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+
+<form action="." method="GET">
+    <div class="row form-inline">
+      
+      <div class="col-2">
+        <h3>Locatie</h3> 
+      </div>
+  
+      <div class="form-group col-2">
+        <input type="text" class="form-control form-control-sm" name="q"  value="{{ query|escape }}" placeholder="Locatie">
+      </div>
+  
+      <div class="form-group col-1">
+        <button type="submit" class="btn btn-primary btn-sm">Zoek</button>
+      </div>
+      
+      <div class="form-group col-1">
+        <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
+      </div>
+    </div>
+  </form>
+
+<table class="table table-hover table-sm">
+  <thead class="smit-header">
+    <tr>
+      <!-- <th scope="col">#</td> -->
+      <th scope="col">Bedrijf</td>
+      <th scope="col">Locatie</td>
+      <th scope="col">Adres</td>
+      <th scope="col">Contact</td>
+      <th scope="col">Telefoon</td>
+      <th scope="col">Acties</td>
+    </tr>
+  </thead>
+ 
+  {% if page_obj %}
+  <tbody>
+    {% for locatie in page_obj %}
+    <tr class="smit-line">
+       <td> {{locatie.bedrijf.naam}} </td>
+       <td> {{locatie.naam}} </td>
+       <td> {{locatie.adres.naam}} </td>
+       <td> {{locatie.contact.naam}} </td>
+       <td> {{locatie.contact.telefoon}} </td>
+       <td><a class="btn btn-sm btn-info" href="{% url 'editLocatie' locatie.id %}">Edit</a></td>
+       <td><a class="btn btn-sm btn-danger" href="{% url 'deleteLocatie' locatie.id %}">Delete</a></td>
+    </tr>
+
+  </tbody> 
+  {% endfor %}
+</table>
+ 
+
+  {% else %}
+    <strong>Er zijn geen entries</strong>
+  {% endif %}
+ </div>
+{% endblock %}

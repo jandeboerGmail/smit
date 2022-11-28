@@ -31,32 +31,33 @@
 </form>
 <hr>
   {% if query %}
-  <table class="table">
-    <thead class="text-primary">
+  <table class="table table-hover table-sm">
+    <thead class="smit-header">
       <tr>
-        <!-- <th scope="col">#</th> -->
-        <th scope="col">Locatie</th>
-         <th scope="col">Naam</th>
-          <th scope="col">Type</th>
-          <th scope="col">Plaats</th>
-          <th scope="col">Instalatie</th>
-          <th scope="col">Gps</th>
-          <th scope="col">Acties</th>
+        <!-- <th scope="col">#</td> -->
+        <th scope="col">Locatie</td>
+         <th scope="col">Naam</td>
+          <th scope="col">Type</td>
+          <th scope="col">Plaats</td>
+          <th scope="col">Instalatie</td>
+          <th scope="col">Gps</td>
+          <th scope="col">Acties</td>
       </div>
       </tr>
     </thead>
     {% if results %}
     <tbody>
       {% for camera in results %}
-         <th> {{camera.locatie.naam}} </th>
-         <th> {{camera.naam}} </th>
-         <th> {{camera.type}} </th>
-         <th> {{camera.plaats}} </th>
-         <th> {{camera.datum_geplaatst}} </th> 
-         <th> {{camera.gps_locatie}} </th> 
-    
-         <th><a class="btn btn-sm btn-info" href="{% url 'editCamera' camera.id %}">Edit</a></th>
-         <th><a class="btn btn-sm btn-danger" href="{% url 'deleteCamera' camera.id %}">Delete</a></th>
+      <tr class="smit-line">
+         <td> {{camera.locatie.naam}} </td>
+         <td> {{camera.naam}} </td>
+         <td> {{camera.type}} </td>
+         <td> {{camera.plaats}} </td>
+         <td> {{camera.datum_geplaatst}} </td> 
+         <td> {{camera.gps_locatie}} </td> 
+         <td><a class="btn btn-sm btn-info" href="{% url 'editCamera' camera.id %}">Edit</a></td>
+         <td><a class="btn btn-sm btn-danger" href="{% url 'deleteCamera' camera.id %}">Delete</a></td>
+        </tr>
       </tbody>
      {% endfor %}
     </table>

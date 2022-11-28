@@ -379,13 +379,12 @@ def zNaamLocatie (request):
     query = request.GET.get('q','')
     if query:
         qset = (Q(naam__icontains=query))       
-        #Locatie_list = Locatie.objects.filter(qset).distinct().order_by('naam')
-        Locatie_list = Locatie.objects.filter(qset).distinct().order_by('bedrijf','adres')
-        aantal = Locatie_list.count
-        Locatie_dict  = {'results' : Locatie_list , 'aantal' : aantal, "query": query}
+        page_obj = Locatie.objects.filter(qset).distinct().order_by('bedrijf','adres')
+        aantal = page_obj.count
+        Locatie_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         Locatie_dict = {}
-    return render(request,'../templates/zoekLocatie.html', Locatie_dict ) 
+    return render(request,'../templates/zNaamLocatie.html', Locatie_dict ) 
 
 # Export
 @login_required

@@ -31,15 +31,15 @@
 </form>
 <hr>
   {% if query %}
-  <table class="table">
-    <thead class="text-primary">
+  <table class="table table-hover table-sm">
+  <thead class="smit-header">
       <tr>
-        <!-- <th scope="col">#</th> -->
-        <th scope="col">Naam</th>
-        <th scope="col">Straat</th>
-        <th scope="col">Postcode</th>
-        <th scope="col">Plaats</th>
-        <th scope="col">Akties</th>
+        <!-- <th scope="col">#</td> -->
+        <th scope="col">Naam</td>
+        <th scope="col">Straat</td>
+        <th scope="col">Postcode</td>
+        <th scope="col">Plaats</td>
+        <th scope="col">Akties</td>
       </tr>
     </thead>
     <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
@@ -47,13 +47,15 @@
     {% if results %}
     <tbody>
       {% for bedrijf in results %}
-         <!-- <th scope="row">{{bedrijf.id}}</th> -->
-         <th> {{bedrijf.naam}} </th>
-         <th> {{bedrijf.adres.straat}} </th> 
-         <th> {{bedrijf.adres.postcode}} </th> 
-         <th> {{bedrijf.adres.plaats}} </th>
-         <th><a class="btn btn-sm btn-info" href="{% url 'editBedrijf' bedrijf.id %}">Edit</a></th>
-         <th><a class="btn btn-sm btn-danger" href="{% url 'deleteBedrijf' bedrijf.id %}">Delete</a></th>
+      <tr class="smit-line">
+         <!-- <th scope="row">{{bedrijf.id}}</td> -->
+         <td> {{bedrijf.naam}} </td>
+         <td> {{bedrijf.adres.straat}} </td> 
+         <td> {{bedrijf.adres.postcode}} </td> 
+         <td> {{bedrijf.adres.plaats}} </td>
+         <td><a class="btn btn-sm btn-info" href="{% url 'editBedrijf' bedrijf.id %}">Edit</a></td>
+         <td><a class="btn btn-sm btn-danger" href="{% url 'deleteBedrijf' bedrijf.id %}">Delete</a></td>
+        </tr>
       </tbody> 
      {% endfor %}
     </table>

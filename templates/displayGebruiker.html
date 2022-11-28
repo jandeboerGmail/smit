@@ -22,31 +22,33 @@
   </div>
   </div>
 </div>
-<hr>
-<table class="table">
-  <thead class="text-primary" >
+
+<table class="table table-hover table-sm">
+  <thead class="smit-header">
     <tr>
-      <!-- <th scope="col">#</th> -->
-      <th scope="col">Naam</th>
-      <th scope="col">User</th>
-      <th scope="col">Email</th>
-      <th scope="col">Telefoon</th>
-      <th scope="col">Soort</th>
-      <th scope="col">Acties</th>
+      <!-- <th scope="col">#</td> -->
+      <th scope="col">Naam</td>
+      <th scope="col">User</td>
+      <th scope="col">Email</td>
+      <th scope="col">Telefoon</td>
+      <th scope="col">Soort</td>
+      <th scope="col">Acties</td>
     </tr>
   </thead>
   <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
   {% if results %}
   <tbody>
     {% for gebruiker in results %}
-       <!-- <th scope="row">{{contact.id}}</th> -->
-       <th> {{gebruiker.naam}} </th>
-       <th> {{gebruiker.user}} </th>
-       <th> {{gebruiker.email}} </th>
-       <th> {{gebruiker.telefoon}} </th>
-       <th> {{gebruiker.soort}} </th>
-       <th><a class="btn btn-sm btn-info" href="{% url 'editGebruiker' gebruiker.id %}">Edit</a></th>
-       <th><a class="btn btn-sm btn-danger" href="{% url 'deleteGebruiker' gebruiker.id %}">Delete</a></th>
+    <tr class="smit-line">
+       <!-- <th scope="row">{{contact.id}}</td> -->
+       <td> {{gebruiker.naam}} </td>
+       <td> {{gebruiker.user}} </td>
+       <td> {{gebruiker.email}} </td>
+       <td> {{gebruiker.telefoon}} </td>
+       <td> {{gebruiker.soort}} </td>
+       <td><a class="btn btn-sm btn-info" href="{% url 'editGebruiker' gebruiker.id %}">Edit</a></td>
+       <td><a class="btn btn-sm btn-danger" href="{% url 'deleteGebruiker' gebruiker.id %}">Delete</a></td>
+      </tr>
     </tbody> 
    {% endfor %}
   </table>
