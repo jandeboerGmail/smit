@@ -23,6 +23,16 @@ urlpatterns = [
     path('indexLog',views.indexLog,name='indexLog'),
     path('indexActies',views.indexActies,name='indexActies'),
 
+#stadgenoot
+    path('indexStadgenoot',views.indexStadgenoot,name='indexStadgenoot'),
+    path('allVideoStadgenoot',views.allVideoStadgenoot,name='allVideoStadgenoot'),
+    path('zNaamVideoStadgenoot',views.zNaamVideoStadgenoot,name='zNaamVideoStadgenoot'),
+    path('zOrderVideoStadgenoot',views.zOrderVideoStadgenoot,name='zOrderVideoStadgenoot'),
+
+    path('allOrderStadgenoot',views.allOrderStadgenoot,name='allOrderStadgenoot'),
+    path('zNrOrderStadgenoot',views.zNrOrderStadgenoot,name='zNrOrderStadgenoot'),
+    path('zContactOrderStadgenoot',views.zContactOrderStadgenoot,name='zContactOrderStadgenoot'),
+
 # Gebruiker
     path('allGebruiker/',views.allGebruiker,name='allGebruiker'),
     path('zNaamGebruiker/',views.zNaamGebruiker,name='zNaamGebruiker'),

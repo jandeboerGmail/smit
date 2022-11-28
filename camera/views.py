@@ -78,6 +78,10 @@ def indexLog(request):
 def indexActies(request):
     return render(request,'../templates/indexActies.html', {} )
 
+@login_required
+def indexStadgenoot(request):
+    return render(request,'../templates/indexStadgenoot.html', {} )
+
 # --- Gebruiker
 @login_required
 def allGebruiker(request):
@@ -817,7 +821,7 @@ def zoekVideo(request):
 # -----Orders ---
 @login_required
 def allOrder(request):
-    list = ServiceOrder.objects.order_by('ordernr')
+    list = ServiceOrder.objects.order_by('bedrijf','ordernr','contact')
     aantal =  list.count
 
     paginator = Paginator(list,10)
@@ -826,17 +830,17 @@ def allOrder(request):
 
     dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'../templates/displayOrder.html',dict )
-
+'''
 @login_required
 def zNrOrder (request):
     query = request.GET.get('q','')
 
     if query:
         qset = (Q(ordernr__icontains=query))       
-        list = ServiceOrder.objects.filter(qset).distinct().order_by('ordernr')
+        list = ServiceOrder.objects.filter(qset).distinct().order_by('bedrijf','ordernr','contact')
         aantal = list.count
 
-        paginator = Paginator(list,10)
+        paginator = Paginator(list,15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -844,16 +848,17 @@ def zNrOrder (request):
     else:
         dict = {}
     return render(request,'../templates/zNrOrder.html', dict )
+'''
 
 def zContactOrder (request):
     query = request.GET.get('q','')
 
     if query:
         qset = (Q(contact__naam__contains=query))       
-        list = ServiceOrder.objects.filter(qset).distinct().order_by('ordernr')
+        list = ServiceOrder.objects.filter(qset).distinct().order_by('contact','bedrijf','ordernr')
         aantal = list.count
 
-        paginator = Paginator(list,10)
+        paginator = Paginator(list,15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         
@@ -1080,19 +1085,143 @@ def actieAddVideo(request):
     return redirect('indexActies')
 
 
-
-
+#stadgenoot Video
+# Zoek
 
 '''
 @login_required
-def zNaamCamera (request):
+def zNaamVideoStadgenoot (request):
     query = request.GET.get('q','')
     if query:
-        qset = (Q(naam__icontains=query))       
-        camera_list = Camera.objects.filter(qset).distinct().order_by('naam')
-        aantal = camera_list.count
-        camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
+        qset = (Q(naam__icontains=query))   
+
+        #qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains="Stadgenoot").select_related('camera')
+        qs1 = Video.objects.filter(qset)
+        #qs1 = qs2 | qs3
+        aantal = qs1.count
+        print ('qs1: ',str(qs1.query))
+        print ('aantal: ',aantal)
+
+        paginator = Paginator(qs1,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
-        camera_dict = {}
-    return render(request,'../templates/zNaamCamera.html', camera_dict ) 
+        video_dict = {}
+    return render(request,'../templates/zNaamVideo.html', video_dict )
 '''
+
+@login_required
+def zNaamVideoStadgenoot (request):
+    query = request.GET.get('q','')
+    print('query: ',query)
+    if query:
+        print ('query: ',query)
+        qset = (Q(naam__icontains=query))   
+        qs1 = Video.objects.filter(qset).order_by('naam')
+        print ('qs1: ',str(qs1.query))
+        aantal = qs1.count
+
+        paginator = Paginator(qs1,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
+    else:
+        video_dict = {}
+    return render(request,'../templates/zNaamVideo.html', video_dict )
+
+@login_required
+def zOrderVideoStadgenoot (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(ordernr__icontains=query))       
+        video_list = Video.objects.filter(qset).distinct().order_by('naam')
+        aantal = video_list.count
+
+        paginator = Paginator(video_list,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+     
+        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
+    else:
+        video_dict = {}
+    return render(request,'../templates/zOrderVideo.html', video_dict )
+
+@login_required
+def allOrderStadgenoot(request):
+    list = ServiceOrder.objects.filter(bedrijf__naam__icontains="Stadgenoot").select_related("bedrijf").order_by('ordernr','contact')
+    aantal =  list.count
+
+    paginator = Paginator(list,10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    return render(request,'../templates/displayOrder.html',dict )
+
+@login_required
+def zNrOrderStadgenoot (request):
+    query = request.GET.get('q','')
+    query = 'a'
+    if query:
+        qset = (Q(ordernr__icontains=query))
+        qs1 = ServiceOrder.objects.filter(qset).distinct().order_by('bedrijf','ordernr','contact')
+
+        #qs1 = ServiceOrder.objects.filter(bedrijf__naam__icontains="Stadgenoot").select_related("bedrijf").order_by('ordernr','contact')       
+        
+        #qs1 = ServiceOrder.objects.filter(bedrijf__naam__icontains="Stadgenoot").select_related("bedrijf").order_by('ordernr')
+        #qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains="Stadgenoot").select_related('camera')
+        aantal = qs1.count
+        print ('qs1: ',str(qs1.query))
+        print("aantal: ", aantal)
+
+        paginator = Paginator(qs1,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
+    else:
+        dict = {}
+    return render(request,'../templates/zNrOrder.html', dict )
+
+
+@login_required
+def zNrOrder (request):
+    query = request.GET.get('q','')
+
+    if query:
+        qset = (Q(ordernr__icontains=query))       
+        list = ServiceOrder.objects.filter(qset).distinct().order_by('bedrijf','ordernr','contact')
+        aantal = list.count
+
+        paginator = Paginator(list,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
+    else:
+        dict = {}
+    return render(request,'../templates/zNrOrder.html', dict )
+
+
+@login_required
+def zContactOrderStadgenoot (request):
+    query = request.GET.get('q','')
+    query = 'a'
+    if query:
+        qset = (Q(contact__naam__contains=query))       
+        list = ServiceOrder.objects.filter(qset).distinct().order_by('contact','bedrijf','ordernr')
+        aantal = list.count
+
+        paginator = Paginator(list,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
+    else:
+        dict = {}
+    return render(request,'../templates/zContactOrder.html', dict )
+
+

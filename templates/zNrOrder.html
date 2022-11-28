@@ -22,39 +22,35 @@
       <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
     </div>
 
-    <!---
-    <div class="col-1">
-      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
-    </div>
-  -->
   </div>
 </form>
-<hr>
+
   {% if query %}
-  <table class="table">
-    <thead class="text-primary">
-      <tr>
-        <!-- <th scope="col">#</th> -->
-        <th scope="col">OrderNr</th>
-        <th scope="col">Bedrijf</th>
-        <th scope="col">Contact</th>
-        <th scope="col">Geopend</th>
-        <th scope="col">Gesloten<th></th>
-        <th scope="col">Acties</th>
+  <table class="table table-hover table-sm">
+    <thead class="smit-header">
+      <tr> 
+        <th scope="col">Bedrijf</td>
+        <th scope="col">OrderNr</td>
+        <th scope="col">Contact</td>
+        <th scope="col">Geopend</td>
+        <th scope="col">Gesloten<td></td>
+        <th scope="col">Acties</td>
       </div>
       </tr>
     </thead>
     {% if page_obj %}
     <tbody">
       {% for order in page_obj %}
-         <th> {{order.ordernr}} </th>
-         <th> {{order.bedrijf}} </th>
-         <th> {{order.contact}} </th>
-         <th> {{order.conversion_started}} </th>
-         <th> {{order.conversion_ready}} </th>
-     
-         <th><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></th>
-         <th><a class="btn btn-sm btn-danger" href="{% url 'deleteOrder' order.id %}">Delete</a></th>
+      <tr class="smit-line">
+         <td> {{order.bedrijf}} </td>
+         <td> {{order.ordernr}} </td>
+         <td> {{order.bedrijf}} </td>
+         <td> {{order.contact}} </td>
+         <td> {{order.conversion_started}} </td>
+         <td> {{order.conversion_ready}} </td> 
+         <td><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></td>
+         <td><a class="btn btn-sm btn-danger" href="{% url 'deleteOrder' order.id %}">Delete</a></td>
+      </tr>
       </tbody>  
     </tbody>
     {% endfor %}

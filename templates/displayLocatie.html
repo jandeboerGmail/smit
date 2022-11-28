@@ -2,25 +2,19 @@
 {% block head_title %} 
 {% endblock %}
 {% block content %}
+
 <div class="container-fluid">
   <div class="row align-items-end">
-    <div class="col-9">
-      <h2>Locatie</h2> 
-    </div>
-   
+    <h2 class="col-10 smit-h2">Locatie</h2> 
+
     <div class="col-1">
-      <a class="btn btn-sm btn-dark" href="{% url 'exportLocatie' %}">Export </a>
+      <a class="btn btn-sm btn-primary" href="{% url 'exportVideo' %}">Export </a>
     </div>
-    <!--
-    <div class="col-1">
-    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
+
+    <div class="col-1 smit-h2">
+      {{aantal}} 
     </div>
-    -->
-  <div class="col-1">
-    <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
   </div>
-  </div>
-</div>
 
 <table class="table table-hover table-sm">
   <thead class="smit-header">
