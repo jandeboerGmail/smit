@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+<h2 class='container-fluid smit-h2-center'>Stadgenoot video portal</h2>
+<hr>
+
+<div class="row">   
+    <div class="col">
+      <div class="smit-header-big">
+         Video
+      </div>
+      <br>
+      <div class="nav-index">
+        <a class="nav-index" href="/camera/allVideoStadgenoot">Video's</a>
+      </div>
+      <div class="nav-index">
+        <a class="nav-index" href="/camera/zNaamVideoStadgenoot">Naam</a>
+      </div>
+      <div class="nav-index">
+        <a class="nav-index" href="/camera/zOrderVideoStadgenoot">Service Order</a>
+      </div>
+      <div class="nav-index">
+        <a class="nav-index" href="/camera/zCameraVideo">Camera</a>
+      </div>
+    </div>
+    <div class="col">
+        <div class="smit-header-big">
+          Orders
+        </div>
+        <br>
+        <div class="nav-index">
+          <a class="nav-index" href="/camera/allOrderStadgenoot">Orders</a>
+        </div>
+        <div class="nav-index">
+          <a class="nav-index" href="/camera/zNrOrderStadgenoot">Service Order</a>
+        </div>
+        <div class="nav-index">
+          <a class="nav-index" href="/camera/zContactOrderStadgenoot">Contact</a>
+        </div>
+      </div>
+    <div class="col">
+      <div class="smit-header-big">
+         Actie
+      </div>
+      <br>
+      <div class="nav-index">
+        <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
+      </div>
+    </div>
+</div>
+<hr>
+ 
+
+{% endblock %}
