@@ -21,19 +21,12 @@
     <div class="form-group col-1">
       <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
     </div>
-
-    <!---
-    <div class="col-1">
-      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
-    </div>
-  -->
-
   </div>
 </form>
 
 {% if query %}
-  <table class="table">
-    <thead class="text-primary" >
+ <table class="table table-hover table-sm"> 
+  <thead class="smit-header">
       <tr>
         <th scope="col">Naam</th>
         <th scope="col">Order</th>
@@ -48,18 +41,20 @@
     {% if page_obj %}
     <tbody>
       {% for video in page_obj %}
-         <th> {{video.naam}} </th>
-         <th> {{video.ordernr}} </th>
-         <th> {{video.camera.naam}} </th>
-         <th> {{video.camera.locatie.naam}} </th>
-         <th> {{video.camera.plaats}} </th>
-         <th> {{video.opname_van}} </th>
-         <th> {{video.opname_tot}} </th>
-         <th><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></th>
-         <!--<th><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></th> -->
-         <!--<th><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></th> -->
-         <th><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></th>
-         <th><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></th>
+      <tr class="smit-line">
+         <td> {{video.naam}} </td>
+         <td> {{video.ordernr}} </td>
+         <td> {{video.camera.naam}} </td>
+         <td> {{video.camera.locatie.naam}} </td>
+         <td> {{video.camera.plaats}} </td>
+         <td> {{video.opname_van}} </td>
+         <td> {{video.opname_tot}} </td>
+         <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
+         <!--<td><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></td> -->
+         <!--<td><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></td> -->
+         <td><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></td>
+         <td><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></td>
+      </tr>
       </tbody> 
      {% endfor %}
     </table>

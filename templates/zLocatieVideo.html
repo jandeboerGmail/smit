@@ -11,7 +11,7 @@
     </div>
 
     <div class="form-group col-2">
-      <input type="text" class="form-control form-control-sm" name="q"  value="{{ query|escape }}" placeholder="Camera">
+      <input type="text" class="form-control form-control-sm" name="q"  value="{{ query|escape }}" placeholder="Locatie">
     </div>
 
     <div class="form-group col-1">
@@ -21,48 +21,62 @@
     <div class="form-group col-1">
       <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
     </div>
-
-    <!---
-    <div class="col-1">
-      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
-    </div>
-  -->
-
   </div>
 </form>
-<hr>
+
 {% if query %}
-  <table class="table">
-    <thead class="text-primary" >
+<table class="table table-hover table-sm">
+  <thead class="smit-header">
       <tr>
-        <th scope="col">Locatie</th>
-        <th scope="col">Camera</th>
-        <th scope="col">Plaats</th>
-        <th scope="col">Naam</th>
-        <th scope="col">Order</th>
-        <th scope="col">Opname van</th>
-        <th scope="col">Opname tot</th>
-        <th scope="col">Acties</th>
+        <th scope="col">Locatie</td>
+        <th scope="col">Camera</td>
+        <th scope="col">Plaats</td>
+        <th scope="col">Naam</td>
+        <th scope="col">Order</td>
+        <th scope="col">Opname van</td>
+        <th scope="col">Opname tot</td>
+        <th scope="col">Acties</td>
       </tr>
     </thead>
     {% if results %}
     <tbody>
       {% for video in results %}
-         <th> {{video.camera.locatie.naam}} </th>
-         <th> {{video.camera.naam}} </th>
-         <th> {{video.camera.plaats}} </th>
-         <th> {{video.naam}} </th>
-         <th> {{video.ordernr}} </th> 
-         <th> {{video.opname_van}} </th>
-         <th> {{video.opname_tot}} </th>
-         <th><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></th>
-         <!--<th><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></th> -->
-         <!--<th><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></th> -->
-         <th><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></th>
-         <th><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></th>
+      <tr class="smit-line">
+         <td> {{video.camera.locatie.naam}} </td>
+         <td> {{video.camera.naam}} </td>
+         <td> {{video.camera.plaats}} </td>
+         <td> {{video.naam}} </td>
+         <td> {{video.ordernr}} </td> 
+         <td> {{video.opname_van}} </td>
+         <td> {{video.opname_tot}} </td>
+         <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
+         <!--<td><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></td> -->
+         <!--<td><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></td> -->
+         <td><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></td>
+         <td><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></td>
+      </tr>
       </tbody> 
      {% endfor %}
     </table>
+
+    <div class="pagination">
+      <span class="step-links">
+          {% if page_obj.has_previous %}
+              <a href="?page=1">&laquo; eerste</a>
+              <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
+          {% endif %}
+  
+          <span class="current">
+              Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
+          </span>
+  
+          {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">volgende</a>
+              <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
+          {% endif %}
+      </span>
+    </div>
+    
     {% else %}
       <strong>Er zijn geen entries</strong>
     {% endif %}

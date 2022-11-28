@@ -591,8 +591,8 @@ def allVideo(request):
     return render(request,'../templates/displayVideo.html',video_dict )
 
 def allVideoBedrijf(request,bedrijf):
-    qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("ordernr","camera__locatie","camera__eigenaar")
-    print ('qs1: ',str(qs1.query))
+    qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("ordernr","camera__locatie")
+    #print ('qs1: ',str(qs1.query))
     aantal = qs1.count
 
     paginator = Paginator(qs1,15)
@@ -624,13 +624,13 @@ def allVideoSmit(request):
 @login_required
 def zNaamVideo (request):
     query = request.GET.get('q','')
-    #print ("query: ", query)
     if query:
-        qset = (Q(naam__icontains=query))       
-        video_list = Video.objects.filter(qset).distinct().order_by('naam')
-        aantal = video_list.count
+        qset = (Q(naam__icontains=query))   
+        qs1 = Video.objects.filter(qset).order_by('naam')
+        #print ('qs1: ',str(qs1.query))
+        aantal = qs1.count
 
-        paginator = Paginator(video_list,10)
+        paginator = Paginator(qs1,15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -642,14 +642,12 @@ def zNaamVideo (request):
 @login_required
 def zOrderVideo (request):
     query = request.GET.get('q','')
-    #print ("query: ", query)
     if query:
-        #print ("querry: ", query)
         qset = (Q(ordernr__icontains=query))       
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
         aantal = video_list.count
 
-        paginator = Paginator(video_list,10)
+        paginator = Paginator(video_list,15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
      
@@ -661,34 +659,40 @@ def zOrderVideo (request):
 @login_required
 def zCameraVideo (request):
     query = request.GET.get('q','')
-    #print ("query: ", query)
     if query:
-        print ("querry: ", query)
         qset = (Q(camera__naam__icontains=query))    
         #qset = (Q(locatie__naam__icontains=query))   
         #qset = (Q(naam__icontains=query))  
         #video_list = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam)   
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
         aantal = video_list.count
-        print ("aantal: ",aantal)
+
+        paginator = Paginator(video_list,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+     
         video_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
     return render(request,'../templates/zCameraVideo.html', video_dict )
 
-
-
 @login_required
 def zLocatieVideo (request):
-    query = request.GET.get('q','')
+    query = request.GET.get('q','')    
     if query:
-        qset = (Q(video__camera__locatie__naam__icontains=query))       
-        video_list = Video.objects.filter(qset).distinct().order_by('locatie','naam')
+        qset = (Q(camera__locatie__naam__icontains=query))    
+        video_list = Video.objects.filter(qset).select_related('camera').distinct().order_by('naam')
+        print ('video_list: ',str(video_list.query))
         aantal = video_list.count
-        camera_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
+
+        paginator = Paginator(video_list,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+          
+        video_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
     else:
-        camera_dict = {}
-    return render(request,'../templates/zLocatieVideo.html', camera_dict ) 
+        video_dict = {}
+    return render(request,'../templates/zLocatieVideo.html', video_dict ) 
 
 # Export
 @login_required
