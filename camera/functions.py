@@ -46,6 +46,8 @@ def setRunningStatus(status):
     return
 
 # Add video Content 
+
+
 # Adress 
 def addAdress(orderNr,naam):
     #print("add Adress: ",naam)
@@ -95,22 +97,42 @@ def addGebruiker(orderNr,naam):
         aGebruiker =  aGebruikers[0]
     return aGebruiker   
 
+# Service Order
+def addServiceOrder(order,bedrijf):
+    aGebruiker = addGebruiker(order,"Onbekend")
+    aBedrijf   = addBedrijf(order,bedrijf)
+    #print("add Adress: ",naam)
+    aOrders = ServiceOrder.objects.filter(ordernr=order)
+    if not aOrders and order:
+        aOrder = ServiceOrder()
+        aOrder.ordernr = order
+        aOrder.bedrijf = aBedrijf
+        aOrder.contact = aGebruiker
+        aOrder.save ()
+    
+        message = "WARNING: Default values added for service order: "  + order
+        addLogEntry(order,message)
+    else:
+        aOrder = aOrders[0]
+    return aOrder
+
 #Locatie
 def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
     aBedrijf   = addBedrijf(orderNr,bedrijfNaam)
-    aGebruiker = addGebruiker(orderNr,"Default")
+    aGebruiker = addGebruiker(orderNr,"Onbekend")
     aAdress    = addAdress(orderNr,adressNaam)
 
-    #print ("Locatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aGebruiker.naam)
+    print ("Locatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aGebruiker.naam)
 
     #aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')[0]
     #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
     #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam)
-    aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
+    #aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
+    aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam)
 
     if not aLocaties and locatieNaam:
-        #print("not found location;  ",locatieNaam,bedrijfNaam)
+        print("location not found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
         aLocatie = Locatie()
         aLocatie.naam    = locatieNaam
         aLocatie.adres   = aAdress
@@ -122,10 +144,14 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
         addLogEntry(orderNr,message)
     else:
        aLocatie = aLocaties[0] 
+       print("location found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
     return aLocatie 
 
 #Camera
 def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
+
+    aServiceOrder = addServiceOrder(orderNr,bedrijfNaam)
+    print ('aServiceOrder: ', aServiceOrder.ordernr)
 
     aLocatie  = addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam)
     print ('aLocatie: ', aLocatie.naam)
@@ -181,7 +207,10 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
             aVideo.opname_van   = datetime.strptime(recFrom, '%Y%m%d%H%M%S')
         if validDate(recTill):
             aVideo.opname_tot   = datetime.strptime(recTill, '%Y%m%d%H%M%S') 
-        #aVideo.codec        = codec
+        if "h264" in videoNaam:
+            aVideo.codec        = "h265"
+        else:
+            aVideo.codec        = "vb9"
         aVideo.save()
 
         message = "WARNING: Default values added for video: "  + videoNaam + " | " + aCamera.naam
@@ -294,9 +323,9 @@ def insertConvertedVideos():
             filename = os.path.join(root, name)
             #print("Filename: ",filename)
             #print("Files :",os.path.join(root, name))
-            if "Converted" in filename and "x_" not in filename:
+            if "Converted" in filename and "._" not in filename:
                 #print('Filename :',filename)
-                if ".webm" in filename and "._" not in filename:
+                if ".webm" in filename or "_h264.mp4" in filename and "._" not in filename:
                     extractDBitems(filename)
 
     return   
@@ -341,10 +370,7 @@ def ConvertingVideos():
                             os.mkdir(reqDir)
                 
                         outFileName = os.path.join(destDir,after)
-               
-                        outFileName = outFileName.replace(".mp4", ".webm")
-                        outFileName = outFileName.replace(".MP4", ".webm")
-
+            
                         outFile = outFileName.replace(" ", "\ ")
                         inFile = inFileName.replace(" ", "\ ")
 
@@ -353,50 +379,70 @@ def ConvertingVideos():
                         fileSize = file_stats.st_size / (1024 * 1024)
                         fSize = "%.5f" % fileSize
 
-                        startTime = time.time()
-                        message = 'Converting   ' + inFileName + " Size: " + fSize + " MB"
-                        addLogEntry(request,message)
-
-                        #command 
-                        #command = "cp " + inFile + " " + outFile 
-
-                        #vb9 onepass
-                        command = "ffmpeg -y -i " + inFile
-                        command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
-                        #vb9 twopass
-                        #command = "ffmpeg  -y -i " + inFile
-                        #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
-                        #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
-
-                        #addLogEntry(request,command)
-                        #print('Command :',command) 
-                        # removeFile(outFile) # uncomment in production
-
-                        startTime = time.time()
+                        #probe format
+                        command = "ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 " + inFile  + " > ._isFormat"
                         result = os.system(command)
-                        #result = 0
+                        with open('._isFormat', 'r') as file:
+                            formatData= file.read().replace('\n', '')
+                    
+                        if "h264" in formatData:
+                            outFileName = outFileName.replace(".mp4", "_h264.mp4")
+                            outFileName = outFileName.replace(".MP4", "_h264.MP4")
 
-                        #print('Result :',result)
-                        if result ==  0: # 256 error
-                            # Elapsed Time
-                            endTime = time.time()
-                            elapsedTime = endTime - startTime
-                            elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
-
-                            # fileSize
-                            file_stats = os.stat(outFileName)
-                            #print(file_stats)
-                            fileSize = file_stats.st_size / (1024 * 1024)
-                            fSize = "%.5f" % fileSize
-
-                            message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
+                            message = 'Copying h264code ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(request,message)
-                        
-                            # removeFile(inFileName) # uncommend for production
+                            shutil.copyfile(inFileName, outFileName)
                             extractDBitems(outFileName)
+                            # removeFile(inFileName) # uncommend for production
+
+                        else: #conversion needed
+                            outFileName = outFileName.replace(".mp4", ".webm")
+                            outFileName = outFileName.replace(".MP4", ".webm")
+
+                            startTime = time.time()
+                            message = 'Converting   ' + inFileName + " Size: " + fSize + " MB"
+                            addLogEntry(request,message)
+
+                            #command 
+                            #command = "cp " + inFile + " " + outFile 
+
+                            #vb9 onepass
+                            command = "ffmpeg -y -i " + inFile
+                            command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
+                            #vb9 twopass
+                            #command = "ffmpeg  -y -i " + inFile
+                            #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
+                            #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
+
+                            #addLogEntry(request,command)
+                            #print('Command :',command) 
+                            # removeFile(outFile) # uncomment in production
+
+                            startTime = time.time()
+                            result = os.system(command)
+                            #result = 0
+
+                            #print('Result :',result)
+                            if result ==  0: # 256 error
+                                # Elapsed Time
+                                endTime = time.time()
+                                elapsedTime = endTime - startTime
+                                elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
+
+                                # fileSize
+                                file_stats = os.stat(outFileName)
+                                #print(file_stats)
+                                fileSize = file_stats.st_size / (1024 * 1024)
+                                fSize = "%.5f" % fileSize
+
+                                message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
+                                addLogEntry(request,message)
+                        
+                                # removeFile(inFileName) # uncommend for production
+                                extractDBitems(outFileName)
             
-                        else:
-                            addLogEntry(request,"ERROR : Not Converted")
+                            else:
+                                addLogEntry(request,"ERROR : Not Converted")
     message = "Converting Ended "
     addLogEntry(" ", message)
     setRunningStatus(False)

@@ -1,4 +1,5 @@
 camera/static/media/
+/data
 /static/
 /media/
 convert/*.mp4

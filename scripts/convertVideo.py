@@ -2,7 +2,7 @@
 from operator import eq
 import os,time,shutil
 
-videoPath='/home/jan/video/'
+videoPath='/home/jan/media/'
 
 def removeFile(fileName):
    if os.path.exists(fileName):
@@ -24,7 +24,7 @@ def substring_before(s, delim):
 
 def converting():
 
-    print("Converting...")
+    print("Probing...")
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
@@ -61,7 +61,7 @@ def converting():
                         outFile = outFile.replace(" ", "\ ")
                         inFile = filename.replace(" ", "\ ")
 
-                        print('Converting :' ,inFile, 'to', outFile)
+                        print('Checking :' ,inFile, 'to', outFile)
 
                         #command 
                         #command = "cp " + inFile + " " + outFile 
@@ -70,17 +70,16 @@ def converting():
                         #command = "ffmpeg  -i " + inFile
                         #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
                         #vb9 twopass
-                        command = "ffmpeg  -i " + inFile
-                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
-                        command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
+                        command = "ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 " + inFile
+                        #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
+                        #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
 
-                        #print('Command :',command) 
-                        removeFile(outFile)
+                        print('Command :',command) 
                         result = os.system(command)
 
                         #print('Result :',result)
                         if result ==  0: # 256 error
-                            print("Converted")
+                            print("Checking")
                             #removeFile(inFile) uncommend for production
 
 #main

@@ -44,6 +44,7 @@ urlpatterns = [
 # Adresss
     path('allAdress/',views.allAdress,name='allAdress'),
     path('zNaamAdress/',views.zNaamAdress,name='zNaamAdress'),
+    path('zPlaatsAdress/',views.zPlaatsAdress,name='zPlaatsAdress'),
     path('createAdress/',views.createAdress,name='createAdress'),
     path('editAdress/<int:pk>',views.editAdress,name='editAdress'),
     path('deleteAdress/<int:pk>',views.deleteAdress,name='deleteAdress'),

@@ -204,6 +204,24 @@ def zNaamAdress (request):
         adress_dict = {}
     return render(request,'../templates/zNaamAdress.html', adress_dict ) 
 
+@login_required
+def zPlaatsAdress (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(plaats__icontains=query))       
+        adress_list = Adress.objects.filter(qset).distinct().order_by('naam')
+        aantal = adress_list.count
+
+        paginator = Paginator(adress_list,12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        adress_dict  = {'results' : adress_list , 'aantal' : aantal, "query": query}
+    else:
+        adress_dict = {}
+    #return render(request,'../templates/displayAdress.html', adress_dict ) 
+    return render(request,'../templates/zPlaatsAdress.html', adress_dict ) 
+
 #CRUD
 @login_required
 def createAdress(request):
@@ -821,10 +839,10 @@ def zoekVideo(request):
 # -----Orders ---
 @login_required
 def allOrder(request):
-    list = ServiceOrder.objects.order_by('bedrijf','ordernr','contact')
+    list = ServiceOrder.objects.order_by('bedrijf','contact','ordernr')
     aantal =  list.count
 
-    paginator = Paginator(list,10)
+    paginator = Paginator(list,15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -1154,7 +1172,7 @@ def allOrderStadgenoot(request):
     list = ServiceOrder.objects.filter(bedrijf__naam__icontains="Stadgenoot").select_related("bedrijf").order_by('ordernr','contact')
     aantal =  list.count
 
-    paginator = Paginator(list,10)
+    paginator = Paginator(list,15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
