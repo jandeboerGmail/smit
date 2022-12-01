@@ -22,8 +22,8 @@
     <tr>
       <!-- <th scope="col">#</td> -->
         <th scope="col">Bedrijf</td>
-        <th scope="col">OrderNr</td>
         <th scope="col">Contact</td>
+        <th scope="col">OrderNr</td>
         <th scope="col">Gestart</td>
         <th scope="col">Gesloten<td></td>
         <th scope="col">Acties</td>
@@ -36,8 +36,8 @@
     {% for order in page_obj %}
     <tr class="smit-line">
        <td> {{order.bedrijf}} </td>
-       <td> {{order.ordernr}} </td>  
        <td> {{order.contact}} </td>
+       <td> {{order.ordernr}} </td>  
        <td> {{order.conversion_started}} </td>
        <td> {{order.conversion_ready}} </td> 
        <td><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></td>
