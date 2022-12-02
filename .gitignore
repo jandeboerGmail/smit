@@ -10,6 +10,7 @@ Plugins/Microsoft.HEVCVideoExtension_1.0.43421.0_x64__8wekyb3d8bbwe.Appx
 migrations/
 *.tar
 *.gz
+*isFormat
 
 
 # Byte-compiled / optimized / DLL files

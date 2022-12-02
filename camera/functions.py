@@ -47,7 +47,6 @@ def setRunningStatus(status):
 
 # Add video Content 
 
-
 # Adress 
 def addAdress(orderNr,naam):
     #print("add Adress: ",naam)
@@ -132,7 +131,7 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
     aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam)
 
     if not aLocaties and locatieNaam:
-        print("location not found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
+        #print("location not found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
         aLocatie = Locatie()
         aLocatie.naam    = locatieNaam
         aLocatie.adres   = aAdress
@@ -144,7 +143,7 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
         addLogEntry(orderNr,message)
     else:
        aLocatie = aLocaties[0] 
-       print("location found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
+       #print("location found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
     return aLocatie 
 
 #Camera
@@ -208,9 +207,9 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
         if validDate(recTill):
             aVideo.opname_tot   = datetime.strptime(recTill, '%Y%m%d%H%M%S') 
         if "h264" in videoNaam:
-            aVideo.codec        = "h265"
+            aVideo.codec        = "h264"
         else:
-            aVideo.codec        = "vb9"
+            aVideo.codec        = "vp9"
         aVideo.save()
 
         message = "WARNING: Default values added for video: "  + videoNaam + " | " + aCamera.naam
@@ -310,7 +309,7 @@ def extractDBitems(filename):
 
     #print ("recFrom: " , recFrom)
     #print ("RecTill: " , recTill)
-    #print ("Codec:    vb9\n\n")
+    #print ("Codec:    vp9\n\n")
 
     addVideo(ordernr,naam,camera,locatie,bedrijf,video_link,recFrom,recTill)
     return
@@ -318,6 +317,8 @@ def extractDBitems(filename):
 def insertConvertedVideos():
     inpath=getVideoLocation()
     print('Add Converted Videos to DB from:',inpath)
+    message = 'Add Converted Videos to DB from:' + inpath
+    addLogEntry(" ", message)
     for root, dirs, files in os.walk(inpath, topdown=True):
         for name in files:
             filename = os.path.join(root, name)
@@ -325,9 +326,10 @@ def insertConvertedVideos():
             #print("Files :",os.path.join(root, name))
             if "Converted" in filename and "._" not in filename:
                 #print('Filename :',filename)
-                if ".webm" in filename or "_h264.mp4" in filename and "._" not in filename:
+                if ".webm" in filename or "h264" in filename and "._" not in filename:
                     extractDBitems(filename)
-
+    message = 'Add Converted Videos to DB Ended'
+    addLogEntry(" ", message)
     return   
 
 def ConvertingVideos():
@@ -386,10 +388,9 @@ def ConvertingVideos():
                             formatData= file.read().replace('\n', '')
                     
                         if "h264" in formatData:
-                            outFileName = outFileName.replace(".mp4", "_h264.mp4")
-                            outFileName = outFileName.replace(".MP4", "_h264.MP4")
-
-                            message = 'Copying h264code ' + inFileName + " Size: " + fSize + " MB"
+                            outFileName = 'h264_' + outFileName
+                
+                            message = 'Copying h264 ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(request,message)
                             shutil.copyfile(inFileName, outFileName)
                             extractDBitems(outFileName)
@@ -406,10 +407,10 @@ def ConvertingVideos():
                             #command 
                             #command = "cp " + inFile + " " + outFile 
 
-                            #vb9 onepass
+                            #vp9 onepass
                             command = "ffmpeg -y -i " + inFile
                             command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
-                            #vb9 twopass
+                            #vp9 twopass
                             #command = "ffmpeg  -y -i " + inFile
                             #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
                             #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
