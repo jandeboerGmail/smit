@@ -1241,5 +1241,3 @@ def zContactOrderStadgenoot (request):
     else:
         dict = {}
     return render(request,'../templates/zContactOrder.html', dict )
-
-

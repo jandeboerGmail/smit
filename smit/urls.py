@@ -16,10 +16,12 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import include, path
+from two_factor.urls import urlpatterns as tf_urls
 
 app_name = 'camera'
 
 urlpatterns = [
+    path('', include(tf_urls)),
     path('', include('camera.urls')),
     #path('', admin.site.urls),
     path('camera/', include('camera.urls')),

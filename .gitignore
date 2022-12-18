@@ -11,6 +11,8 @@ migrations/
 *.tar
 *.gz
 *isFormat
+setenv*
+accessList
 
 
 # Byte-compiled / optimized / DLL files

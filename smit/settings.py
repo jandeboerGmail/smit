@@ -25,10 +25,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'changeme')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = bool(int(os.environ.get('DEBUG', 0)))
-DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
+#DEBUG = True
+#DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.1.11','jupiter','berkhout.ddns.net','192.168.2.62','portal','sgportal','sgportal.smitelektrotechniek.nl']
+#ALLOWED_HOSTS = ['192.168.1.11','jupiter','berkhout.ddns.net','192.168.2.62','portal','sgportal','sgportal.smitelektrotechniek.nl']
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
 ALLOWED_HOSTS.extend(
     filter(
         None,
@@ -45,7 +47,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #mfa
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_email',  # <- if you want email capability.
+    'two_factor',
+    'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
+    'two_factor.plugins.email',  # <- if you want email capability.
     'camera',
+
 ]
 
 MIDDLEWARE = [
@@ -54,6 +65,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -97,7 +109,11 @@ DATABASES = {
 }
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
-LOGIN_URL = '/admin/login'
+#LOGIN_URL = '/admin/login'
+#mfa
+LOGIN_URL = 'two_factor:login' 
+# this one is optional
+#LOGIN_REDIRECT_URL = 'two_factor:profile'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

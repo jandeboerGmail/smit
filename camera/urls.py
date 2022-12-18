@@ -121,3 +121,4 @@ urlpatterns = [
     path('actieInsertConvertedVideos/',views.actieInsertConvertedVideos,name='actieInsertConvertedVideos'),
 
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
