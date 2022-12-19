@@ -4,3 +4,7 @@ mysqlclient
 mysql-connector-python
 Pillow
 xlwt
+django-two-factor-auth
+django-two-factor-auth[phonenumbers]
+twilio
+django-bootstrap-form

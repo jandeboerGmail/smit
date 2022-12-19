@@ -29,14 +29,14 @@ DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 #DEBUG = True
 #DEBUG = False
 
-#ALLOWED_HOSTS = ['192.168.1.11','jupiter','berkhout.ddns.net','192.168.2.62','portal','sgportal','sgportal.smitelektrotechniek.nl']
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
-ALLOWED_HOSTS.extend(
-    filter(
-        None,
-        os.environ.get('ALLOWED_HOSTS', '').split(','),
-    )
-)
+ALLOWED_HOSTS = ['192.168.1.11','jupiter','berkhout.ddns.net','192.168.2.62','portal','sgportal','sgportal.smitelektrotechniek.nl']
+#ALLOWED_HOSTS = ['127.0.0.1','localhost']
+#ALLOWED_HOSTS.extend(
+#    filter(
+#        None,
+#        os.environ.get('ALLOWED_HOSTS', '').split(','),
+#   )
+#)
 
 # Application definition
 
@@ -56,9 +56,9 @@ INSTALLED_APPS = [
     'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
     'two_factor.plugins.email',  # <- if you want email capability.
     'camera',
-    'debug_toolbar', #MFA
-    'bootstrapform',
 
+     'bootstrapform'
+     
 ]
 
 MIDDLEWARE = [
