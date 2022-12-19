@@ -120,12 +120,14 @@ PHONENUMBER_DEFAULT_REGION = 'NL'
 
 #TWO_FACTOR_SMS_GATEWAY = 'example.gateways.Messages'0000
 #TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
-TWO_FACTOR_WEBAUTHN_RP_NAME = 'Demo Application'
-TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
+TWO_FACTOR_WEBAUTHN_RP_NAME = 'Smit Vdeo Appc '
 
-TWILIO_ACCOUNT_SID = 'AC6c947d6ae3fb067153e84c62af3f5f35'
-TWILIO_AUTH_TOKEN = '1373835eb583ab1cb4ce3ae259a521e5'
-TWILIO_CALLER_ID = '+12058463331'
+TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
+TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID', '')
+TWILIO_AUTH_TOKEN  =  os.environ.get('TWILIO_AUTH_TOKEN', '')
+TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID ', '')
+TWILIO_AUTH_TOKEN = ''
+TWILIO_CALLER_ID = ''
 
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
