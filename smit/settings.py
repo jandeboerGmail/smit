@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
     'two_factor.plugins.email',  # <- if you want email capability.
     'camera',
+    'debug_toolbar', #MFA
+    'bootstrapform',
 
 ]
 
@@ -110,10 +112,23 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 #LOGIN_URL = '/admin/login'
-#mfa
+
+#MFA
+LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'two_factor:login' 
+PHONENUMBER_DEFAULT_REGION = 'NL'
+
+#TWO_FACTOR_SMS_GATEWAY = 'example.gateways.Messages'0000
+#TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
+TWO_FACTOR_WEBAUTHN_RP_NAME = 'Demo Application'
+TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
+
+TWILIO_ACCOUNT_SID = 'AC6c947d6ae3fb067153e84c62af3f5f35'
+TWILIO_AUTH_TOKEN = '1373835eb583ab1cb4ce3ae259a521e5'
+TWILIO_CALLER_ID = '+12058463331'
+
 # this one is optional
-#LOGIN_REDIRECT_URL = 'two_factor:profile'
+LOGIN_REDIRECT_URL = 'two_factor:profile'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

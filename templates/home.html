@@ -1,0 +1,89 @@
+
+{% load static %}
+{% load i18n %}
+
+{% url 'registration' as reg_url %}
+{% url 'two_factor:login' as login_url %}
+{% url 'two_factor:setup' as setup_url %}
+{% url 'logout' as logout_url %}
+{% url 'secret' as secret_url %}
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary"> 
+    <div class="container">
+          <img src="{%static 'images/smit-logo.png' %}"class="navbar-brand"  width="123" height="58"alt="Logo" >
+  
+        <button class="navbar-toggler" type="button" data-toggle="collapse"
+                data-target="#bs-example-navbar-collapse-1" aria-controls="bs-example-navbar-collapse-1"
+                aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="navbar-nav mr-auto">
+  
+          <li class="nav-item"></li>
+            <a class="nav-link" href="/camera/indexAdres">Adres</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexGebruiker">Gebruiker</a>
+          </li>
+         
+          <li class="nav-item"></li>
+            <a class="nav-link" href="/camera/indexBedrijf">Bedrijf</a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexLocatie">Locatie</a>
+          </li>
+        
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexCamera">Camera</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexVideo">Video</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexOrder">Order</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexLog">Log</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexActies">Actie</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexStadgenoot">Stadgenoot</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/about">Over</a>
+            <!--
+            <li class="nav-item {% block nav_secret %}{% endblock %}">
+              <a class="nav-link" href="{% url 'secret' %}">{% trans "Secret Page" %}</a>
+            </li>
+          -->
+          </ul>
+
+          <ul class="navbar-nav mlrauto">
+            {% if user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link text-dark">{{ user }} {% if user.otp_device %}🔒{% endif %}</a>
+            </li>
+            <li class="nav-item mr-auto">
+              <a class="nav-link text-dark" href="{{ logout_url }}">Logout</a>
+            </li>
+  
+          {% else %}
+          
+            <li class="nav-item">
+              <a class="nav-link text-dark"  href="{{ reg_url }}">Registering</a> 
+            </li>
+             <li class="nav-item">
+              <a class="nav-link text-dark" href="{% url 'two_factor:login' %}">{% trans "Login" %}</a>
+            </li>
+          {% endif %}
+          </ul>
+        </div>
+      </div>
+  </nav>
