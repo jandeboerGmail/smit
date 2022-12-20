@@ -407,6 +407,11 @@ def ConvertingVideos():
                             #command 
                             #command = "cp " + inFile + " " + outFile 
 
+                            #h264
+                            #ffmpeg -i "$i" -bsf:v h264_mp4toannexb -sn -map 0:0 -map 0:1 -vcodec libx264 "$i.ts"
+                            #command = "ffmpeg -i " + inFile
+                            #command = command + " -bsf:v h264_mp4toannexb -sn -map 0:0 -map 0:1 -vcodec libx264 " + outFile
+
                             #vp9 onepass
                             command = "ffmpeg -y -i " + inFile
                             command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile

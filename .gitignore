@@ -17,6 +17,10 @@ accessList
 docker-compose*
 *docker*
 *twilio*
+*.sql
+*.xls
+*.xlsx
+test*
 
 
 # Byte-compiled / optimized / DLL files

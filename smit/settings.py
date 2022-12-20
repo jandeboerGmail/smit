@@ -122,9 +122,9 @@ PHONENUMBER_DEFAULT_REGION = 'NL'
 TWO_FACTOR_WEBAUTHN_RP_NAME = 'Smit Video App'
 
 TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
-TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID', '')
-TWILIO_AUTH_TOKEN  =  os.environ.get('TWILIO_AUTH_TOKEN', '')
-TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID ', '')
+TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID')
+TWILIO_AUTH_TOKEN  =  os.environ.get('TWILIO_AUTH_TOKEN')
+TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
 TWILIO_AUTH_TOKEN = ''
 TWILIO_CALLER_ID = ''
 
