@@ -1,5 +1,6 @@
 camera/static/media/
 /data
+/Data
 /static/
 /media/
 convert/*.mp4
@@ -13,11 +14,13 @@ migrations/
 *isFormat
 setenv*
 accessList
+*test*
 
 docker-compose*
 *docker*
 *twilio*
 *.sql
+smit*sql
 *.xls
 *.xlsx
 test*
