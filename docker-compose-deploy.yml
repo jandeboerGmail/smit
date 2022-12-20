@@ -4,19 +4,26 @@ services:
   app:
     build:
       context: .
+    restart: always
     volumes:
       - static_data:/vol/web
       - /home/jan/media/:/code/camera/static/media
     environment:
-      - SECRET_KEY=samplesecret123
       - DEBUG=0
-      - TWILIO_ACCOUNT_SID=AC6c947d6ae3fb067153e84c62af3f5f35
-      - TWILIO_AUTH_TOKEN=1373835eb583ab1cb4ce3ae259a521e5
-      - TWILIO_CALLER_ID=+12058463331
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_CALLER_ID=+${TWILIO_CALLER_ID} 
 
   proxy:
     build:
       context: ./proxy
+    restart: always
     volumes:
       - static_data:/vol/static
     ports:

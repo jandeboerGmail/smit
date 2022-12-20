@@ -7,12 +7,16 @@ services:
     volumes:
       - /home/jan/media/:/code/camera/static/media
     environment:
-      - SECRET_KEY=samplesecret123
-      - ALLOWED_HOSTS=192.168.1.226,192.168.1.10,192.168.1.11,192.168.2.62,127.0.0.1,localhost,sgportal,sgportal.smitelectra.nl,berkhout.ddns.net,jupiter
       - DEBUG=1
-      - TWILIO_ACCOUNT_SID=AC6c947d6ae3fb067153e84c62af3f5f35
-      - TWILIO_AUTH_TOKEN=1373835eb583ab1cb4ce3ae259a521e5
-      - TWILIO_CALLER_ID=+12058463331
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_CALLER_ID=+${TWILIO_CALLER_ID} 
     ports:
       - "8000:8000"
     command: sh -c "python manage.py runserver 0.0.0.0:8000"

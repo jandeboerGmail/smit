@@ -29,14 +29,13 @@ DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 #DEBUG = True
 #DEBUG = False
 
-ALLOWED_HOSTS = ['192.168.1.11','jupiter','berkhout.ddns.net','192.168.2.62','portal','sgportal','sgportal.smitelektrotechniek.nl']
-#ALLOWED_HOSTS = ['127.0.0.1','localhost']
-#ALLOWED_HOSTS.extend(
-#    filter(
-#        None,
-#        os.environ.get('ALLOWED_HOSTS', '').split(','),
-#   )
-#)
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.environ.get('ALLOWED_HOSTS', '').split(','),
+   )
+)
 
 # Application definition
 
@@ -99,10 +98,10 @@ WSGI_APPLICATION = 'smit.wsgi.application'
 DATABASES = {
      'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'smitvideo_dev',
-        'USER': 'django',
-        'PASSWORD': 'Django2020Pwd!',
-        'HOST': '192.168.1.11',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASS'),
+        'HOST': os.environ.get('DB_HOST'), 
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
@@ -120,7 +119,7 @@ PHONENUMBER_DEFAULT_REGION = 'NL'
 
 #TWO_FACTOR_SMS_GATEWAY = 'example.gateways.Messages'0000
 #TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
-TWO_FACTOR_WEBAUTHN_RP_NAME = 'Smit Vdeo Appc '
+TWO_FACTOR_WEBAUTHN_RP_NAME = 'Smit Video App'
 
 TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID', '')
