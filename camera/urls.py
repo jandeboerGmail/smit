@@ -127,36 +127,19 @@ urlpatterns = [
     path('actieDisplayConversionStatus/',views.actieDisplayConversionStatus,name='actieDisplayConversionStatus'),
     path('actieToggleConversionStatus/',views.actieToggleConversionStatus,name='actieToggleConversionStatus'),
     path('actieGetVideoLocation/',views.actieGetVideoLocation,name='actieGetVideoLocation'),
+    path('actieSendMail/',views.actieSendMail,name='actieSendMail'),
     path('actieConvertVideo/',views.actieConvertVideo,name='actieConvertVideo'),
     path('actieConvertVideoOrder/',views.actieConvertVideoOrder,name='actieConvertVideoOrder'),
     path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
     path('actieInsertConvertedVideos/',views.actieInsertConvertedVideos,name='actieInsertConvertedVideos'),
+    
 #MFA
-    path(
-        '',
-        HomeView.as_view(),
-        name='home',
-    ),
-    path(
-        'account/logout/',
-        LogoutView.as_view(),
-        name='logout',
-    ),
-    path(
-        'secret/',
-        ExampleSecretView.as_view(),
-        name='secret',
-    ),
-    path(
-        'account/register/',
-        RegistrationView.as_view(),
-        name='registration',
-    ),
-    path(
-        'account/register/done/',
-        RegistrationCompleteView.as_view(),
-        name='registration_complete',
-    ),
+    path( '', HomeView.as_view(),name='home',),
+    path('account/logout/',LogoutView.as_view(),name='logout',),
+    path('secret/',ExampleSecretView.as_view(),name='secret',),
+    path('account/register/',RegistrationView.as_view(),name='registration',),
+    path('account/register/done/',RegistrationCompleteView.as_view(),name='registration_complete',),
+    
     path('', include(tf_urls)),
     path('', include(tf_twilio_urls)),
     #path('', include('user_sessions.urls', 'user_sessions')),

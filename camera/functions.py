@@ -122,7 +122,7 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
     aGebruiker = addGebruiker(orderNr,"Onbekend")
     aAdress    = addAdress(orderNr,adressNaam)
 
-    print ("Locatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aGebruiker.naam)
+    #print ("Locatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aGebruiker.naam)
 
     #aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')[0]
     #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
@@ -150,17 +150,17 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
     aServiceOrder = addServiceOrder(orderNr,bedrijfNaam)
-    print ('aServiceOrder: ', aServiceOrder.ordernr)
+    #print ('aServiceOrder: ', aServiceOrder.ordernr)
 
     aLocatie  = addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam)
-    print ('aLocatie: ', aLocatie.naam)
+    #print ('aLocatie: ', aLocatie.naam)
 
-    print("Finding aCamera: ",cameraNaam,"-", aLocatie.naam)
+    #print("Finding aCamera: ",cameraNaam,"-", aLocatie.naam)
     #aCameras    = Camera.objects.get(naam=cameraNaam,locatie__naam=aLocatie.naam)
     aCameras    = Camera.objects.filter(naam=cameraNaam,locatie__naam=aLocatie.naam)
 
     if not aCameras and  cameraNaam:
-        print("not found aCamera: ",cameraNaam, aLocatie.naam)
+        #print("not found aCamera: ",cameraNaam, aLocatie.naam)
         aCamera = Camera()
         aCamera.naam      = cameraNaam
         aCamera.locatie   = aLocatie
@@ -173,7 +173,7 @@ def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaa
         addLogEntry(orderNr,message)
     else:
         aCamera = aCameras[0]
-        print("Found aCamera: ", aCamera.naam, aLocatie.naam)
+        #print("Found aCamera: ", aCamera.naam, aLocatie.naam)
     return aCamera 
 
 #Video
@@ -187,10 +187,10 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     print("bedrijfnaam: ",bedrijfNaam)
 
     aAdress = addAdress(orderNr,locatieNaam)
-    print ("Adress: ",aAdress.naam)
+    #print ("Adress: ",aAdress.naam)
 
     aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,aAdress.naam,"default")
-    print ("Camera: ",aCamera.naam)
+    #print ("Camera: ",aCamera.naam)
 
     #aVideo   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
     aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam)
@@ -216,7 +216,7 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
         addLogEntry(orderNr,message)
     else:
         aVideo = aVideos[0]
-        print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
+        #print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
 
     #print ("Video: ",aVideo.naam)
     return aVideo
@@ -397,9 +397,6 @@ def ConvertingVideos():
                             # removeFile(inFileName) # uncommend for production
 
                         else: #conversion needed
-                            outFileName = outFileName.replace(".mp4", ".webm")
-                            outFileName = outFileName.replace(".MP4", ".webm")
-
                             startTime = time.time()
                             message = 'Converting   ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(request,message)
@@ -408,13 +405,21 @@ def ConvertingVideos():
                             #command = "cp " + inFile + " " + outFile 
 
                             #h264
-                            #ffmpeg -i "$i" -bsf:v h264_mp4toannexb -sn -map 0:0 -map 0:1 -vcodec libx264 "$i.ts"
-                            #command = "ffmpeg -i " + inFile
-                            #command = command + " -bsf:v h264_mp4toannexb -sn -map 0:0 -map 0:1 -vcodec libx264 " + outFile
-
-                            #vp9 onepass
+                            outFileName = outFileName.replace(".mp4", "_conv_h264.mp4")
+                            outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
+                            outFile = outFileName.replace(" ", "\ ")
+                            #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
                             command = "ffmpeg -y -i " + inFile
-                            command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
+                            command = command + " -map 0 -c:v libx264 -crf 18 " + outFile
+
+                            #vb9
+                            #outFileName = outFileName.replace(".mp4", ".webm")
+                            #outFileName = outFileName.replace(".MP4", ".webm")
+                            #outFile = outFileName.replace(" ", "\ ")
+                            #vp9 
+                            #command = "ffmpeg -y -i " + inFile
+                            #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
+                            
                             #vp9 twopass
                             #command = "ffmpeg  -y -i " + inFile
                             #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 

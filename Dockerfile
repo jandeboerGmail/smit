@@ -9,12 +9,10 @@ RUN mkdir /code
 WORKDIR /code
 
 COPY requirements.txt /code/
+RUN apt-get update -qq && apt-get install ffmpeg -y
 RUN pip3 install --upgrade pip
 RUN pip3 install -r requirements.txt
 
-#COPY smit/settings_dev.py /code/smit/settings.py
-#COPY smit/settings_prod.py /code/smit/settings.py
-#COPY smit/settings_smit.py /code/smit/settings.py
 COPY . /code
 COPY ./scripts /scripts
 

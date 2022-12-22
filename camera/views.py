@@ -10,7 +10,9 @@ from operator import eq
 from django.utils import timezone
 from django.core.paginator import Paginator
 from datetime import datetime
-from itertools import chain
+from django.core.mail import send_mail
+
+#from itertools import chain
 
 import camera.functions as functions
 from camera.models import Adress, Gebruiker, Bedrijf, Camera, Locatie, Video ,ServiceOrder, Log, Parameter
@@ -42,6 +44,7 @@ def todo(request):
     context  = {}
     return render(request,'todo.html',context )
     # return HttpResponse("Hello, world. You're at the Camera Todo index")
+
 
 #index
 @login_required
@@ -1111,6 +1114,14 @@ def actieAddVideo(request):
     #addVideo("Order S02","video 4 repeat","NVR9 2","Remijden","Stadgenoot",videoLink)
     return redirect('indexActies')
 
+def actieSendMail(request):
+    subject = 'Thank you for registering to our site'
+    message = ' it  means a world to us '
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['jandeboer@gmail.com',]
+    send_mail( subject, message, email_from, recipient_list )
+    return HttpResponse("Mail send!!")
+    #return redirect('redirect to a new page')
 
 #stadgenoot Video
 # Zoek

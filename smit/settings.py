@@ -125,8 +125,14 @@ TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN  =  os.environ.get('TWILIO_AUTH_TOKEN')
 TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
-TWILIO_AUTH_TOKEN = ''
-TWILIO_CALLER_ID = ''
+
+#mail
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER =  os.environ.get('EMAIL_HOST_USER') 
+EMAIL_HOST_PASSWORD =  os.environ.get('EMAIL_HOST_PASSWORD')  
 
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
