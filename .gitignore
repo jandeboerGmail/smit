@@ -16,7 +16,7 @@ setenv*
 accessList
 *test*
 
-*docker*
+
 *twilio*
 *.sql
 smit*sql

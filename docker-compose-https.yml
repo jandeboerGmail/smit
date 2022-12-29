@@ -1,0 +1,59 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    volumes:
+      - static_data:/vol/web
+      - /home/jan/media/:/code/camera/static/media
+    environment:
+      - DEBUG=0
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_CALLER_ID=${TWILIO_CALLER_ID} 
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+
+  proxy:
+    build:
+      context: ./docker/proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - 80:80
+      - 443:443
+      - "9000:9000"
+    volumes:
+      - certbot-web:/vol/www
+      - proxy-dhparams:/vol/proxy
+      - certbot-certs:/etc/letsencrypt
+    environment:
+      - DOMAIN=${DOMAIN}
+
+  certbot:
+    build:
+      context: ./docker/certbot
+    command: echo "Skipping..."
+    environment:
+      - EMAIL=${ACME_DEFAULT_EMAIL}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - certbot-web:/vol/www
+      - certbot-certs:/etc/letsencrypt/
+    depends_on:
+      - proxy
+
+volumes:
+  certbot-web:
+  proxy-dhparams:
+  certbot-certs:
+  static_data:
