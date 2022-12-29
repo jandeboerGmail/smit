@@ -16,7 +16,6 @@ setenv*
 accessList
 *test*
 
-docker-compose*
 *docker*
 *twilio*
 *.sql
