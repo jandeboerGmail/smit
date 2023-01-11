@@ -1065,7 +1065,18 @@ def actieGetVideoLocation(request):
 def actieConvertVideo(request):
     if functions.getRunningStatus() == False:
         functions.ConvertingVideos()
-    return redirect('indexActies')
+        html = "<html><body><strong><center>Conversion Started.. (check logs) </center></strong></body></html>" 
+    else:
+        html = "<html><body><strong><center>Nothing to Convert</center></strong></body></html>" 
+    return HttpResponse(html)
+    #return redirect('indexActies')
+
+@login_required
+def actieListVideo(request):
+    functions.ListVideos()
+    html = "<html><body><strong><center>Listing video's Done.. (check logs) </center></strong></body></html>" 
+    return HttpResponse(html)
+    #return redirect('indexActies')
 
 '''
 @login_required

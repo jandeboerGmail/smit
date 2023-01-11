@@ -458,4 +458,46 @@ def ConvertingVideos():
     addLogEntry(" ", message)
     setRunningStatus(False)
     return
+
+def ListVideos():
+    videoPath=getVideoLocation()
+    message = "Looking for New Videos in " + videoPath
+    addLogEntry(" ", message)
+    for root, dirs, files in os.walk(videoPath, topdown=True):
+  
+        for name in files:
+            inFileName = os.path.join(root, name)
+            #print("Files :",os.path.join(root, name))
+            if "2Convert" in inFileName:
+                #print('inFile :',inFileName)
+                if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
+                    print('inFile :',inFileName)
+                    after = substring_after(inFileName,"2Convert/") 
+            
+                    if (after and size_changed(inFileName,1--)) and (os.path.getsize(inFileName)) > 0:
+                        #print('After :',after)
+                        request = after[0:after.find("/")]
+                        #print('request:',request)
+                        
+                        inFile = inFileName.replace(" ", "\ ")
+                        file_stats = os.stat(inFileName)
+                        fileSize = file_stats.st_size / (1024 * 1024)
+                        fSize = "%.5f" % fileSize
+
+                        #probe format
+                        command = "ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 " + inFile  + " > ._isFormat"
+                        result = os.system(command)
+                        with open('._isFormat', 'r') as file:
+                            formatData= file.read().replace('\n', '')
+                    
+                        if "h264" in formatData:
+                            message = 'Copying h264 ' + inFileName + " Size: " + fSize + " MB"
+                            addLogEntry(request,message)
+                        else: #conversion needed
+                            message = 'Toconvert    ' + inFileName + " Size: " + fSize + " MB"
+                            addLogEntry(request,message)                
+                          
+    message = "Listing Ended "
+    addLogEntry(" ", message)
+    return
                    

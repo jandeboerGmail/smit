@@ -129,6 +129,7 @@ urlpatterns = [
     path('actieGetVideoLocation/',views.actieGetVideoLocation,name='actieGetVideoLocation'),
     path('actieSendMail/',views.actieSendMail,name='actieSendMail'),
     path('actieConvertVideo/',views.actieConvertVideo,name='actieConvertVideo'),
+    path('actieListVideo/',views.actieListVideo,name='actieListVideo'),
     path('actieConvertVideoOrder/',views.actieConvertVideoOrder,name='actieConvertVideoOrder'),
     path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
     path('actieInsertConvertedVideos/',views.actieInsertConvertedVideos,name='actieInsertConvertedVideos'),
