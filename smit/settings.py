@@ -135,7 +135,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 #EMAIL_PORT = 587
 
 #Smit
-EMAIL_HOST = 'smitelektrotechniek.mail.protection.outlook.com'
+EMAIL_HOST = os.environ.get('EMAIL_HOST') 
 EMAIL_USE_TLS = True
 EMAIL_PORT = 25
 
