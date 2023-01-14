@@ -467,14 +467,14 @@ def ListVideos():
   
         for name in files:
             inFileName = os.path.join(root, name)
-            #print("Files :",os.path.join(root, name))
+            print("Files :",os.path.join(root, name))
             if "2Convert" in inFileName:
                 #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
                     print('inFile :',inFileName)
                     after = substring_after(inFileName,"2Convert/") 
             
-                    if (after and size_changed(inFileName,1--)) and (os.path.getsize(inFileName)) > 0:
+                    if (after and size_changed(inFileName,1)) and (os.path.getsize(inFileName)) > 0:
                         #print('After :',after)
                         request = after[0:after.find("/")]
                         #print('request:',request)

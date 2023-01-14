@@ -10,7 +10,7 @@ from operator import eq
 from django.utils import timezone
 from django.core.paginator import Paginator
 from datetime import datetime
-from django.core.mail import send_mail
+from django.core.mail import send_mail, EmailMessage
 
 #from itertools import chain
 
@@ -1126,11 +1126,29 @@ def actieAddVideo(request):
     return redirect('indexActies')
 
 def actieSendMail(request):
+    # org
+    
     subject = 'Thank you for registering to our site'
     message = ' it  means a world to us '
-    email_from = settings.EMAIL_HOST_USER
+    
+    email_from =  'sgportal@Smitelektrotechniek'
+    
     recipient_list = ['jandeboer@gmail.com',]
     send_mail( subject, message, email_from, recipient_list )
+    
+    '''
+    # new
+    email = EmailMessage(
+    'Hello',
+    'Body goes here',
+    'sgportal@Smitelektrotechniek',
+    ['jandeboer.com'],
+    reply_to=['sgportal@Smitelektrotechniek.nl'],
+    headers={'Message-ID': 'foo'},
+)
+
+    email.send()
+    '''
     return HttpResponse("Mail send!!")
     #return redirect('redirect to a new page')
 
