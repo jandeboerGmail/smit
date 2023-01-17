@@ -11,6 +11,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator
 from datetime import datetime
 from django.core.mail import send_mail, EmailMessage
+from django.core import mail
 
 #from itertools import chain
 
@@ -1126,28 +1127,45 @@ def actieAddVideo(request):
     return redirect('indexActies')
 
 def actieSendMail(request):
-    # org
     
+    # org
+
     subject = 'Thank you for registering to our site'
     message = ' it  means a world to us '
-    
-    email_from =  'sgportal@Smitelektrotechniek'
+
+    email_from =  'smitvideoapp@gmail.com'
+    #email_from = settings.EMAIL_HOST_USER
     
     recipient_list = ['jandeboer@gmail.com',]
-    send_mail( subject, message, email_from, recipient_list )
-    
-    '''
+    connection = mail.get_connection()
+    connection.open()
+
+    send_mail( subject, message, email_from, recipient_list )    
+
     # new
-    email = EmailMessage(
-    'Hello',
+    '''
+    
+    connection = mail.get_connection()
+    connection.open()
+    email1 = mail.EmailMessage(
+        'Hello',
+        'Body goes here',
+        'sgportal@Smitelektrotechniek',
+        ['jandeboer@gmail.com'],
+        connection=connection,
+    )
+    
+    email1.send()
+    '''
+    # newer
+    '''
+    send_mail(
+    'Subject Hello',
     'Body goes here',
     'sgportal@Smitelektrotechniek',
     ['jandeboer.com'],
-    reply_to=['sgportal@Smitelektrotechniek.nl'],
-    headers={'Message-ID': 'foo'},
+    fail_silently=False,
 )
-
-    email.send()
     '''
     return HttpResponse("Mail send!!")
     #return redirect('redirect to a new page')

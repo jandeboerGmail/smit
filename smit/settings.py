@@ -111,6 +111,8 @@ DATABASES = {
 #LOGIN_URL = '/admin/login'
 
 #MFA
+TWO_FACTOR_REMEMBER_COOKIE_AGE = 600
+
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'two_factor:login' 
 PHONENUMBER_DEFAULT_REGION = 'NL'
@@ -126,22 +128,17 @@ TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
 
 #mail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' No mail only diplay on screen
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_HOST          = os.environ.get('EMAIL_HOST') 
+EMAIL_HOST='smtp.gmail.com' #Gmail
 
-#gmail
-#EMAIL_HOST = 'smtp.gmail.com'
-#EMAIL_USE_TLS = True
-#EMAIL_PORT = 587
-
-#Smit
-EMAIL_HOST = os.environ.get('EMAIL_HOST') 
-EMAIL_USE_TLS = True
-EMAIL_PORT = 25
-
-EMAIL_HOST_USER =  os.environ.get('EMAIL_HOST_USER') 
-EMAIL_HOST_PASSWORD =  os.environ.get('EMAIL_HOST_PASSWORD')  
- 
+EMAIL_PORT          = os.environ.get('EMAIL_PORT') 
+EMAIL_USE_TLS       = os.environ.get('EMAIL_USE_TLS') 
+#EMAIL_USE_SSL       = os.environ.get('EMAIL_USE_SSL') 
+EMAIL_USE_TLS       = True
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
 
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
@@ -161,7 +158,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -170,7 +166,6 @@ TIME_ZONE = 'CET'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

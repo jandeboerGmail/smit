@@ -409,7 +409,7 @@ def ConvertingVideos():
                             outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
                             outFile = outFileName.replace(" ", "\ ")
                             #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
-                            command = "ffmpeg -y -i " + inFile
+                            command = "ffmpeg -y -threads 1 -i " + inFile
                             command = command + " -map 0 -c:v libx264 -crf 18 " + outFile
 
                             #vb9
