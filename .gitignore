@@ -15,7 +15,9 @@ migrations/
 setenv*
 accessList
 *test*
-
+*cer*
+*crt*
+*.pem
 
 *twilio*
 *.sql
