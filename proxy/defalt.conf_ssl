@@ -1,0 +1,16 @@
+server {
+    listen                  9000;
+    listen                  443 ssl;
+    server_name             smitelektrotechniek.nl;
+    ssl_certificate         /etc/ssl/certs/cert.pem;
+    ssl_certificate_key     /etc/ssl/private/key.pem;
+
+    location /static {
+        alias /vol/static;
+    }
+
+    location / {
+        uwsgi_pass app:8000;
+        include /etc/nginx/uwsgi_params;
+    }
+}
