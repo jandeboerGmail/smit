@@ -18,6 +18,8 @@ accessList
 *cer*
 *crt*
 *.pem
+*.key
+*.csr
 
 *twilio*
 *.sql
