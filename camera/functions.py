@@ -448,7 +448,8 @@ def ConvertingVideos():
                                 fileSize = file_stats.st_size / (1024 * 1024)
                                 fSize = "%.5f" % fileSize
 
-                                message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
+                                message = "To " + outFileName 
+                                #message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
                                 addLogEntry(request,message)
                         
                                 # removeFile(inFileName) # uncommend for production

@@ -28,11 +28,8 @@ services:
     restart: always
     volumes:
       - static_data:/vol/static
-      - ./cert.pem:/etc/ssl/certs/cert.pem
-      - ./key.pem:/etc/ssl/private/key.pem
     ports:
       - "9000:9000"
-      - "443:443"
     depends_on:
       - app
 
