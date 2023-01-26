@@ -112,6 +112,7 @@ DATABASES = {
 
 #MFA
 #TWO_FACTOR_REMEMBER_COOKIE_AGE = 60
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') 
 
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'two_factor:login' 
@@ -130,8 +131,8 @@ TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' No mail only diplay on screen
 
-#EMAIL_HOST          = os.environ.get('EMAIL_HOST') 
-EMAIL_HOST='smtp.gmail.com' #Gmail
+EMAIL_HOST          = os.environ.get('EMAIL_HOST') 
+#EMAIL_HOST='smtp.gmail.com' #Gmail
 
 EMAIL_PORT          = os.environ.get('EMAIL_PORT') 
 EMAIL_USE_TLS       = os.environ.get('EMAIL_USE_TLS') 
@@ -142,6 +143,11 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
+
+#cookie settings 
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+SESSION_COOKIE_AGE=3600
+#SESSION_COOKIE_SECURE=True
 
 AUTH_PASSWORD_VALIDATORS = [
     {
