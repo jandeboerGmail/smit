@@ -25,6 +25,7 @@
         <th scope="col">Plaats</th>
         <th scope="col">Opname van</th>
         <th scope="col">Opname tot</th>
+        <th scope="col">Toegevoegd</th>
         <th scope="col">Acties</th>
     </tr>
   </thead>
@@ -40,6 +41,7 @@
        <td> {{video.camera.plaats}} </td>
        <td> {{video.opname_van}} </td>
        <td> {{video.opname_tot}} </td>
+       <td> {{video.datum_inserted}} </td>
        <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
        <!--<td><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></td> -->
        <!--<td><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></td> -->

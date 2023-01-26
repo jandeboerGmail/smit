@@ -7,7 +7,7 @@ services:
     restart: always
     volumes:
       - static_data:/vol/web
-      -  /mnt/cctv/KLANTEN/DOWNLOAD/Stadgenoot/:/code/camera/static/media
+      - /mnt/cctv/KLANTEN/DOWNLOAD/Stadgenoot/:/code/camera/static/media
     environment:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}

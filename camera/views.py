@@ -614,7 +614,7 @@ def deleteCamera(request,pk):
 # ---- Video ---------------
 @login_required
 def allVideo(request):
-    video_list = Video.objects.order_by('camera','ordernr','naam')
+    video_list = Video.objects.order_by('-datum_inserted','camera','ordernr','naam')
     aantal =  video_list.count
 
     paginator = Paginator(video_list,15)
@@ -625,7 +625,7 @@ def allVideo(request):
     return render(request,'../templates/displayVideo.html',video_dict )
 
 def allVideoBedrijf(request,bedrijf):
-    qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("ordernr","camera__locatie")
+    qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_inserted","ordernr","camera__locatie")
     #print ('qs1: ',str(qs1.query))
     aantal = qs1.count
 
@@ -1066,9 +1066,9 @@ def actieGetVideoLocation(request):
 def actieConvertVideo(request):
     if functions.getRunningStatus() == False:
         functions.ConvertingVideos()
-        html = "<html><body><strong><center>Conversion Started.. (check logs) </center></strong></body></html>" 
+        html = "<html><body><strong><center>Conversie gestart... (check logs)</center></strong></body></html>" 
     else:
-        html = "<html><body><strong><center>Nothing to Convert</center></strong></body></html>" 
+        html = "<html><body><strong><center>Niets te converteren(check status)</center></strong></body></html>" 
     return HttpResponse(html)
     #return redirect('indexActies')
 

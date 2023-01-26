@@ -361,13 +361,13 @@ def ConvertingVideos():
                         #make/check output dir
                         destDir = substring_before(inFileName, "2Convert") + "Converted/" 
                        
-                        #print('destDir :',destDir)
+                        print('destDir :',destDir)
                         if not os.path.isdir(destDir):
                             os.mkdir(destDir)
 
                         # check / create request directory
                         reqDir = destDir + request + "/"
-                        #print('reqDir :', reqDir)
+                        print('reqDir :', reqDir)
                         if not os.path.isdir(reqDir):
                             os.mkdir(reqDir)
                 
@@ -388,7 +388,7 @@ def ConvertingVideos():
                             formatData= file.read().replace('\n', '')
                     
                         if "h264" in formatData:
-                            outFileName = 'h264_' + outFileName
+                            outFileName = outFileName 
                 
                             message = 'Copying h264 ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(request,message)
@@ -440,13 +440,13 @@ def ConvertingVideos():
                                 # Elapsed Time
                                 endTime = time.time()
                                 elapsedTime = endTime - startTime
-                                elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
+                                #elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
 
                                 # fileSize
-                                file_stats = os.stat(outFileName)
-                                #print(file_stats)
-                                fileSize = file_stats.st_size / (1024 * 1024)
-                                fSize = "%.5f" % fileSize
+                                #file_stats = os.stat(outFileName)
+                                ##print(file_stats)
+                                #fileSize = file_stats.st_size / (1024 * 1024)
+                                #fSize = "%.5f" % fileSize
 
                                 message = "To " + outFileName 
                                 #message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
@@ -470,7 +470,7 @@ def ListVideos():
   
         for name in files:
             inFileName = os.path.join(root, name)
-            print("Files :",os.path.join(root, name))
+            #print("Files :",os.path.join(root, name))
             if "2Convert" in inFileName:
                 #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
@@ -494,10 +494,10 @@ def ListVideos():
                             formatData= file.read().replace('\n', '')
                     
                         if "h264" in formatData:
-                            message = 'Copying h264 ' + inFileName + " Size: " + fSize + " MB"
+                            message = 'ToCopy h264 ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(request,message)
                         else: #conversion needed
-                            message = 'Toconvert    ' + inFileName + " Size: " + fSize + " MB"
+                            message = 'ToConvert    ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(request,message)                
                           
     message = "Listing Ended "
