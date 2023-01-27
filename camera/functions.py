@@ -336,6 +336,8 @@ def ConvertingVideos():
     print('Conversion')
    
     videoPath=getVideoLocation()
+    max_converting = 3
+    converting = 1
     
     message = "Converting Looking for New Videos in " + videoPath
     addLogEntry(" ", message)
@@ -410,8 +412,8 @@ def ConvertingVideos():
                             outFile = outFileName.replace(" ", "\ ")
                             
                             #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
-                            #command = "ffmpeg -y -threads 1 -i " + inFile
-                            command = "ffmpeg -y -i " + inFile
+                            command = "ffmpeg -y -threads 1 -i " + inFile
+                            #command = "ffmpeg -y -i " + inFile
                             command = command + " -map 0 -c:v libx264 -crf 18 " + outFile + " &"
                             #vb9
                             #outFileName = outFileName.replace(".mp4", ".webm")
@@ -432,31 +434,35 @@ def ConvertingVideos():
                             # removeFile(outFile) # uncomment in production
 
                             startTime = time.time()
-                            result = os.system(command)
-                            #result = 0
-
-                            #print('Result :',result)
-                            if result ==  0: # 256 error
-                                # Elapsed Time
-                                endTime = time.time()
-                                elapsedTime = endTime - startTime
-                                #elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
-
-                                # fileSize
-                                #file_stats = os.stat(outFileName)
-                                ##print(file_stats)
-                                #fileSize = file_stats.st_size / (1024 * 1024)
-                                #fSize = "%.5f" % fileSize
-
-                                message = "To " + outFileName 
-                                #message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
-                                addLogEntry(request,message)
                         
-                                # removeFile(inFileName) # uncommend for production
-                                extractDBitems(outFileName)
+                            if converting <= max_converting:
+                                converting += 1
+                                
+                                result = os.system(command)
+                                #result = 0
+
+                                #print('Result :',result)
+                                if result ==  0: # 256 error
+                                    # Elapsed Time
+                                    endTime = time.time()
+                                    elapsedTime = endTime - startTime
+                                    #elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
+
+                                    # fileSize
+                                    #file_stats = os.stat(outFileName)
+                                    ##print(file_stats)
+                                    #fileSize = file_stats.st_size / (1024 * 1024)
+                                    #fSize = "%.5f" % fileSize
+
+                                    message = "To " + outFileName 
+                                    #message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
+                                    addLogEntry(request,message)
+                        
+                                    # removeFile(inFileName) # uncommend for production
+                                    extractDBitems(outFileName)
             
-                            else:
-                                addLogEntry(request,"ERROR : Not Converted")
+                                else:
+                                    addLogEntry(request,"ERROR : Not Converted")
     message = "Converting Ended "
     addLogEntry(" ", message)
     setRunningStatus(False)
