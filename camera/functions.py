@@ -399,44 +399,42 @@ def ConvertingVideos():
                             # removeFile(inFileName) # uncommend for production
 
                         else: #conversion needed
-                            startTime = time.time()
-                            message = 'Converting   ' + inFileName + " Size: " + fSize + " MB"
-                            addLogEntry(request,message)
-
-                            #command 
-                            #command = "cp " + inFile + " " + outFile 
-
-                            #h264
-                            outFileName = outFileName.replace(".mp4", "_conv_h264.mp4")
-                            outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
-                            outFile = outFileName.replace(" ", "\ ")
-                            
-                            #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
-                            command = "ffmpeg -y -threads 1 -i " + inFile
-                            #command = "ffmpeg -y -i " + inFile
-                            command = command + " -map 0 -c:v libx264 -crf 18 " + outFile + " &"
-                            #vb9
-                            #outFileName = outFileName.replace(".mp4", ".webm")
-                            #outFileName = outFileName.replace(".MP4", ".webm")
-                            #outFile = outFileName.replace(" ", "\ ")
-                            
-                            #vp9 
-                            #command = "ffmpeg -y -i " + inFile
-                            #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
-                            
-                            #vp9 twopass
-                            #command = "ffmpeg  -y -i " + inFile
-                            #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
-                            #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
-
-                            #addLogEntry(request,command)
-                            print('Command :',command) 
-                            # removeFile(outFile) # uncomment in production
-
-                            startTime = time.time()
-                        
                             if converting <= max_converting:
                                 converting += 1
+                                startTime = time.time()
+                                message = 'Converting   ' + inFileName + " Size: " + fSize + " MB"
+                                addLogEntry(request,message)
+
+                                #command 
+                                #command = "cp " + inFile + " " + outFile 
+
+                                #h264
+                                outFileName = outFileName.replace(".mp4", "_conv_h264.mp4")
+                                outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
+                                outFile = outFileName.replace(" ", "\ ")
+                            
+                                #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
+                                command = "ffmpeg -y -threads 1 -i " + inFile
+                                #command = "ffmpeg -y -i " + inFile
+                                command = command + " -map 0 -c:v libx264 -crf 18 " + outFile + " &"
+                                #vb9
+                                #outFileName = outFileName.replace(".mp4", ".webm")
+                                #outFileName = outFileName.replace(".MP4", ".webm")
+                                #outFile = outFileName.replace(" ", "\ ")
+                            
+                                #vp9 
+                                #command = "ffmpeg -y -i " + inFile
+                                #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
+                            
+                                #vp9 twopass
+                                #command = "ffmpeg  -y -i " + inFile
+                                #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
+                                #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
+
+                                #addLogEntry(request,command)
+                                print('Command :',command) 
+                                # removeFile(outFile) # uncomment in production
+                                startTime = time.time()
                                 
                                 result = os.system(command)
                                 #result = 0
@@ -453,16 +451,17 @@ def ConvertingVideos():
                                     ##print(file_stats)
                                     #fileSize = file_stats.st_size / (1024 * 1024)
                                     #fSize = "%.5f" % fileSize
-
+                                    
                                     message = "To " + outFileName 
                                     #message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
                                     addLogEntry(request,message)
                         
                                     # removeFile(inFileName) # uncommend for production
                                     extractDBitems(outFileName)
-            
                                 else:
                                     addLogEntry(request,"ERROR : Not Converted")
+                            else:
+                                addLogEntry(" ","INFO : Exceeding Number of ffmpeg converions") 
     message = "Converting Ended "
     addLogEntry(" ", message)
     setRunningStatus(False)
