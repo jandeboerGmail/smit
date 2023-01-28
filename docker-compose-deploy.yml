@@ -7,7 +7,7 @@ services:
     restart: always
     volumes:
       - static_data:/vol/web
-      - /home/jan/media/:/code/camera/static/media
+      - /home/jan/media/:/code/camera/video
     environment:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
