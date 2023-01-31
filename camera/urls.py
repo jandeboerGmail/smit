@@ -130,6 +130,7 @@ urlpatterns = [
     path('actieSendMail/',views.actieSendMail,name='actieSendMail'),
     path('actieConvertVideo/',views.actieConvertVideo,name='actieConvertVideo'),
     path('actieListVideo/',views.actieListVideo,name='actieListVideo'),
+    path('actieListConvertedVideo/',views.actieListConvertedVideo,name='actieListConvertedVideo'),
     path('actieConvertVideoOrder/',views.actieConvertVideoOrder,name='actieConvertVideoOrder'),
     path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
     path('actieInsertConvertedVideos/',views.actieInsertConvertedVideos,name='actieInsertConvertedVideos'),

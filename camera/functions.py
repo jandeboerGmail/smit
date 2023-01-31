@@ -508,4 +508,36 @@ def ListVideos():
     message = "Listing Ended "
     addLogEntry(" ", message)
     return
+
+def ListConvertedVideos():
+    videoPath=getVideoLocation()
+    message = "Looking for Converted Videos in " + videoPath
+    addLogEntry(" ", message)
+    for root, dirs, files in os.walk(videoPath, topdown=True):
+  
+        for name in files:
+            inFileName = os.path.join(root, name)
+            #print("Files :",os.path.join(root, name))
+            if "Converted" in inFileName:
+                #print('inFile :',inFileName)
+                if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
+                    print('inFile :',inFileName)
+                    after = substring_after(inFileName,"2Convert/") 
+            
+                    if (os.path.getsize(inFileName)) > 0:
+                        #print('After :',after)
+                        request = after[0:after.find("/")]
+                        #print('request:',request)
+                        
+                        inFile = inFileName.replace(" ", "\ ")
+                        file_stats = os.stat(inFileName)
+                        fileSize = file_stats.st_size / (1024 * 1024)
+                        fSize = "%.5f" % fileSize
+
+                        message = 'Converted '  + inFileName + " Size: " + fSize + " MB"
+                        addLogEntry(request,message)
+                                                           
+    message = "Listing Converted Ended"
+    addLogEntry(" ", message)
+    return
                    

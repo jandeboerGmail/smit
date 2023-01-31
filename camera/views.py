@@ -1080,6 +1080,14 @@ def actieListVideo(request):
     return HttpResponse(html)
     #return redirect('indexActies')
 
+@login_required
+def actieListConvertedVideo(request):
+    functions.ListConvertedVideos()
+    html = "<html><body><strong><center>Listing Converted video's Done.. (check logs) </center></strong></body></html>" 
+    return HttpResponse(html)
+    #return redirect('indexActies')
+
+
 '''
 @login_required
 def actieConvertVideo(request):
