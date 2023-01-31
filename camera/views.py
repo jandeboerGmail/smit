@@ -810,8 +810,9 @@ def playVideo(request,pk):
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
         return redirect('indexVideo')
-
-    video_dict  = {'video' : video }
+    location =  functions.getVideoLocation() + video.video_link
+    #location =  video.video_link
+    video_dict  = {'location' : location , 'video' : video }
     return render(request,'../templates/playVideo.html', video_dict )
     '''
     template_name = 'playVideo.html'

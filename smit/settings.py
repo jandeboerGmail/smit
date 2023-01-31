@@ -17,7 +17,6 @@ import os
 #BASE_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -110,8 +109,7 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 #LOGIN_URL = '/admin/login'
 
-#MFA
-#TWO_FACTOR_REMEMBER_COOKIE_AGE = 60
+
 DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') 
 
 LOGOUT_REDIRECT_URL = 'home'
@@ -144,9 +142,13 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
 
+#MFA
+TWO_FACTOR_REMEMBER_COOKIE_AGE = 600
+
 #cookie settings 
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
-SESSION_COOKIE_AGE=600
+SESSION_COOKIE_AGE=3600
+#SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE',6000))
 #SESSION_COOKIE_SECURE=True
 PASSWORD_RESET_TIMEOUT_DAYS=30
 
