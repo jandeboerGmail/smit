@@ -234,6 +234,26 @@ def removeFile(fileName):
         os.remove(fileName)
         print('Removed File :',fileName)
 
+def moveFileToDone(fileName,request):
+    #print('Move File :',fileName)
+    #print('request:',request)    
+
+    destFileName = fileName.replace("2Convert", "2_Convert")
+    destDir = substring_before(destFileName, "2_Convert") + "2_Convert/"
+                       
+    #print('destDir :',destDir)
+    if not os.path.isdir(destDir):
+        os.mkdir(destDir)
+
+    # check / create request directory
+    reqDir = destDir + request + "/"
+    #print('reqDir :', reqDir)
+    if not os.path.isdir(reqDir):
+         os.mkdir(reqDir)
+    
+    print('Move the File :',fileName,reqDir)
+    shutil.move(fileName,reqDir)
+
 def size_changed(fileName,sec):
         b_size = os.path.getsize(fileName)
         time.sleep(sec)
@@ -274,7 +294,7 @@ def extractDBitems(filename):
     videoNaam = fileItems[8].replace("\ ", " ")
 
     #extract videonaam
-    naam = substring_before(videoNaam, ".webm")
+    naam = substring_before(videoNaam, ".mp4")
  
     #extract camera, record, till, from
     naamItems = re.split("_",videoNaam)
@@ -316,15 +336,15 @@ def extractDBitems(filename):
 
 def insertConvertedVideos():
     inpath=getVideoLocation()
-    print('Add Converted Videos to DB from:',inpath)
-    message = 'Add Converted Videos to DB from:' + inpath
+    print('Add Migrated Videos to DB from:',inpath)
+    message = 'Add Migrated Videos to DB from:' + inpath
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(inpath, topdown=True):
         for name in files:
             filename = os.path.join(root, name)
             #print("Filename: ",filename)
             #print("Files :",os.path.join(root, name))
-            if "Converted" in filename and "._" not in filename:
+            if "Migrated" in filename and "._" not in filename:
                 #print('Filename :',filename)
                 if ".webm" in filename or "h264" in filename and "._" not in filename:
                     extractDBitems(filename)
@@ -361,7 +381,7 @@ def ConvertingVideos():
                         print('request:',request)
                         
                         #make/check output dir
-                        destDir = substring_before(inFileName, "2Convert") + "Converted/" 
+                        destDir = substring_before(inFileName, "2Convert") + "Migrated/" 
                        
                         print('destDir :',destDir)
                         if not os.path.isdir(destDir):
@@ -397,12 +417,13 @@ def ConvertingVideos():
                             shutil.copyfile(inFileName, outFileName)
                             extractDBitems(outFileName)
                             # removeFile(inFileName) # uncommend for production
-
+                            moveFileToDone(inFileName,request) 
+                            
                         else: #conversion needed
                             if converting <= max_converting:
                                 converting += 1
                                 startTime = time.time()
-                                message = 'Converting   ' + inFileName + " Size: " + fSize + " MB"
+                                message = 'Migrating   ' + inFileName + " Size: " + fSize + " MB"
                                 addLogEntry(request,message)
 
                                 #command 
@@ -434,6 +455,7 @@ def ConvertingVideos():
                                 #addLogEntry(request,command)
                                 print('Command :',command) 
                                 # removeFile(outFile) # uncomment in production
+                            
                                 startTime = time.time()
                                 
                                 result = os.system(command)
@@ -453,16 +475,17 @@ def ConvertingVideos():
                                     #fSize = "%.5f" % fileSize
                                     
                                     message = "To " + outFileName 
-                                    #message = "Converted to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
+                                    #message = "Migrated to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
                                     addLogEntry(request,message)
                         
                                     # removeFile(inFileName) # uncommend for production
+                                    moveFileToDone(inFileName,request) 
                                     extractDBitems(outFileName)
                                 else:
-                                    addLogEntry(request,"ERROR : Not Converted")
+                                    addLogEntry(request,"ERROR : Not Migrated")
                             else:
                                 addLogEntry(" ","INFO : Exceeding Number of ffmpeg converions") 
-    message = "Converting Ended "
+    message = "Migrating Ended "
     addLogEntry(" ", message)
     setRunningStatus(False)
     return
@@ -511,18 +534,18 @@ def ListVideos():
 
 def ListConvertedVideos():
     videoPath=getVideoLocation()
-    message = "Looking for Converted Videos in " + videoPath
+    message = "Looking for Migrated Videos in " + videoPath
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
         for name in files:
             inFileName = os.path.join(root, name)
             #print("Files :",os.path.join(root, name))
-            if "Converted" in inFileName:
+            if "Migrated" in inFileName:
                 #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
                     print('inFile :',inFileName)
-                    after = substring_after(inFileName,"2Convert/") 
+                    after = substring_after(inFileName,"Migrated/") 
             
                     if (os.path.getsize(inFileName)) > 0:
                         #print('After :',after)
@@ -534,10 +557,10 @@ def ListConvertedVideos():
                         fileSize = file_stats.st_size / (1024 * 1024)
                         fSize = "%.5f" % fileSize
 
-                        message = 'Converted '  + inFileName + " Size: " + fSize + " MB"
+                        message = 'Migrated '  + inFileName + " Size: " + fSize + " MB"
                         addLogEntry(request,message)
                                                            
-    message = "Listing Converted Ended"
+    message = "Listing Migrated Ended"
     addLogEntry(" ", message)
     return
                    

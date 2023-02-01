@@ -14,7 +14,7 @@ from django.core.mail import send_mail, EmailMessage
 from django.core import mail
 
 #from itertools import chain
-
+#import datetime
 import camera.functions as functions
 from camera.models import Adress, Gebruiker, Bedrijf, Camera, Locatie, Video ,ServiceOrder, Log, Parameter
 from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm
@@ -32,7 +32,7 @@ import os,time,shutil,re,locale,xlwt
 
 # Create your views here.
 def current_datetime(request):
-    now = datetime.datetime.now()
+    now = datetime.now()
     html = "<html><body>It is now %s.</body></html>" % now
     return HttpResponse(html)
 
@@ -120,7 +120,7 @@ def zNaamGebruiker (request):
 @login_required
 def exportGebruiker(request):
         response = HttpResponse(content_type='application/ms-excel')
-        now = datetime.datetime.now()
+        now = datetime.now()
         response['Content-Disposition']  = 'attachment; filename=Gebruikers_' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
@@ -321,7 +321,7 @@ def zPlaatsBedrijf(request):
 @login_required
 def exportBedrijf(request):
         response = HttpResponse(content_type='application/ms-excel')
-        now = datetime.datetime.now()
+        now = atetime.now()
         response['Content-Disposition']  = 'attachment; filename=Bedrijven_' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
@@ -425,7 +425,7 @@ def zNaamLocatie (request):
 @login_required
 def exportLocatie(request):
         response = HttpResponse(content_type='application/ms-excel')
-        now = datetime.datetime.now()
+        now = datetime.now()
         response['Content-Disposition']  = 'attachment; filename=Locatie_' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
@@ -539,7 +539,7 @@ def zLocatieCamera (request):
 @login_required
 def exportCamera(request):
         response = HttpResponse(content_type='application/ms-excel')
-        now = datetime.datetime.now()
+        now = datetime.now()
         response['Content-Disposition']  = 'attachment; filename=Camera_' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
@@ -732,7 +732,7 @@ def zLocatieVideo (request):
 @login_required
 def exportVideo(request):
         response = HttpResponse(content_type='application/ms-excel')
-        now = datetime.datetime.now()
+        now = datetime.now()
         response['Content-Disposition']  = 'attachment; filename=Video_' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
@@ -903,7 +903,7 @@ def zContactOrder (request):
 @login_required
 def exportOrder(request):
         response = HttpResponse(content_type='application/ms-excel')
-        now = datetime.datetime.now()
+        now = datetime.now()
         response['Content-Disposition']  = 'attachment; filename=ServiceOrder' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
@@ -1006,7 +1006,7 @@ def zOrderLog (request):
 @login_required
 def exportLog(request):
         response = HttpResponse(content_type='application/ms-excel')
-        now = datetime.datetime.now()
+        now = datetime.now()
         response['Content-Disposition']  = 'attachment; filename=Log_' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
