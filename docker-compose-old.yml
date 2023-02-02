@@ -4,18 +4,15 @@ services:
   app:
     build:
       context: .
-    restart: always
-    volumes:
-      - static_data:/vol/web
-      - type: bind
-        source: /home/jan/media
-        target: /code/camera/static/media
+    volumes: 
+      - /home/jan/media/:/code/camera/mediaode/camera/media
     environment:
       - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
-      - DJANGO_DEBUG=0
+      - DJANGO_DEBUG=1
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
@@ -23,17 +20,12 @@ services:
       - TWILIO_CALLER_ID=${TWILIO_CALLER_ID} 
       - EMAIL_HOST_USER=${EMAIL_HOST_USER}
       - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
-      
-  proxy:
-    build:
-      context: ./proxy
-    restart: always
-    volumes:
-      - static_data:/vol/static
+      - SESSION_COOKIE_AGE=${SESSION_COOKIE_AGE} 
+    
     ports:
-      - "9000:9000"
-    depends_on:
-      - app
+      - "8010:8010"
+    command: sh -c "python manage.py runserver 0.0.0.0:8010"
 
-volumes:
-  static_data:
+
+   
+   

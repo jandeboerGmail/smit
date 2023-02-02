@@ -29,17 +29,21 @@
     Org <video controls autoplay muted src="{% static '/media/' %}{{video.video_link}}" width="1024" height="768"> 
     Tst   <video controls autoplay muted src="/code/video/Berkhout/Dorpstraat/Converted/Order1/voordeur264.mp4"  width="1024" height="768">
     -->
-    <video controls autoplay muted src="{{location}}" width="1024" height="768">
-      
+    <!--
+          <video controls autoplay muted src="{{location}}" width="1024" height="768">
+    -->
+
+    <video controls autoplay muted src="{% static '/media/' %}{{video.video_link}}" width="1024" height="768"> 
+   
       <p>This is fallback content to display for user agents that do not support the video tag.</p>
     </video>
   </div>
   <div class="col text-primary">   
       <!-- {{video.video_link}} 
         <h7>Play {% static '/media/' %}{{video.video_link}} </h7>
+        <h6>Play [{{location}}]</h6>
       -->
-      <h3>Play [{{location}}]</h3>
-      <h7>Play {% static '/media/' %}{{video.video_link}} </h7>
+      <h6>Play {% static '/media/' %}{{video.video_link}} </h6>
   </div>
 </div>
 
