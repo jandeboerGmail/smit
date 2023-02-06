@@ -129,26 +129,14 @@ TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' No mail only diplay on screen
 
-# gmail
-EMAIL_HOST          = 'smtp.gmail.com'
-EMAIL_PORT          = 587
+
+EMAIL_HOST          = os.environ.get('EMAIL_HOST') 
+EMAIL_PORT          = os.environ.get('EMAIL_PORT') 
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS       = True
-EMAIL_HOST_USER     ='smitvideoapp@gmail.com'
-EMAIL_HOST_PASSWORD ='zucyooafnvevhatt'
-
-#smit
-EMAIL_HOST          ='smitelektrotechniek.mail.protection.outlook.com'
-EMAIL_PORT          = 25
-EMAIL_HOST_USER     ='sgportal'
-EMAIL_HOST_PASSWORD ='!Welkom&Smit!838927'
-
-#EMAIL_HOST          = os.environ.get('EMAIL_HOST') 
-#EMAIL_PORT          = os.environ.get('EMAIL_PORT') 
-#EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER')
-#EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
-#EMAIL_USE_TLS       = True
-#EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER')
-#EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
+EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
 
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
