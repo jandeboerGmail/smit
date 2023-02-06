@@ -1,6 +1,7 @@
 import os,time,shutil,re
 from django.utils import timezone
 from datetime import datetime
+from django.core.mail import send_mail, EmailMessage
 from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video ,ServiceOrder, Log, Parameter
 
 # generic functions
@@ -571,3 +572,18 @@ def ListConvertedVideos():
     message = "Listing Migrated Ended"
     addLogEntry(" ", message)
     return                   
+
+def SendMail(subject,message,recipent_list):
+     
+    #chatgpt
+    email = EmailMessage(
+        subject, 
+        message, 
+        'sgportal@smitelektrotechniek.nl', 
+        recipent_list, 
+        reply_to=['sgportal@smitelektrotechniek.nl'], 
+        #headers={'Message-ID': 'foo'},
+    )
+    email.send()
+
+    return

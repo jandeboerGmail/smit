@@ -1136,58 +1136,13 @@ def actieAddVideo(request):
     return redirect('indexActies')
 
 def actieSendMail(request):
-    
-    # org
-    '''
-    subject = 'Thank you for registering to our site'
-    message = ' it  means a world to us '
 
-    connection = mail.get_connection()
-    connection.open()
-
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = ['jandeboer@gmail.com']
-
-    send_mail( subject, message, email_from, recipient_list )    
-
-    # new
-    
-    connection = mail.get_connection()
-    connection.open()
-    email1 = mail.EmailMessage(
-        'Hello',
-        'Body goes here',
-        'sgportal@Smitelektrotechniek.nl',
-        ['jandeboer@gmail.com'],
-        connection=connection,
-    )
-    
-    email1.send()
-    
-    # newer
-    
-    send_mail(
-    'Subject Hello',
-    'Body goes here',
-    'sgportal@Smitelektrotechniek',
-    ['jandeboer.com'],
-    fail_silently=False,
-)
-    '''
-    #chatgpt
-    email = EmailMessage(
-        'Subject here', 
-        'Here is the message.', 
-        'smitvideoapp@gmail.com', 
-        ['jandeboer@gmail.com'], 
-        reply_to=['jandeboer@gmail.com'], 
-        headers={'Message-ID': 'foo'},
-    )
-    email.send()
-
+    recipients = ['jandeboer@gmail.com','eenwest@gmail.com']
+  
+    functions.SendMail('My subject',"Test Message2",recipients)
     return HttpResponse("Mail send!!")
     #return redirect('redirect to a new page')
-
+  
 #stadgenoot Video
 # Zoek
 

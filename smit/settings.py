@@ -110,7 +110,6 @@ DATABASES = {
 #LOGIN_URL = '/admin/login'
 
 
-DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL') 
 
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'two_factor:login' 
@@ -129,28 +128,29 @@ TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' No mail only diplay on screen
 
-
 EMAIL_HOST          = os.environ.get('EMAIL_HOST') 
 EMAIL_PORT          = os.environ.get('EMAIL_PORT') 
 EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS       = True
-EMAIL_HOST_USER     = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD') 
+DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL') 
+ACME_DEFAULT_EMAIL  = os.environ.get('ACME_DEFAULT_EMAIL ') 
 
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
 
 #MFA
-#TWO_FACTOR_REMEMBER_COOKIE_AGE = 600
 TWO_FACTOR_REMEMBER_COOKIE_AGE = 300
+TWO_FACTOR_LOGIN_TIMEOUT=60
 
-#cookie settings 
+#Cookie settings 
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 SESSION_COOKIE_AGE=3600
 #SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE',6000))
 #SESSION_COOKIE_SECURE=True
 PASSWORD_RESET_TIMEOUT_DAYS=30
+
+DOMAIN          = os.environ.get('DOMAIN')
 
 AUTH_PASSWORD_VALIDATORS = [
     {
