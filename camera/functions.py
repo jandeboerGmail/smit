@@ -193,7 +193,9 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     #print ("Camera: ",aCamera.naam)
 
     #aVideo   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
-    aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam)
+    locatieId = Locatie.objects.filter(naam=locatieNaam)[0]
+    print ('locatieId :',locatieId)
+    aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam,camera__locatie=locatieId)
 
     if not aVideos:
         print("not found aVideo;  ",videoNaam, aCamera.naam)
@@ -216,7 +218,7 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
         addLogEntry(orderNr,message)
     else:
         aVideo = aVideos[0]
-        #print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
+        print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
 
     #print ("Video: ",aVideo.naam)
     return aVideo
@@ -240,19 +242,20 @@ def moveFileToDone(fileName,request):
 
     destFileName = fileName.replace("2Convert", "2_Convert")
     destDir = substring_before(destFileName, "2_Convert") + "2_Convert/"
-                       
-    #print('destDir :',destDir)
+
+    # Check if 2_Convert directory exists
+    print('destDir :',destDir)
     if not os.path.isdir(destDir):
         os.mkdir(destDir)
 
-    # check / create request directory
+    # check / create request/Order directory
     reqDir = destDir + request + "/"
     #print('reqDir :', reqDir)
     if not os.path.isdir(reqDir):
          os.mkdir(reqDir)
     
-    print('Move the File :',fileName,reqDir)
-    shutil.move(fileName,reqDir)
+    #print('Move the File :',fileName,destFileName)
+    shutil.move(fileName,destFileName)
 
 def size_changed(fileName,sec):
         b_size = os.path.getsize(fileName)
@@ -272,26 +275,31 @@ def extractDBitems(filename):
     # print("----------- extractDBitems -----")
    
     inFile = filename.replace(" ", "\ ")
-    #print("filename: ",inFile)
+    print("filename: ",inFile)
     fileItems = re.split("/",inFile)
 
-    '''
     itr = 0
     #print("Inpath: ",inpath)
     for item in fileItems:
         print ("fileItems :",itr,item)
         itr += 1
-    '''
     
     #extract videoLink
     video_link = substring_after(inFile,inpath)
     video_link = video_link.replace("\ ", " ")
     #print("video_link: ", video_link) 
 
-    ordernr   = fileItems[7].replace("\ ", " ")
-    bedrijf   = fileItems[4].replace("\ ", " ")
-    locatie   = fileItems[5].replace("\ ", " ")
-    videoNaam = fileItems[8].replace("\ ", " ")
+    if  "static" in inFile:
+        ordernr   = fileItems[8].replace("\ ", " ")
+        bedrijf   = fileItems[5].replace("\ ", " ")
+        locatie   = fileItems[6].replace("\ ", " ")
+        videoNaam = fileItems[9].replace("\ ", " ")
+    else:
+        ordernr   = fileItems[7].replace("\ ", " ")
+        bedrijf   = fileItems[4].replace("\ ", " ")
+        locatie   = fileItems[5].replace("\ ", " ")
+        videoNaam = fileItems[8].replace("\ ", " ")
+
 
     #extract videonaam
     naam = substring_before(videoNaam, ".mp4")
@@ -309,7 +317,7 @@ def extractDBitems(filename):
     while substring_after(s, "/"):
         s = substring_after(s, "/")
         #print ("s" ,s)
-        naam = substring_before(s, ".webm")
+        naam = substring_before(s, ".mp4")
     #print ("Naam:    ",naam)
 
     #extract camera
@@ -346,7 +354,7 @@ def insertConvertedVideos():
             #print("Files :",os.path.join(root, name))
             if "Migrated" in filename and "._" not in filename:
                 #print('Filename :',filename)
-                if ".webm" in filename or "h264" in filename and "._" not in filename:
+                if ".webm" in filename or ".mp4" in filename and "._" not in filename:
                     extractDBitems(filename)
     message = 'Add Converted Videos to DB Ended'
     addLogEntry(" ", message)
@@ -479,7 +487,7 @@ def ConvertingVideos():
                                     addLogEntry(request,message)
                         
                                     # removeFile(inFileName) # uncommend for production
-                                    moveFileToDone(inFileName,request) 
+                                    # moveFileToDone(inFileName,request) Not yet after conversion 
                                     extractDBitems(outFileName)
                                 else:
                                     addLogEntry(request,"ERROR : Not Migrated")
@@ -543,7 +551,7 @@ def ListConvertedVideos():
             #print("Files :",os.path.join(root, name))
             if "Migrated" in inFileName:
                 #print('inFile :',inFileName)
-                if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
+                if ".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName  and not "._" in inFileName:
                     print('inFile :',inFileName)
                     after = substring_after(inFileName,"Migrated/") 
             
@@ -562,5 +570,4 @@ def ListConvertedVideos():
                                                            
     message = "Listing Migrated Ended"
     addLogEntry(" ", message)
-    return
-                   
+    return                   

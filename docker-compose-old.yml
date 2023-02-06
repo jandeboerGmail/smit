@@ -5,7 +5,7 @@ services:
     build:
       context: .
     volumes: 
-      - /home/jan/media/:/code/camera/mediaode/camera/media
+      - /home/jan/media/:/code/camera/media
     environment:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}

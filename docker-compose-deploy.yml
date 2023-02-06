@@ -6,14 +6,18 @@ services:
       context: .
     restart: always
     volumes:
-      - static_data:/vol/web
-      - /home/jan/media/:/code/camera/media
+      - type: bind
+        source: /home/jan/media
+        target: /code/camera/static/media
+      - type: volume
+        source: static_data
+        target: /vol/web
     environment:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
       - DB_USER=${DB_USER}
       - DB_PASS=${DB_PASS}
-      - DJANGO_DEBUG=0
+      - DJANGO_DEBUG=1
       - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
       - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
       - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}

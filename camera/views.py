@@ -614,7 +614,7 @@ def deleteCamera(request,pk):
 # ---- Video ---------------
 @login_required
 def allVideo(request):
-    video_list = Video.objects.order_by('-datum_inserted','camera','ordernr','naam')
+    video_list = Video.objects.order_by('ordernr','naam','camera','-datum_updated')
     aantal =  video_list.count
 
     paginator = Paginator(video_list,15)
@@ -625,7 +625,7 @@ def allVideo(request):
     return render(request,'../templates/displayVideo.html',video_dict )
 
 def allVideoBedrijf(request,bedrijf):
-    qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_inserted","ordernr","camera__locatie")
+    qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
     #print ('qs1: ',str(qs1.query))
     aantal = qs1.count
 
@@ -1113,7 +1113,7 @@ def actieInsertConvertedVideos(request):
 
 @login_required
 def actieAddVideo(request):
-    videoLink = "Default/earth.webm"
+    videoLink = "Default/earth.mp4"
 
     #addBedrijf("Order S01","Stadgenoot")
     #addBedrijf("Order S02","Stadgenoot1")
@@ -1138,36 +1138,34 @@ def actieAddVideo(request):
 def actieSendMail(request):
     
     # org
-
+    '''
     subject = 'Thank you for registering to our site'
     message = ' it  means a world to us '
 
-    email_from =  'smitvideoapp@gmail.com'
-    #email_from = settings.EMAIL_HOST_USER
-    
-    recipient_list = ['jandeboer@gmail.com',]
     connection = mail.get_connection()
     connection.open()
+
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = ['jandeboer@gmail.com']
 
     send_mail( subject, message, email_from, recipient_list )    
 
     # new
-    '''
     
     connection = mail.get_connection()
     connection.open()
     email1 = mail.EmailMessage(
         'Hello',
         'Body goes here',
-        'sgportal@Smitelektrotechniek',
+        'sgportal@Smitelektrotechniek.nl',
         ['jandeboer@gmail.com'],
         connection=connection,
     )
     
     email1.send()
-    '''
+    
     # newer
-    '''
+    
     send_mail(
     'Subject Hello',
     'Body goes here',
@@ -1176,6 +1174,17 @@ def actieSendMail(request):
     fail_silently=False,
 )
     '''
+    #chatgpt
+    email = EmailMessage(
+        'Subject here', 
+        'Here is the message.', 
+        'smitvideoapp@gmail.com', 
+        ['jandeboer@gmail.com'], 
+        reply_to=['jandeboer@gmail.com'], 
+        headers={'Message-ID': 'foo'},
+    )
+    email.send()
+
     return HttpResponse("Mail send!!")
     #return redirect('redirect to a new page')
 
@@ -1280,7 +1289,6 @@ def zNrOrderStadgenoot (request):
         dict = {}
     return render(request,'../templates/zNrOrder.html', dict )
 
-
 @login_required
 def zNrOrder (request):
     query = request.GET.get('q','')
@@ -1298,7 +1306,6 @@ def zNrOrder (request):
     else:
         dict = {}
     return render(request,'../templates/zNrOrder.html', dict )
-
 
 @login_required
 def zContactOrderStadgenoot (request):
@@ -1322,7 +1329,6 @@ def zContactOrderStadgenoot (request):
 class HomeView(TemplateView):
     template_name = 'home.html'
 
-
 class RegistrationView(FormView):
     template_name = 'registration.html'
     form_class = UserCreationForm
@@ -1331,7 +1337,6 @@ class RegistrationView(FormView):
         form.save()
         return redirect('registration_complete')
 
-
 class RegistrationCompleteView(TemplateView):
     template_name = 'registration_complete.html'
 
@@ -1339,7 +1344,6 @@ class RegistrationCompleteView(TemplateView):
         context = super().get_context_data(**kwargs)
         context['login_url'] = resolve_url(settings.LOGIN_URL)
         return context
-
 
 @class_view_decorator(never_cache)
 class ExampleSecretView(OTPRequiredMixin, TemplateView):

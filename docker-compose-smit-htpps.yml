@@ -6,10 +6,12 @@ services:
       context: .
     restart: always
     volumes:
-      - static_data:/vol/web
       - type: bind
         source: /home/jan/media
         target: /code/camera/static/media
+      - type: volume
+        source: static_data
+        target: /vol/web
     environment:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
