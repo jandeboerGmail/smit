@@ -2,6 +2,9 @@ import os,time,shutil,re
 from django.utils import timezone
 from datetime import datetime
 from django.core.mail import send_mail, EmailMessage
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+
 from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video ,ServiceOrder, Log, Parameter
 
 # generic functions
@@ -33,6 +36,11 @@ def getVideoLocation():
         print("INVALID")
     '''
     return str(aParameter.videoPath)
+
+
+def getMaximumConvert():
+    aParameter =  Parameter.objects.get(id=1)
+    return aParameter.maximumConvert
 
 def getRunningStatus():
     aParameter =  Parameter.objects.get(id=1)
@@ -364,8 +372,8 @@ def insertConvertedVideos():
 def ConvertingVideos():
     print('Conversion')
    
-    videoPath=getVideoLocation()
-    max_converting = 3
+    videoPath     = getVideoLocation()
+    maxConverting = getMaximumConvert()
     converting = 1
     
     message = "Converting Looking for New Videos in " + videoPath
@@ -429,7 +437,7 @@ def ConvertingVideos():
                             moveFileToDone(inFileName,request) 
                             
                         else: #conversion needed
-                            if converting <= max_converting:
+                            if converting <= maxConverting:
                                 converting += 1
                                 startTime = time.time()
                                 message = 'Migrating   ' + inFileName + " Size: " + fSize + " MB"
@@ -571,18 +579,44 @@ def ListConvertedVideos():
                                                            
     message = "Listing Migrated Ended"
     addLogEntry(" ", message)
-    return                   
+    return
+                 
+def valid_email_address(email_address):
 
-def SendMail(subject,message,recipent_list):
+    try:
+        validate_email(email_address)
+        valid_email = True
+
+    except ValidationError:
+        valid_email = False
+
+    return valid_email 
+
+def SendMail(subject,message,recipentList):
      
+    emailcheckedRecepentList = []
+    
+    request = " "
+    for emailAdress in recipentList:
+        #print ("email_adress :",emailAdress)
+        
+        if valid_email_address(emailAdress):
+            emailcheckedRecepentList.append(emailAdress)       
+            errorMessage = 'INFO : Mail send to: '  + emailAdress
+            addLogEntry(request,errorMessage) 
+
+        else:
+            errorMessage = 'INFO : Wrong email Adress Specified: '  + emailAdress
+            addLogEntry(request,errorMessage) 
+
+    #print ("emailcheckedRecepentList :",emailcheckedRecepentList)    
     #chatgpt
     email = EmailMessage(
-        subject, 
-        message, 
+        subject, message, 
         'sgportal@smitelektrotechniek.nl', 
-        recipent_list, 
+        emailcheckedRecepentList, 
         reply_to=['sgportal@smitelektrotechniek.nl'], 
-        #headers={'Message-ID': 'foo'},
+                #headers={'Message-ID': 'foo'},
     )
     email.send()
 

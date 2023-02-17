@@ -1,6 +1,7 @@
 
 {% load static %}
 {% load i18n %}
+{% load user_tags %}
 
 {% url 'registration' as reg_url %}
 {% url 'two_factor:login' as login_url %}
@@ -12,7 +13,7 @@
     <div class="container">
           <img src="{%static 'images/smit-logo.png' %}"class="navbar-brand"  width="123" height="58"alt="Logo" >
         
-        {% if user.is_authenticated %}
+        {% if request.user|has_group:"Admin"%}
         <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#bs-example-navbar-collapse-1" aria-controls="bs-example-navbar-collapse-1"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -42,9 +43,11 @@
           <li class="nav-item">
             <a class="nav-link" href="/camera/indexCamera">Camera</a>
           </li>
+          {% if perms.camera.can_view_video %}
           <li class="nav-item">
             <a class="nav-link" href="/camera/indexVideo">Video</a>
           </li>
+          {% endif %}
           <li class="nav-item">
             <a class="nav-link" href="/camera/indexOrder">Order</a>
           </li>
@@ -56,12 +59,13 @@
           <li class="nav-item">
             <a class="nav-link" href="/camera/indexActies">Actie</a>
           </li>
+          {% endif %}
+          {% if request.user|has_group:"Stadgenoot"%}
+           <li class="nav-item">
+            <a class="nav-link" href="/camera/indexStadgenoot">Stadgenoot</a>
+          </li>
+          {% endif %}
 
-            <li class="nav-item">
-             <a class="nav-link" href="/camera/indexStadgenoot">Stadgenoot</a>
-           </li>
-           {% endif %}
-          
           <li class="nav-item">
             <a class="nav-link" href="/camera/about">Over</a>
           </li>

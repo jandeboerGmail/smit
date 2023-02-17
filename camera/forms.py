@@ -22,13 +22,15 @@ class GebruikerForm(forms.ModelForm):
     class Meta:
         model = Gebruiker
 
-        fields = ['naam','user','soort','email','telefoon','memo'] 
+        fields = ['naam','user','soort','email1','telefoon_mobiel','memo'] 
         
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'user': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),  
-            'telefoon': forms.TextInput(attrs={'class': 'form-control'}),
+            'email1': forms.EmailInput(attrs={'class': 'form-control'}), 
+            #'emai2': forms.EmailInput(attrs={'class': 'form-control'}),  
+            'telefoon_mobiel': forms.TextInput(attrs={'class': 'form-control'}),
+            #'telefoon_vast': forms.TextInput(attrs={'class': 'form-control'}),
             'soort': forms.Select(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
@@ -103,17 +105,18 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = ServiceOrder
 
-        fields = ['ordernr','bedrijf','contact','conversion_started','conversion_ready','keep_original','auto_cleanup','memo']
+        fields = ['ordernr','bedrijf','contact','memo']
         widgets = {
             'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
             'contact': forms.Select(attrs={'class': 'form-control'}),
+          
             '''
             'conversion_started': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'conversion_ready': forms.CheckboxInput(attrs={'class': 'form-control'}),
-            'conversion_ready': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'auto_cleanup': forms.CheckboxInput(attrs={'class': 'form-control'}),
-            '''
+             '''
+             
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
 

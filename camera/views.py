@@ -1,6 +1,6 @@
 #from re import A
 #from sqlite3 import Date
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.conf import settings
@@ -10,7 +10,7 @@ from operator import eq
 from django.utils import timezone
 from django.core.paginator import Paginator
 from datetime import datetime
-from django.core.mail import send_mail, EmailMessage
+from django.core.mail import EmailMessage
 from django.core import mail
 
 #from itertools import chain
@@ -613,6 +613,7 @@ def deleteCamera(request,pk):
 
 # ---- Video ---------------
 @login_required
+@permission_required('video.can_view_video')
 def allVideo(request):
     video_list = Video.objects.order_by('ordernr','naam','camera','-datum_updated')
     aantal =  video_list.count
@@ -913,14 +914,14 @@ def exportOrder(request):
         font_style = xlwt.XFStyle()
         font_style.font.bold = True
 
-        columns = ['ordernr','bedrijf','contact','conversion_started','conversion_ready','memo']
+        columns = ['ordernr','bedrijf','contact','memo']
 
         for col_num in range(len(columns)):
             ws.write(row_num, col_num, columns[col_num], font_style)
 
         font_style = xlwt.XFStyle()
 
-        rows = ServiceOrder.objects.order_by('ordernr').values_list('ordernr','bedrijf','contact','conversion_started','conversion_ready','memo')
+        rows = ServiceOrder.objects.order_by('ordernr').values_list('ordernr','bedrijf','contact','memo')
         for row in rows:
             row_num +=1
 
@@ -1137,9 +1138,9 @@ def actieAddVideo(request):
 
 def actieSendMail(request):
 
-    recipients = ['jandeboer@gmail.com','eenwest@gmail.com']
+    recipients = ['jandeboer@gmail.com','eenwestßmail.com','eenwest@gmail.com']
   
-    functions.SendMail('My subject',"Test Message2",recipients)
+    functions.SendMail('My subject',"Test Message3",recipients)
     return HttpResponse("Mail send!!")
     #return redirect('redirect to a new page')
   

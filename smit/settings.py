@@ -109,8 +109,6 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 #LOGIN_URL = '/admin/login'
 
-
-
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_URL = 'two_factor:login' 
 PHONENUMBER_DEFAULT_REGION = 'NL'
@@ -136,6 +134,8 @@ EMAIL_USE_TLS       = True
 DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL') 
 ACME_DEFAULT_EMAIL  = os.environ.get('ACME_DEFAULT_EMAIL ') 
 
+DOMAIN              = os.environ.get('DOMAIN')
+
 # this one is optional
 LOGIN_REDIRECT_URL = 'two_factor:profile'
 
@@ -145,12 +145,10 @@ TWO_FACTOR_LOGIN_TIMEOUT=60
 
 #Cookie settings 
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
-SESSION_COOKIE_AGE=3600
-#SESSION_COOKIE_AGE = int(os.environ.get('SESSION_COOKIE_AGE',6000))
+#SESSION_COOKIE_AGE=3600
+SESSION_COOKIE_AGE  = int(os.environ.get('SESSION_COOKIE_AGE','3600'))
 #SESSION_COOKIE_SECURE=True
 PASSWORD_RESET_TIMEOUT_DAYS=30
-
-DOMAIN          = os.environ.get('DOMAIN')
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -166,6 +164,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+#AUTH_USER_MODEL = 'camera.Gebruiker'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
