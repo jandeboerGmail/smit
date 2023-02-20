@@ -70,6 +70,13 @@ urlpatterns = [
     path('editBedrijf/<int:pk>',views.editBedrijf,name='editBedrijf'),
     path('deleteBedrijf/<int:pk>',views.deleteBedrijf,name='deleteBedrijf'),
 
+# Gebied
+    path('allGebied/',views.allGebied,name='allGebied'),
+    #path('zNaamGebied/',views.zNaamGebied,name='zNaamGebied'),
+    path('exportGebied/',views.exportGebied,name='exportGebied'),
+    path('createGebied/',views.createGebied,name='createGebied'),
+    path('editGebied/<int:pk>',views.editGebied,name='editGebied'),
+    path('deleteGebied/<int:pk>',views.deleteGebied,name='deleteGebied'),
     
 # Locatie
     path('allLocatie/',views.allLocatie,name='allLocatie'),
@@ -123,7 +130,7 @@ urlpatterns = [
     path('zOrderLog/',views.zOrderLog,name='zOrderLog'),
     path('exportLog/',views.exportLog,name='exportLog'),
 
-# Acies
+# Acties
     path('actieDisplayConversionStatus/',views.actieDisplayConversionStatus,name='actieDisplayConversionStatus'),
     path('actieToggleConversionStatus/',views.actieToggleConversionStatus,name='actieToggleConversionStatus'),
     path('actieGetVideoLocation/',views.actieGetVideoLocation,name='actieGetVideoLocation'),

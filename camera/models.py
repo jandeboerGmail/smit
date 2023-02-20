@@ -52,6 +52,29 @@ class Bedrijf(models.Model):
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
 
+class Gebied(models.Model):
+    #id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
+    gebiedNr = models.IntegerField(blank = False, null = False)
+    naam = models.CharField(max_length=100,blank = False)
+    bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
+    image = models.ImageField(upload_to ='images/',null=True,blank=True)
+    memo = models.TextField(blank = True)
+    #slug = models.SlugField(max_length=120,default='slug')
+    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
+    datum_updated = models.DateTimeField(default=timezone.now, blank=False)
+
+    def save(self, *args, **kwargs):
+        self.datum_updated = timezone.now()
+        super(Log, self).save(*args, **kwargs)
+  
+    class Meta:
+        verbose_name_plural = 'gebied'
+        ordering = ['bedrijf','gebiedNr']
+        unique_together = ('bedrijf','gebiedNr')
+
+    def __str__(self): # For Python 2, use __unicode__ too
+        return self.id
+    
 class Gebruiker(models.Model):
     
     class Soorten(models.IntegerChoices):
@@ -71,6 +94,7 @@ class Gebruiker(models.Model):
     telefoon_mobiel = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
     telefoon_vast = models.CharField(default = '00 11 22 33 44',max_length=16,blank = True)
     soort = models.IntegerField(choices=Soorten.choices,default=1)
+    gebied  = models.ForeignKey(Gebied,on_delete=models.CASCADE)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
@@ -140,10 +164,39 @@ class Camera(models.Model):
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
-     
+
+class ServiceOrder(models.Model):
+        id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
+        ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
+        bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
+        contact = models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
+        locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
+        
+        #video  = models.ForeignKey(Video,on_delete=models.CASCADE)
+        keep_original =  models.BooleanField(default=False)
+        auto_cleanup =  models.BooleanField(default=False)
+        conversion_ready   =  models.BooleanField(default=False)
+        memo = models.TextField(blank = True)
+        slug = models.SlugField(max_length=120,default='slug')
+        datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
+        datum_updated  = models.DateTimeField(default=timezone.now, blank=False)
+
+        def save(self, *args, **kwargs):
+            self.slug = slugify(self.ordernr)
+            self.datum_updated = timezone.now()
+            super(ServiceOrder, self).save(*args, **kwargs)     
+
+        class Meta:
+            verbose_name_plural = 'ServiceOrder'
+            ordering = ['ordernr']
+
+        def __str__(self): # For Python 2, use __unicode__ too
+            return self.ordernr   
+        
 class Video(models.Model):
     naam = models.CharField(max_length=100,blank = False) #format bedrijflocatieddmmyyhhmmss  (utc)
-    ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
+    ordernr  = models.ForeignKey(ServiceOrder,on_delete=models.CASCADE)
+    #ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
     opname_van = models.DateTimeField(default=timezone.now, blank=False)
     opname_tot = models.DateTimeField(default=timezone.now, blank=False)
     camera = models.ForeignKey(Camera,on_delete=models.CASCADE)
@@ -171,46 +224,8 @@ class Video(models.Model):
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
+   
 
-class Gebied(models.Model):
-    id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
-    naam = models.CharField(max_length=100,blank = False)
-    image = models.ImageField(upload_to ='images/',null=True,blank=True)
-    memo = models.TextField(blank = True)
-    #slug = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank=False)
-
-    def save(self, *args, **kwargs):
-        self.datum_updated = timezone.now()
-        super(Log, self).save(*args, **kwargs)
-  
-    class Meta:
-        verbose_name_plural = 'gebied'
-        ordering = ['id']
-
-    def __str__(self): # For Python 2, use __unicode__ too
-        return self.id
-    
-    class Authorisatie(models.Model):
-        id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
-        bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-        user = models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
-        memo = models.TextField(blank = True)
-        #slug = models.SlugField(max_length=120,default='slug')
-        datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-        datum_updated = models.DateTimeField(default=timezone.now, blank=False)
-
-    def save(self, *args, **kwargs):
-        self.datum_updated = timezone.now()
-        super(Log, self).save(*args, **kwargs)
-  
-    class Meta:
-        verbose_name_plural = 'authorisatie'
-        ordering = ['id']
-
-    def __str__(self): # For Python 2, use __unicode__ too
-        return self.id
     
 class Log(models.Model):
     id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
@@ -233,7 +248,7 @@ class Log(models.Model):
 class Parameter(models.Model):
     id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
     videoPath = models.CharField(max_length=100,blank = False,unique=False) # ex /home/jan/video/'
-    maximumConvert = models.IntegerField(max_length=2,blank = False, default=3)
+    maximumConvert = models.IntegerField(blank = False, default=3)
     conversion_running = models.BooleanField(default=False)
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
     datum_updated = models.DateTimeField(default=timezone.now, blank=False)
@@ -245,6 +260,7 @@ class Parameter(models.Model):
     def __str__(self): # For Python 2, use __unicode__ too
         return self.videoPath
 
+'''
 class Opname(models.Model):
     naam    = models.CharField(max_length=50,blank = False)
     locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
@@ -268,30 +284,25 @@ class Opname(models.Model):
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
-
-class ServiceOrder(models.Model):
+'''
+'''
+class Authorisatie(models.Model):
         id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
-        ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
         bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-        contact = models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
-        #locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
-        #opname  = models.ForeignKey(Opname,on_delete=models.CASCADE)
-        keep_original =  models.BooleanField(default=False)
-        auto_cleanup =  models.BooleanField(default=False)
-        conversion_ready   =  models.BooleanField(default=False)
+        user = models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
         memo = models.TextField(blank = True)
-        slug = models.SlugField(max_length=120,default='slug')
+        #slug = models.SlugField(max_length=120,default='slug')
         datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-        datum_updated  = models.DateTimeField(default=timezone.now, blank=False)
+        datum_updated = models.DateTimeField(default=timezone.now, blank=False)
 
-        def save(self, *args, **kwargs):
-            self.slug = slugify(self.ordernr)
-            self.datum_updated = timezone.now()
-            super(ServiceOrder, self).save(*args, **kwargs)     
+    def save(self, *args, **kwargs):
+        self.datum_updated = timezone.now()
+        super(Log, self).save(*args, **kwargs)
+  
+    class Meta:
+        verbose_name_plural = 'authorisatie'
+        ordering = ['id']
 
-        class Meta:
-            verbose_name_plural = 'ServiceOrder'
-            ordering = ['ordernr']
-
-        def __str__(self): # For Python 2, use __unicode__ too
-            return self.ordernr
+    def __str__(self): # For Python 2, use __unicode__ too
+        return self.id
+'''  

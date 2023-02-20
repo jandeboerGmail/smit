@@ -16,8 +16,8 @@ from django.core import mail
 #from itertools import chain
 #import datetime
 import camera.functions as functions
-from camera.models import Adress, Gebruiker, Bedrijf, Camera, Locatie, Video ,ServiceOrder, Log, Parameter
-from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm
+from camera.models import Adress, Gebruiker, Bedrijf, Camera, Gebied, Locatie, Video ,ServiceOrder, Log, Parameter
+from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm, GebiedForm
 
 #MFA
 from django.contrib.auth.forms import UserCreationForm
@@ -66,6 +66,10 @@ def indexBedrijf(request):
 @login_required
 def indexAdres(request):
     return render(request,'../templates/indexAdres.html', {} )
+
+@login_required
+def indexGebied(request):
+    return render(request,'../templates/indexGebied.html', {} )
 
 @login_required
 def indexLocatie(request):
@@ -321,7 +325,7 @@ def zPlaatsBedrijf(request):
 @login_required
 def exportBedrijf(request):
         response = HttpResponse(content_type='application/ms-excel')
-        now = atetime.now()
+        now = time.now()
         response['Content-Disposition']  = 'attachment; filename=Bedrijven_' + \
             now.strftime ("%Y%m%d_%H%M%S") +'.xls'
 
@@ -395,6 +399,97 @@ def deleteBedrijf(request,pk):
         context = {'item' : bedrijf , 'title': 'Verwijder Bedrijf'}
         return render(request,template_name,context)
 
+# --- Gebied -----------------
+@login_required
+def allGebied(request):
+    aList = Gebied.objects.order_by('bedrijf','gebiedNr')
+    aantal =  aList.count
+
+    paginator = Paginator(aList,12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    aDict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    return render(request,'../templates/displayGebied.html',aDict )
+
+# Zoek
+
+# Export
+@login_required
+def exportGebied(request):
+        response = HttpResponse(content_type='application/ms-excel')
+        now = datetime.now()
+        response['Content-Disposition']  = 'attachment; filename=Gebied_' + \
+            now.strftime ("%Y%m%d_%H%M%S") +'.xls'
+
+        wb = xlwt.Workbook(encoding='utf-8')
+        ws = wb.add_sheet('Gebied')
+        row_num = 0
+        font_style = xlwt.XFStyle()
+        font_style.font.bold = True
+
+        columns = ['bedrijf','gebiedNr','naam','memo']
+
+        for col_num in range(len(columns)):
+            ws.write(row_num, col_num, columns[col_num], font_style)
+
+        font_style = xlwt.XFStyle()
+
+        rows = Gebied.objects.order_by('bedrijf','gebiedNR').values_list('bedrijf.naam','gebiedNr','naam','memo')
+        for row in rows:
+            row_num +=1
+
+            for col_num in range(len(columns)):
+                ws.write(row_num, col_num, str(row[col_num]), font_style)
+
+        wb.save(response)
+        return response
+
+#CRUD
+@login_required
+def createGebied(request):
+    form = GebiedForm(request.POST or None)
+    if form.is_valid():
+        form.save()
+        form = GebiedForm()
+    template_name = 'inputForm.html'
+    context = {'form' : form, 'title': 'Gebied Toevoegen'}
+    return render(request,template_name,context)
+
+@login_required
+def editGebied(request,pk):
+    try :
+        locatie = Gebied.objects.get(id=pk)
+    except Gebied.DoesNotExist:
+        return redirect('indexGebied')
+
+    form = GebiedForm(request.POST or None,instance = locatie)
+    # print('Request Method:',request.method)
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+        return ( redirect('indexGebied'))
+
+    template_name = 'inputForm.html'
+    context = {'form' : form, 'title': 'Wijzig Gebied'}
+    return render(request,template_name,context)
+
+@login_required
+def deleteGebied(request,pk):
+    try :
+        locatie = Gebied.objects.get(id=pk)
+    except Gebied.DoesNotExist:
+        return redirect('/camera/indexGebied')
+
+    if request.method == 'POST':
+        #print('Deleting Post:',request.POST)
+        locatie.delete()
+        return ( redirect('/camera/indexGebied'))
+
+    template_name = 'deleteRecord.html'
+    context = {'item' : locatie , 'title': 'Verwijder Gebied'}
+    return render(request,template_name,context)
+                  
 # --- Locatie -----------------
 @login_required
 def allLocatie(request):

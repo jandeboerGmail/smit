@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'camera',
+    
     #mfa
     'django_otp',
     'django_otp.plugins.otp_static',
@@ -51,9 +54,7 @@ INSTALLED_APPS = [
     'two_factor',
     'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
     'two_factor.plugins.email',  # <- if you want email capability.
-    'camera',
-
-     'bootstrapform'
+    'bootstrapform'
      
 ]
 

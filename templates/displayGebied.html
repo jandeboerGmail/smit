@@ -5,10 +5,10 @@
 
 <div class="container-fluid">
   <div class="row align-items-end">
-    <h2 class="col-10 smit-h2">Locatie</h2> 
+    <h2 class="col-10 smit-h2">Gebied</h2> 
 
     <div class="col-1">
-      <a class="btn btn-sm btn-primary" href="{% url 'exportLocatie' %}">Export </a>
+      <a class="btn btn-sm btn-primary" href="{% url 'exportGebied %}">Export </a>
     </div>
 
     <div class="col-1 smit-h2">
@@ -21,25 +21,24 @@
     <tr>
       <!-- <th scope="col">#</td> -->
       <th scope="col">Bedrijf</td>
-      <th scope="col">Locatie</td>
-      <th scope="col">Adres</td>
-      <th scope="col">Contact</td>
-      <th scope="col">Telefoon</td>
+      <th scope="col">Gebied/<td>
+      <th scope="col">naam</td>
+      <th scope="col">image</td>
       <th scope="col">Acties</td>
     </tr>
   </thead>
   <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
   {% if page_obj %}
   <tbody>
-    {% for locatie in page_obj %}
+    {% for gebied in page_obj %}
     <tr class="smit-line">
-       <td> {{locatie.bedrijf.naam}} </td>
-       <td> {{locatie.naam}} </td>
-       <td> {{locatie.adres.naam}} </td>
+       <td> {{gebied.bedrijf.naam}} </td>
+       <td> {{gebied.gebiedNr} </td>
+       <td> {{gebied.naam}} </td>
        <td> {{locatie.contact.naam}} </td>
        <td> {{locatie.contact.telefoon}} </td>
-       <td><a class="btn btn-sm btn-info" href="{% url 'editLocatie' locatie.id %}">Edit</a></td>
-       <td><a class="btn btn-sm btn-danger" href="{% url 'deleteLocatie' locatie.id %}">Delete</a></td>
+       <td><a class="btn btn-sm btn-info" href="{% url 'editGebied' gebied.id %}">Edit</a></td>
+       <td><a class="btn btn-sm btn-danger" href="{% url 'deleteGebied' gebied.id %}">Delete</a></td>
     </tr>
 
   </tbody> 

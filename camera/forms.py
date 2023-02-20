@@ -1,6 +1,6 @@
 from re import L
 from django import forms
-from .models import Adress, Gebruiker, Bedrijf, Locatie, Camera, Video, ServiceOrder
+from .models import Adress, Gebruiker, Bedrijf, Locatie, Camera, Video, ServiceOrder, Gebied
 
 #Adress
 class AdressForm(forms.ModelForm):
@@ -28,9 +28,9 @@ class GebruikerForm(forms.ModelForm):
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'user': forms.TextInput(attrs={'class': 'form-control'}),
             'email1': forms.EmailInput(attrs={'class': 'form-control'}), 
-            #'emai2': forms.EmailInput(attrs={'class': 'form-control'}),  
+            'email2': forms.EmailInput(attrs={'class': 'form-control'}),  
             'telefoon_mobiel': forms.TextInput(attrs={'class': 'form-control'}),
-            #'telefoon_vast': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefoon_vast': forms.TextInput(attrs={'class': 'form-control'}),
             'soort': forms.Select(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
@@ -88,10 +88,10 @@ class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
    
-        fields = ['ordernr','naam','camera','opname_van','opname_tot','video_link','codec','memo']
+        fields = ['naam','camera','opname_van','opname_tot','video_link','codec','memo']
 
         widgets = {
-            'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
+           # 'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'camera': forms.Select(attrs={'class': 'form-control'}),
             'opname_van': forms.DateTimeInput(attrs={'class': 'form-control'}),
@@ -120,7 +120,19 @@ class OrderForm(forms.ModelForm):
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
+class GebiedForm(forms.ModelForm):
+     class Meta: 
+        model = Gebied
 
+        fields = ['gebiedNr','bedrijf','naam','image','memo']
+        widgets = {
+            'gebiedNr': forms.NumberInput(attrs={'class': 'form-control'}),
+            'bedrijf': forms.Select(attrs={'class': 'form-control'}),
+            'naam': forms.TextInput(attrs={'class': 'form-control'}),             
+            'memo': forms.Textarea(attrs={'class': 'form-control'}),
+        }                 
+
+'''
 class ZoekVideoForm(forms.ModelForm):
     class Meta:
         model = Video
@@ -129,3 +141,4 @@ class ZoekVideoForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['camera'].queryset = Camera.objects.none()
+'''
