@@ -7,10 +7,6 @@
   <div class="row align-items-end">
     <h2 class="col-10 smit-h2">Gebied</h2> 
 
-    <div class="col-1">
-      <a class="btn btn-sm btn-primary" href="{% url 'exportGebied %}">Export </a>
-    </div>
-
     <div class="col-1 smit-h2">
       {{aantal}} 
     </div>
@@ -21,22 +17,21 @@
     <tr>
       <!-- <th scope="col">#</td> -->
       <th scope="col">Bedrijf</td>
-      <th scope="col">Gebied/<td>
-      <th scope="col">naam</td>
-      <th scope="col">image</td>
+      <th scope="col">Gebied<td>
+      <th scope="col">Naam</td>
+      <th scope="col">Image</td>
       <th scope="col">Acties</td>
     </tr>
   </thead>
-  <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
+
   {% if page_obj %}
   <tbody>
     {% for gebied in page_obj %}
     <tr class="smit-line">
        <td> {{gebied.bedrijf.naam}} </td>
-       <td> {{gebied.gebiedNr} </td>
+       <td> {{gebied.gebiedNr}} </td>
        <td> {{gebied.naam}} </td>
-       <td> {{locatie.contact.naam}} </td>
-       <td> {{locatie.contact.telefoon}} </td>
+       <td> {{gebied.image}} </td>
        <td><a class="btn btn-sm btn-info" href="{% url 'editGebied' gebied.id %}">Edit</a></td>
        <td><a class="btn btn-sm btn-danger" href="{% url 'deleteGebied' gebied.id %}">Delete</a></td>
     </tr>

@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'camera',
-    
+
     #mfa
     'django_otp',
     'django_otp.plugins.otp_static',
@@ -92,6 +92,9 @@ WSGI_APPLICATION = 'smit.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
 
 DATABASES = {
      'default': {

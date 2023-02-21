@@ -417,6 +417,7 @@ def allGebied(request):
 # Export
 @login_required
 def exportGebied(request):
+        '''
         response = HttpResponse(content_type='application/ms-excel')
         now = datetime.now()
         response['Content-Disposition']  = 'attachment; filename=Gebied_' + \
@@ -444,6 +445,7 @@ def exportGebied(request):
 
         wb.save(response)
         return response
+        '''
 
 #CRUD
 @login_required
@@ -459,11 +461,11 @@ def createGebied(request):
 @login_required
 def editGebied(request,pk):
     try :
-        locatie = Gebied.objects.get(id=pk)
+        gebied = Gebied.objects.get(id=pk)
     except Gebied.DoesNotExist:
         return redirect('indexGebied')
 
-    form = GebiedForm(request.POST or None,instance = locatie)
+    form = GebiedForm(request.POST or None,instance = gebied)
     # print('Request Method:',request.method)
     if request.method == 'POST':
         if form.is_valid():
@@ -477,17 +479,17 @@ def editGebied(request,pk):
 @login_required
 def deleteGebied(request,pk):
     try :
-        locatie = Gebied.objects.get(id=pk)
+        gebied = Gebied.objects.get(id=pk)
     except Gebied.DoesNotExist:
         return redirect('/camera/indexGebied')
 
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
-        locatie.delete()
+        gebied.delete()
         return ( redirect('/camera/indexGebied'))
 
     template_name = 'deleteRecord.html'
-    context = {'item' : locatie , 'title': 'Verwijder Gebied'}
+    context = {'item' : gebied , 'title': 'Verwijder Gebied'}
     return render(request,template_name,context)
                   
 # --- Locatie -----------------

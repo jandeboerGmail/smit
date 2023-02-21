@@ -35,18 +35,20 @@
           <li class="nav-item"></li>
             <a class="nav-link" href="/camera/indexBedrijf">Bedrijf</a>
           </li>
+
+
+          <li class="nav-item">
+            <a class="nav-link" href="/camera/indexGebied">Gebied</a>
+          </li>
           
           <li class="nav-item">
             <a class="nav-link" href="/camera/indexLocatie">Locatie</a>
-          </li>
-
-          <li class="nav-item">
-            <a class="nav-link" href="/camera/indexLGebied">Gebied</a>
           </li>
         
           <li class="nav-item">
             <a class="nav-link" href="/camera/indexCamera">Camera</a>
           </li>
+
           {% if perms.camera.can_view_video %}
           <li class="nav-item">
             <a class="nav-link" href="/camera/indexVideo">Video</a>

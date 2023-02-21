@@ -65,7 +65,7 @@ class Gebied(models.Model):
 
     def save(self, *args, **kwargs):
         self.datum_updated = timezone.now()
-        super(Log, self).save(*args, **kwargs)
+        super(Gebied, self).save(*args, **kwargs)
   
     class Meta:
         verbose_name_plural = 'gebied'
@@ -73,7 +73,7 @@ class Gebied(models.Model):
         unique_together = ('bedrijf','gebiedNr')
 
     def __str__(self): # For Python 2, use __unicode__ too
-        return self.id
+        return self.naam
     
 class Gebruiker(models.Model):
     
@@ -225,7 +225,6 @@ class Video(models.Model):
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
    
-
     
 class Log(models.Model):
     id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
@@ -259,50 +258,3 @@ class Parameter(models.Model):
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.videoPath
-
-'''
-class Opname(models.Model):
-    naam    = models.CharField(max_length=50,blank = False)
-    locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
-    camera  = models.ForeignKey(Camera,on_delete=models.CASCADE)
-    video   = models.ForeignKey(Video,on_delete=models.CASCADE)
-    datum_aangevraagd  = models.DateTimeField(default=timezone.now, blank=False)
-    memo    = models.TextField(blank = True)
-    slug    = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank=False)
-
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
-        super(Camera, self).save(*args, **kwargs)
-
-    class Meta:
-        verbose_name_plural = 'opname'
-        ordering = ['naam']
-        unique_together = ('naam','locatie')
-
-    def __str__(self): # For Python 2, use __unicode__ too
-        return self.naam
-'''
-'''
-class Authorisatie(models.Model):
-        id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
-        bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-        user = models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
-        memo = models.TextField(blank = True)
-        #slug = models.SlugField(max_length=120,default='slug')
-        datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-        datum_updated = models.DateTimeField(default=timezone.now, blank=False)
-
-    def save(self, *args, **kwargs):
-        self.datum_updated = timezone.now()
-        super(Log, self).save(*args, **kwargs)
-  
-    class Meta:
-        verbose_name_plural = 'authorisatie'
-        ordering = ['id']
-
-    def __str__(self): # For Python 2, use __unicode__ too
-        return self.id
-'''  

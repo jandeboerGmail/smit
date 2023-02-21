@@ -5,7 +5,7 @@ from django.core.mail import send_mail, EmailMessage
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 
-from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video ,ServiceOrder, Log, Parameter
+from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video ,ServiceOrder, Log, Parameter, Gebied
 
 # generic functions
 def validDate(dateIn):
@@ -92,11 +92,14 @@ def addBedrijf(orderNr,naam):
 def addGebruiker(orderNr,naam):
     aAdress = addAdress(orderNr,naam)
 
+    aGebied = Gebied.objects.get(id=1) # default rights (Noord)
+
     aGebruikers = Gebruiker.objects.filter(naam=naam)
     if not aGebruikers and naam:
         aGebruiker = Gebruiker()
         aGebruiker.naam = naam
         aGebruiker.adres = aAdress
+        aGebruiker.gebied = aGebied
         aGebruiker.save()
 
         message = "WARNING: Default values added for gebruiker: "  + naam 
@@ -104,25 +107,6 @@ def addGebruiker(orderNr,naam):
     else:
         aGebruiker =  aGebruikers[0]
     return aGebruiker   
-
-# Service Order
-def addServiceOrder(order,bedrijf):
-    aGebruiker = addGebruiker(order,"Onbekend")
-    aBedrijf   = addBedrijf(order,bedrijf)
-    #print("add Adress: ",naam)
-    aOrders = ServiceOrder.objects.filter(ordernr=order)
-    if not aOrders and order:
-        aOrder = ServiceOrder()
-        aOrder.ordernr = order
-        aOrder.bedrijf = aBedrijf
-        aOrder.contact = aGebruiker
-        aOrder.save ()
-    
-        message = "WARNING: Default values added for service order: "  + order
-        addLogEntry(order,message)
-    else:
-        aOrder = aOrders[0]
-    return aOrder
 
 #Locatie
 def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
@@ -155,10 +139,31 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
        #print("location found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
     return aLocatie 
 
-#Camera
-def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
+# Service Order
+def addServiceOrder(order,bedrijf,locatieNaam,adressNaam,gebruikerNaam):
+    aGebruiker = addGebruiker(order,gebruikerNaam)
+    aBedrijf   = addBedrijf(order,bedrijf)
+    aLocatie   = addLocatie(order,locatieNaam,bedrijf,adressNaam,gebruikerNaam)
+    #print("add Adress: ",naam)
+    aOrders = ServiceOrder.objects.filter(ordernr=order)
+    if not aOrders and order:
+        aOrder = ServiceOrder()
+        aOrder.ordernr = order
+        aOrder.bedrijf = aBedrijf
+        aOrder.contact = aGebruiker
+        aOrder.locatie = aLocatie
+        aOrder.save ()
+    
+        message = "WARNING: Default values added for service order: "  + order
+        addLogEntry(order,message)
+    else:
+        aOrder = aOrders[0]
+    return aOrder
 
-    aServiceOrder = addServiceOrder(orderNr,bedrijfNaam)
+#Camera
+def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNm,adressNaam,gebruikerNaam):
+
+    #aServiceOrder = addServiceOrder(orderNr,bedrijfNaam,locatieNaam,adressNaam,gebruikerNaam)
     #print ('aServiceOrder: ', aServiceOrder.ordernr)
 
     aLocatie  = addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam)
@@ -196,9 +201,10 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     print("bedrijfnaam: ",bedrijfNaam)
 
     aAdress = addAdress(orderNr,locatieNaam)
-    #print ("Adress: ",aAdress.naam)
+    print ("Adress: ",aAdress.naam)
 
-    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,aAdress.naam,"default")
+    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNaam,aAdress.naam,"default")
+
     #print ("Camera: ",aCamera.naam)
 
     #aVideo   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
@@ -206,12 +212,16 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     print ('locatieId :',locatieId)
     aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam,camera__locatie=locatieId)
 
+    aOrder=addServiceOrder(orderNr,bedrijfNaam,locatieNaam,aAdress.naam,"default")
+
+    #print ("aUser: ",aCamera.naam)
+
     if not aVideos:
         print("not found aVideo;  ",videoNaam, aCamera.naam)
         aVideo = Video()
         aVideo.naam         = videoNaam
         aVideo.camera       = aCamera
-        aVideo.ordernr      = orderNr
+        aVideo.ordernr      = aOrder
         aVideo.video_link   = videoLink
         if validDate(recFrom):
             aVideo.opname_van   = datetime.strptime(recFrom, '%Y%m%d%H%M%S')
