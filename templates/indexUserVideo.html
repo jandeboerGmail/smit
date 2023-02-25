@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+{% load user_tags %}
+<h2 class='container-fluid smit-h2-center'>Video Sectie</h2>
+<hr>
+{% if request.user|has_group:"Stadgenoot" %}
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/allVideoStadgenoot">Alle Video's</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNaamVideoStadgenoot">Zoek op Naam</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zOrderVideoStadgenoot">Zoek op Service Order</a>
+    </div>
+    <br>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/allCameraStadgenoot">Alle Camera's</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zCameraVideo">Zoek op Camera</a>
+    </div>
+{% endif %}
+{% endblock %}

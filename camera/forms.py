@@ -22,7 +22,7 @@ class GebruikerForm(forms.ModelForm):
     class Meta:
         model = Gebruiker
 
-        fields = ['naam','user','soort','email1','telefoon_mobiel','memo'] 
+        fields = ['naam','user','soort','email1','email2','telefoon_mobiel','telefoon_vast','gebied','soort','memo'] 
         
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
@@ -31,6 +31,7 @@ class GebruikerForm(forms.ModelForm):
             'email2': forms.EmailInput(attrs={'class': 'form-control'}),  
             'telefoon_mobiel': forms.TextInput(attrs={'class': 'form-control'}),
             'telefoon_vast': forms.TextInput(attrs={'class': 'form-control'}),
+            'gebied': forms.Select(attrs={'class': 'form-control'}),
             'soort': forms.Select(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }

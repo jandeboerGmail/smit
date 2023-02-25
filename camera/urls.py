@@ -23,7 +23,7 @@ urlpatterns = [
 
 #Index  
     path('',views.index,name='index'),
-    path('zoekVideo',views.zoekVideo,name='zoekVideo'),
+    #path('zoekVideo',views.zoekVideo,name='zoekVideo'),
 
     path('indexGebruiker',views.indexGebruiker,name='indexGebruiker'),
     path('indexAdres',views.indexAdres,name='indexAdres'),
@@ -37,6 +37,11 @@ urlpatterns = [
     path('indexLog',views.indexLog,name='indexLog'),
     path('indexActies',views.indexActies,name='indexActies'),
 
+#User
+    path('indexUserVideo',views.indexUserVideo,name='indexUserVideo'),
+    path('indexUserOrder',views.indexUserOrder,name='indexUserOrder'),
+    path('indexUserActie',views.indexUserActie,name='indexUserActie'),
+
 #stadgenoot
     path('indexStadgenoot',views.indexStadgenoot,name='indexStadgenoot'),
     path('allVideoStadgenoot',views.allVideoStadgenoot,name='allVideoStadgenoot'),
@@ -46,6 +51,8 @@ urlpatterns = [
     path('allOrderStadgenoot',views.allOrderStadgenoot,name='allOrderStadgenoot'),
     path('zNrOrderStadgenoot',views.zNrOrderStadgenoot,name='zNrOrderStadgenoot'),
     path('zContactOrderStadgenoot',views.zContactOrderStadgenoot,name='zContactOrderStadgenoot'),
+
+    path('allCameraStadgenoot',views.allCameraStadgenoot,name='allCameraStadgenoot'),
 
 # Gebruiker
     path('allGebruiker/',views.allGebruiker,name='allGebruiker'),
@@ -114,8 +121,7 @@ urlpatterns = [
     path('deleteVideo/<int:pk>',views.deleteVideo,name='deleteVideo'),
 
     path('playVideo/<int:pk>',views.playVideo,name='playVideo'),
-    path('convertVideo/<int:pk>',views.convertVideo,name='convertVideo'),
-    path('downloadVideo/<int:pk>',views.downloadVideo,name='downloadVideo'),
+
 
 # Order
     path('allOrder/',views.allOrder,name='allOrder'),
@@ -137,6 +143,7 @@ urlpatterns = [
     path('actieToggleConversionStatus/',views.actieToggleConversionStatus,name='actieToggleConversionStatus'),
     path('actieGetVideoLocation/',views.actieGetVideoLocation,name='actieGetVideoLocation'),
     path('actieSendMail/',views.actieSendMail,name='actieSendMail'),
+    path('actieDisplayPermissions/',views.actieDisplayPermissions,name='actieDisplayPermissions'),
     path('actieConvertVideo/',views.actieConvertVideo,name='actieConvertVideo'),
     path('actieListVideo/',views.actieListVideo,name='actieListVideo'),
     path('actieListConvertedVideo/',views.actieListConvertedVideo,name='actieListConvertedVideo'),

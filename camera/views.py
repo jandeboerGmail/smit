@@ -46,14 +46,12 @@ def todo(request):
     return render(request,'todo.html',context )
     # return HttpResponse("Hello, world. You're at the Camera Todo index")
 
-
 #index
 @login_required
 def index(request):
     # return HttpResponse("Hello, world. You're at the Camera index.")
     # return render(request,'index.html',{})
     return render(request,'../templates/index.html',{})
-
 
 @login_required
 def indexGebruiker(request):
@@ -94,6 +92,17 @@ def indexLog(request):
 @login_required
 def indexActies(request):
     return render(request,'../templates/indexActies.html', {} )
+
+# User
+@login_required
+def indexUserVideo(request):
+    return render(request,'../templates/indexUserVideo.html', {} )
+@login_required
+def indexUserOrder(request):
+    return render(request,'../templates/indexUserOrder.html', {} )
+@login_required
+def indexUserActie(request):
+    return render(request,'../templates/indexUserActie.html', {} )
 
 @login_required
 def indexStadgenoot(request):
@@ -606,6 +615,21 @@ def allCamera(request):
 
     camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'../templates/displayCamera.html',camera_dict )
+    
+@login_required
+def allCameraStadgenoot(request):
+    #camera__locatie__bedrijf__naam__
+    camera_list = Camera.objects.filter(locatie__bedrijf__naam__icontains="Stadgenoot").select_related("locatie").order_by('locatie','naam')
+    
+    #camera_list = Camera.objects.order_by('locatie','naam')
+    aantal =  camera_list.count
+
+    paginator = Paginator(camera_list,12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    return render(request,'../templates/displayCamera.html',camera_dict )
 
 # Zoek
 @login_required
@@ -631,6 +655,7 @@ def zLocatieCamera (request):
     else:
         camera_dict = {}
     return render(request,'../templates/zLocatieCamera.html', camera_dict ) 
+
 
 # Export
 @login_required
@@ -679,14 +704,16 @@ def editCamera(request,pk):
     try :
         camera = Camera.objects.get(id=pk)
     except Camera.DoesNotExist:
-        return redirect('indexCamera')
+        #return redirect('indexCamera')
+        return redirect('about')
 
     form = CameraForm(request.POST or None,instance = camera)
     # print('Request Method:',request.method)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-        return ( redirect('indexCamera'))
+
+        return ( redirect('about'))
 
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Camera'}
@@ -697,12 +724,13 @@ def deleteCamera(request,pk):
     try :
         camera = Camera.objects.get(id=pk)
     except Camera.DoesNotExist:
-        return redirect('/camera/indexCamera')
+        return redirect('about')
 
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
         camera.delete()
-        return ( redirect('/camera/indexCamera'))
+        ##return ( redirect('/camera/indexCamera'))
+        return redirect('about')
 
     template_name = 'deleteRecord.html'
     context = {'item' : camera , 'title': 'Verwijder Camera'}
@@ -710,7 +738,7 @@ def deleteCamera(request,pk):
 
 # ---- Video ---------------
 @login_required
-@permission_required('video.can_view_video')
+@permission_required('camera.view_video')
 def allVideo(request):
     video_list = Video.objects.order_by('ordernr','naam','camera','-datum_updated')
     aantal =  video_list.count
@@ -722,6 +750,8 @@ def allVideo(request):
     video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'../templates/displayVideo.html',video_dict )
 
+@login_required
+@permission_required('camera.view_video')
 def allVideoBedrijf(request,bedrijf):
     qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
     #print ('qs1: ',str(qs1.query))
@@ -735,18 +765,21 @@ def allVideoBedrijf(request,bedrijf):
     return dict
 
 @login_required
+@permission_required('camera.view_video')
 def allVideoStadgenoot(request):
     bedrijf = 'Stadgenoot'
     dict = allVideoBedrijf(request, bedrijf)
     return render(request,'../templates/displayVideo.html',dict )
 
 @login_required
+@permission_required('camera.view_video')
 def allVideoBerkhout(request):
     bedrijf = 'Berkhout'
     dict = allVideoBedrijf(request, bedrijf)
     return render(request,'../templates/displayVideo.html',dict )
 
 @login_required
+@permission_required('camera.view_video')
 def allVideoSmit(request):
     bedrijf = 'Smit'
     dict = allVideoBedrijf(request, bedrijf)
@@ -754,6 +787,7 @@ def allVideoSmit(request):
 
 # Zoek
 @login_required
+@permission_required('camera.view_video')
 def zNaamVideo (request):
     query = request.GET.get('q','')
     if query:
@@ -772,6 +806,7 @@ def zNaamVideo (request):
     return render(request,'../templates/zNaamVideo.html', video_dict )
 
 @login_required
+@permission_required('camera.view_video')
 def zOrderVideo (request):
     query = request.GET.get('q','')
     if query:
@@ -789,6 +824,7 @@ def zOrderVideo (request):
     return render(request,'../templates/zOrderVideo.html', video_dict )
 
 @login_required
+@permission_required('camera.view_video')
 def zCameraVideo (request):
     query = request.GET.get('q','')
     if query:
@@ -808,6 +844,7 @@ def zCameraVideo (request):
         video_dict = {}
     return render(request,'../templates/zCameraVideo.html', video_dict )
 
+@permission_required('camera.view_video')
 @login_required
 def zLocatieVideo (request):
     query = request.GET.get('q','')    
@@ -828,6 +865,7 @@ def zLocatieVideo (request):
 
 # Export
 @login_required
+@permission_required('camera.view_video')
 def exportVideo(request):
         response = HttpResponse(content_type='application/ms-excel')
         now = datetime.now()
@@ -859,6 +897,7 @@ def exportVideo(request):
 
 #CRUD
 @login_required
+@permission_required('camera.add_video')
 def createVideo(request):
     form = VideoForm(request.POST or None)
     if form.is_valid():
@@ -869,45 +908,48 @@ def createVideo(request):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.edit_video')
 def editVideo(request,pk):
     try :
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
-        return redirect('indexVideo')
+        return redirect('about')
 
     form = VideoForm(request.POST or None,instance = video)
     # print('Request Method:',request.method)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-        return ( redirect('indexVideo'))
+        return ( redirect('about'))
 
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Video'}
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.delete_video')
 def deleteVideo(request,pk):
     try :
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
-        return redirect('/camera/indexVideo')
+        return redirect('about')
 
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
         video.delete()
-        return ( redirect('/camera/indexVideo'))
+        return ( redirect('about'))
 
     template_name = 'deleteRecord.html'
     context = {'item' : video , 'title': 'Verwijder Video'}
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.view_video')
 def playVideo(request,pk):
     try :
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
-        return redirect('indexVideo')
+        return redirect('about')
     location =  functions.getVideoLocation() + video.video_link
     #location =  video.video_link
     video_dict  = {'location' : location , 'video' : video }
@@ -919,37 +961,9 @@ def playVideo(request,pk):
     return ( redirect('indexVideo'))
     '''
 
-@login_required
-def downloadVideo(request,pk):
-    try :
-        video = Video.objects.get(id=pk)
-    except Video.DoesNotExist:
-        return redirect('indexVideo')
-
-    # TODO 
-    context  = {}
-    return render(request,'todo.html',context )
-
-
-@login_required
-def convertVideo(request,pk):
-    try :
-        video = Video.objects.get(id=pk)
-    except Video.DoesNotExist:
-        return redirect('indexVideo')
-
-    # TODO 
-    context  = {}
-    return render(request,'todo.html',context )
-
-@login_required
-def zoekVideo(request):
-    # TODO 
-    context  = {}
-    return render(request,'todo.html',context )
-
 # -----Orders ---
 @login_required
+@permission_required('camera.view_serviceorder')
 def allOrder(request):
     list = ServiceOrder.objects.order_by('bedrijf','contact','ordernr')
     aantal =  list.count
@@ -1044,14 +1058,14 @@ def editOrder(request,pk):
     try :
         order = ServiceOrder.objects.get(id=pk)
     except ServiceOrder.DoesNotExist:
-        return redirect('indexOrdr')
+        return redirect('about')
 
     form = OrderForm(request.POST or None,instance = order)
     # print('Request Method:',request.method)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-        return ( redirect('indexOrder'))
+        return ( redirect('about'))
 
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Service Order'}
@@ -1062,12 +1076,12 @@ def deleteOrder(request,pk):
     try :
         order = ServiceOrder.objects.get(id=pk)
     except ServiceOrder.DoesNotExist:
-        return redirect('/camera/indexOrder')
+        return redirect('about')
 
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
         order.delete()
-        return ( redirect('/camera/indexOrder'))
+        return ( redirect('about'))
 
     template_name = 'deleteRecord.html'
     context = {'item' : order , 'title': 'Verwijder Service Order'}
@@ -1185,7 +1199,6 @@ def actieListConvertedVideo(request):
     return HttpResponse(html)
     #return redirect('indexActies')
 
-
 '''
 @login_required
 def actieConvertVideo(request):
@@ -1240,7 +1253,11 @@ def actieSendMail(request):
     functions.SendMail('My subject',"Test Message3",recipients)
     return HttpResponse("Mail send!!")
     #return redirect('redirect to a new page')
-  
+
+def actieDisplayPermissions(request):
+    context  = {}
+    return render(request,'displayPermissions.html',context )
+
 #stadgenoot Video
 # Zoek
 

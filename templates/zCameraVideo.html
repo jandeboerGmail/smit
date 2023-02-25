@@ -57,8 +57,6 @@
          <td> {{video.opname_van}} </td>
          <td> {{video.opname_tot}} </td>
          <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
-         <!--<td><a class="btn btn-sm btn-secondary" href="{% url 'downloadVideo' video.id %}">Download</a></td> -->
-         <!--<td><a class="btn btn-sm btn-primary" href="{% url 'convertVideo' video.id %}">Convert</a></td> -->
          <td><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></td>
          <td><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></td>
       </tr>

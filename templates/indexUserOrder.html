@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+{% load user_tags %}
+<h2 class='container-fluid smit-h2-center'>Order Sectie</h2>
+<hr>
+{% if request.user|has_group:"Stadgenoot" %}
+    <div class="nav-index">
+          <a class="nav-index" href="/camera/allOrderStadgenoot">Alle Orders</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNrOrderStadgenoot">Zoek op Service Order</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zContactOrderStadgenoot">Zoek op Contact</a>
+    </div>
+{% endif %}
+{% endblock %}
