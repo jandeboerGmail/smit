@@ -118,6 +118,7 @@ class Gebruiker(models.Model):
 class Locatie(models.Model):
     naam = models.CharField(max_length=50,blank = False)
     adres = models.ForeignKey(Adress,on_delete=models.CASCADE)
+    gebied  = models.ManyToManyField(Gebied)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
     bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
     contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)

@@ -23,6 +23,7 @@
       <th scope="col">Bedrijf</td>
       <th scope="col">Locatie</td>
       <th scope="col">Adres</td>
+      <th scope="col">Gebied</td>
       <th scope="col">Contact</td>
       <th scope="col">Telefoon</td>
       <th scope="col">Acties</td>
@@ -36,8 +37,9 @@
        <td> {{locatie.bedrijf.naam}} </td>
        <td> {{locatie.naam}} </td>
        <td> {{locatie.adres.naam}} </td>
+       <td> {{locatie.gebied}} </td>
        <td> {{locatie.contact.naam}} </td>
-       <td> {{locatie.contact.telefoon}} </td>
+       <td> {{locatie.contact.telefoon_mobiel}} </td>
        <td><a class="btn btn-sm btn-info" href="{% url 'editLocatie' locatie.id %}">Edit</a></td>
        <td><a class="btn btn-sm btn-danger" href="{% url 'deleteLocatie' locatie.id %}">Delete</a></td>
     </tr>

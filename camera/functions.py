@@ -13,6 +13,18 @@ def validDate(dateIn):
     date_pattern = "^[1-9][0-9][0-9][0-9][0-2][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]$"
     return  re.match(date_pattern, dateIn) # Returns Match object
 
+def isAllowed(userID,videoId):
+        result = False
+        aUser = Gebruiker.objects.get(id=userID)
+        aVideo = Video.objects.get(id=videoId)
+        aCamera = Camera.objects.get(id=aVideo.camera)
+        aLocatie = Locatie.objects.get(id=aCamera.locatie)
+        if aLocatie.gebied == aUser.Gebied:
+            result = True
+        return result
+       
+
+
 # Log functions
 def addLogEntry(orderNr,message):
     aLog = Log()
