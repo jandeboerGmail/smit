@@ -37,10 +37,14 @@ def getVideoLocation():
     '''
     return str(aParameter.videoPath)
 
+def getOrder():
+    aParameter =  Parameter.objects.get(id=1)
+    return aParameter.conversion_order
+    #return 'test'
 
 def getMaximumConvert():
     aParameter =  Parameter.objects.get(id=1)
-    return aParameter.maximumConvert
+    return aParameter.maximum_convert
 
 def getRunningStatus():
     aParameter =  Parameter.objects.get(id=1)
@@ -55,7 +59,6 @@ def setRunningStatus(status):
     return
 
 # Add video Content 
-
 # Adress 
 def addAdress(orderNr,naam):
     #print("add Adress: ",naam)
@@ -514,6 +517,144 @@ def ConvertingVideos():
                                 addLogEntry(" ","INFO : Exceeding Number of ffmpeg converions") 
     message = "Migrating Ended "
     addLogEntry(" ", message)
+    setRunningStatus(False)
+    return
+
+def ConvertingVideosOrder(order):
+    print('Order Conversion')
+   
+    videoPath     = getVideoLocation()
+    maxConverting = getMaximumConvert()
+    converting = 1
+    
+    message = "Order converting Looking for New Videos in " + videoPath 
+    addLogEntry(order, message)
+    setRunningStatus(True)
+
+    for root, dirs, files in os.walk(videoPath, topdown=True):
+  
+        for name in files:
+            inFileName = os.path.join(root, name)
+            #print("Files :",os.path.join(root, name))
+            if "2Convert" in inFileName:
+                #print('inFile :',inFileName)
+                if ".MP4" in inFileName or ".mp4" in inFileName or inFileName in order and not "._" in inFileName:
+                    print('inFile :',inFileName)
+                    after = substring_after(inFileName,"2Convert/") 
+            
+                    if (after and size_changed(inFileName,5)) and (os.path.getsize(inFileName)) > 0:
+                      
+                        print('After :',after)
+                        request = after[0:after.find("/")]
+                        print('request:',request)
+                        
+                        #make/check output dir
+                        destDir = substring_before(inFileName, "2Convert") + "Migrated/" 
+                       
+                        print('destDir :',destDir)
+                        if not os.path.isdir(destDir):
+                            os.mkdir(destDir)
+
+                        # check / create request directory
+                        reqDir = destDir + request + "/"
+                        print('reqDir :', reqDir)
+                        if not os.path.isdir(reqDir):
+                            os.mkdir(reqDir)
+                
+                        outFileName = os.path.join(destDir,after)
+            
+                        outFile = outFileName.replace(" ", "\ ")
+                        inFile = inFileName.replace(" ", "\ ")
+
+                        file_stats = os.stat(inFileName)
+                        #print(file_stats)
+                        fileSize = file_stats.st_size / (1024 * 1024)
+                        fSize = "%.5f" % fileSize
+
+                        #probe format
+                        command = "ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 " + inFile  + " > ._isFormat"
+                        result = os.system(command)
+                        with open('._isFormat', 'r') as file:
+                            formatData= file.read().replace('\n', '')
+                    
+                        if "h264" in formatData:
+                            outFileName = outFileName 
+                
+                            message = 'Copying h264 ' + inFileName + " Size: " + fSize + " MB"
+                            addLogEntry(request,message)
+                            shutil.copyfile(inFileName, outFileName)
+                            extractDBitems(outFileName)
+                            # removeFile(inFileName) # uncommend for production
+                            moveFileToDone(inFileName,request) 
+                            
+                        else: #conversion needed
+                            if converting <= maxConverting:
+                                converting += 1
+                                startTime = time.time()
+                                message = 'Migrating   ' + inFileName + " Size: " + fSize + " MB"
+                                addLogEntry(request,message)
+
+                                #command 
+                                #command = "cp " + inFile + " " + outFile 
+
+                                #h264
+                                outFileName = outFileName.replace(".mp4", "_conv_h264.mp4")
+                                outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
+                                outFile = outFileName.replace(" ", "\ ")
+                            
+                                #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
+                                command = "ffmpeg -y -threads 1 -i " + inFile
+                                #command = "ffmpeg -y -i " + inFile
+                                command = command + " -map 0 -c:v libx264 -crf 18 " + outFile + " &"
+                                #vb9
+                                #outFileName = outFileName.replace(".mp4", ".webm")
+                                #outFileName = outFileName.replace(".MP4", ".webm")
+                                #outFile = outFileName.replace(" ", "\ ")
+                            
+                                #vp9 
+                                #command = "ffmpeg -y -i " + inFile
+                                #command = command + " -c:v libvpx-vp9 -b:v 2M " + outFile
+                            
+                                #vp9 twopass
+                                #command = "ffmpeg  -y -i " + inFile
+                                #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
+                                #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
+
+                                #addLogEntry(request,command)
+                                print('Command :',command) 
+                                # removeFile(outFile) # uncomment in production
+                            
+                                startTime = time.time()
+                                
+                                result = os.system(command)
+                                #result = 0
+
+                                #print('Result :',result)
+                                if result ==  0: # 256 error
+                                    # Elapsed Time
+                                    endTime = time.time()
+                                    elapsedTime = endTime - startTime
+                                    #elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
+
+                                    # fileSize
+                                    #file_stats = os.stat(outFileName)
+                                    ##print(file_stats)
+                                    #fileSize = file_stats.st_size / (1024 * 1024)
+                                    #fSize = "%.5f" % fileSize
+                                    
+                                    message = "To " + outFileName 
+                                    #message = "Migrated to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
+                                    addLogEntry(request,message)
+                        
+                                    # removeFile(inFileName) # uncommend for production
+                                    # moveFileToDone(inFileName,request) Not yet after conversion 
+                                    extractDBitems(outFileName)
+                                else:
+                                    addLogEntry(request,"ERROR : Not Migrated")
+                            else:
+                                addLogEntry(order,"INFO : Exceeding Number of ffmpeg converions") 
+    message = "Order migrating Ended"
+    addLogEntry(order, message)
     setRunningStatus(False)
     return
 

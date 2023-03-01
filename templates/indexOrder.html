@@ -2,6 +2,9 @@
 {% block head_title %} {% endblock %}
 {% block content %}
 {% load static %}
+{% load user_tags %}
+
+{% if request.user|has_group:"Admin"%}
 <h2 class='container-fluid smit-h2'>Order</h2>
 <ul>
   <div class="nav-index">
@@ -19,4 +22,5 @@
     <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
   </div>
 </ul>
+{% endif %}
 {% endblock %}

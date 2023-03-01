@@ -2,7 +2,9 @@
 {% block head_title %} {% endblock %}
 {% block content %}
 {% load static %}
+{% load user_tags %}
 
+{% if request.user|has_group:"Admin"%}
 <h2 class='container-fluid smit-h2'>Acties</h2>
 <ul>
 <hr>
@@ -15,28 +17,29 @@
   <div class="nav-index">
     <a class="nav-index" href="/camera/actieToggleConversionStatus">Verander de Conversie Status</a>
   </div> 
+  <br>
   <div class="nav-index">
     <a class="nav-index" href="/camera/actieSendMail">Sent a testmail</a>
   </div> 
   <div class="nav-index">
-    <a class="nav-index" href="/camera/actieDisplayPermissions">Display Permissions</a>
+    <a class="nav-index" href="/camera/actieDisplayPermissions">List Permisies</a>
   </div> 
-  
   <hr>
   <div class="nav-index">
     <a class="nav-index" href="/camera/actieListVideo">List nieuwe video's</a>
   </div>
   <div class="nav-index">
-    <a class="nav-index" href="/camera/actieConvertVideo">Migreer de video's</a>
+    <a class="nav-index text-danger" href="/camera/actieConvertVideo">Migreer de video's</a>
   </div>
+  <div class="nav-index">
+    <a class="nav-index text-danger"  href="/camera/actieConvertVideoOrder">Migreer de video's op basis van Service Order Nummer</a>
+  </div>
+  
   <div class="nav-index">
     <a class="nav-index" href="/camera/actieListConvertedVideo">List gemigreerde video's</a>
   </div>
-  <hr>
+  <br>
   <!--
-  <div class="nav-index">
-    <a class="nav-index" href="/camera/actieConvertVideoOrder">Converteer Video's met Service Order Nummer</a>
-  </div>
   <div class="nav-index">
     <a class="nav-index" href="/camera/actieAddVideo">Test -> Voeg video toe aan DB</a>
   </div>
@@ -56,4 +59,5 @@
       <a class="nav-index" href="/camera/zOrderLog">Zoek op Service Order Nummer</a>
   </div>
 </ul>
+{% endif %}
 {% endblock %}

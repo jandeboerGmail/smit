@@ -2,7 +2,9 @@
 {% block head_title %} {% endblock %}
 {% block content %}
 {% load static %}
+{% load user_tags %}
 
+{% if request.user|has_group:"Admin"%}
 <h2 class='container-fluid smit-h2'>Locatie</h2>
 
 <ul> 
@@ -21,4 +23,5 @@
   </div>
   <hr>
 </ul>
+{% endiff%}
 {% endblock %}

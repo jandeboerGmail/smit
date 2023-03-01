@@ -247,7 +247,8 @@ class Log(models.Model):
 class Parameter(models.Model):
     id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
     videoPath = models.CharField(max_length=100,blank = False,unique=False) # ex /home/jan/video/'
-    maximumConvert = models.IntegerField(blank = False, default=3)
+    maximum_convert = models.IntegerField(blank = False, default=3)
+    conversion_order = models.CharField(max_length=100,blank = True, default="Default")
     conversion_running = models.BooleanField(default=False)
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
     datum_updated = models.DateTimeField(default=timezone.now, blank=False)

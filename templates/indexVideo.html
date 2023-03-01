@@ -2,8 +2,10 @@
 {% block head_title %} {% endblock %}
 {% block content %}
 {% load static %}
-<h2 class='container-fluid smit-h2'>Video</h2>
+{% load user_tags %}
 
+{% if request.user|has_group:"Admin"%}
+<h2 class='container-fluid smit-h2'>Video</h2>
 <ul>
   <hr>
   <div class="nav-index">
@@ -18,11 +20,9 @@
   <div class="nav-index">
     <a class="nav-index" href="/camera/zCameraVideo">Zoek op Camera</a>
   </div>
-
   <div class="nav-index">
     <a class="nav-index" href="/camera/zLocatieVideo">Zoek op Locatie</a>
   </div>
-  
   <hr>
   <div class="nav-index">
     <a class="nav-index" href="/camera/allVideoStadgenoot">Stadgenoot</a>
@@ -33,7 +33,6 @@
   <div class="nav-index">
     <a class="nav-index" href="/camera/allVideoSmit">Smit</a>
   </div>
- 
   <!--
   <div class="nav-index">
     <a class="nav-index" href="/camera/zLocatieVideo">Zoek op Locatie</a>
@@ -45,4 +44,5 @@
   </div>
   <hr> 
 </ul>
+{% endif %}
 {% endblock %}

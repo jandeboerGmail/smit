@@ -1,7 +1,5 @@
-#from re import A
-#from sqlite3 import Date
 from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.conf import settings
 from django.db.models import Q
@@ -13,8 +11,6 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 from django.core import mail
 
-#from itertools import chain
-#import datetime
 import camera.functions as functions
 from camera.models import Adress, Gebruiker, Bedrijf, Camera, Gebied, Locatie, Video ,ServiceOrder, Log, Parameter
 from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm, GebiedForm
@@ -51,73 +47,88 @@ def todo(request):
 def index(request):
     # return HttpResponse("Hello, world. You're at the Camera index.")
     # return render(request,'index.html',{})
-    return render(request,'../templates/index.html',{})
+    return render(request,'index.html',{})
 
 @login_required
+@permission_required('camera.view_gebruiker')
 def indexGebruiker(request):
-    return render(request,'../templates/indexGebruiker.html', {} )
+    return render(request,'indexGebruiker.html', {} )
 
 @login_required
+@permission_required('camera.view_bedrijf')
 def indexBedrijf(request):
-    return render(request,'../templates/indexBedrijf.html', {} )
+    return render(request,'indexBedrijf.html', {} )
 
 @login_required
+@permission_required('camera.view_adress')
 def indexAdres(request):
-    return render(request,'../templates/indexAdres.html', {} )
+    return render(request,'indexAdres.html', {} )
 
 @login_required
+@permission_required('camera.view_gebied')
 def indexGebied(request):
-    return render(request,'../templates/indexGebied.html', {} )
+    return render(request,'indexGebied.html', {} )
 
 @login_required
+@permission_required('camera.view_locatie')
 def indexLocatie(request):
-    return render(request,'../templates/indexLocatie.html', {} )
+    return render(request,'indexLocatie.html', {} )
 
 @login_required
+@permission_required('camera.view_camera')
 def indexCamera(request):
-    return render(request,'../templates/indexCamera.html', {} )
+    return render(request,'indexCamera.html', {} )
 
 @login_required
+@permission_required('camera.view_video')
 def indexVideo(request):
-    return render(request,'../templates/indexVideo.html', {} )
+    return render(request,'indexVideo.html', {} )
 
 @login_required
+@permission_required('camera.view_serviceorder')
 def indexOrder(request):
-    return render(request,'../templates/indexOrder.html', {} )
+    return render(request,'indexOrder.html', {} )
 
 @login_required
+@permission_required('camera.view_log')
 def indexLog(request):
-    return render(request,'../templates/indexLog.html', {} )
+    return render(request,'indexLog.html', {} )
 
 @login_required
 def indexActies(request):
-    return render(request,'../templates/indexActies.html', {} )
+    return render(request,'indexActies.html', {} )
 
 # User
 @login_required
+@permission_required('camera.view_video')
 def indexUserVideo(request):
-    return render(request,'../templates/indexUserVideo.html', {} )
+    return render(request,'indexUserVideo.html', {} )
+
 @login_required
+@permission_required('camera.view_serviceorder')
 def indexUserOrder(request):
-    return render(request,'../templates/indexUserOrder.html', {} )
+    return render(request,'indexUserOrder.html', {} )
+
 @login_required
 def indexUserActie(request):
-    return render(request,'../templates/indexUserActie.html', {} )
+    return render(request,'indexUserActie.html', {} )
 
 @login_required
 def indexStadgenoot(request):
-    return render(request,'../templates/indexStadgenoot.html', {} )
+    return render(request,'indexStadgenoot.html', {} )
 
 # --- Gebruiker
 @login_required
+@permission_required('camera.view_gebruiker')
 def allGebruiker(request):
     gebruiker_list = Gebruiker.objects.order_by('naam')
     aantal =  gebruiker_list.count
     gebruiker_dict  = {'results' : gebruiker_list , 'aantal' : aantal}
-    return render(request,'../templates/displayGebruiker.html',gebruiker_dict )
+    return render(request,'displayGebruiker.html',gebruiker_dict )
 
 # Zoek
 @login_required
+@permission_required('camera.view_gebruiker')
 def zNaamGebruiker (request):
     query = request.GET.get('q','')
     if query:
@@ -127,10 +138,11 @@ def zNaamGebruiker (request):
         gebruiker_dict  = {'results' : gebruiker_list , 'aantal' : aantal, "query": query}
     else:
         gebruiker_dict = {}
-    return render(request,'../templates/zNaamGebruiker.html', gebruiker_dict ) 
+    return render(request,'zNaamGebruiker.html', gebruiker_dict ) 
 
 # Export
 @login_required
+@permission_required('camera.view_gebruiker')
 def exportGebruiker(request):
         response = HttpResponse(content_type='application/ms-excel')
         now = datetime.now()
@@ -162,6 +174,7 @@ def exportGebruiker(request):
 
 #CRUD
 @login_required
+@permission_required('camera.add_gebruiker')
 def createGebruiker(request):
     form = GebruikerForm(request.POST or None)
     if form.is_valid():
@@ -172,6 +185,7 @@ def createGebruiker(request):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.edit_gebuiker')
 def editGebruiker(request,pk):
     try :
         gebruiker = Gebruiker.objects.get(id=pk)
@@ -190,6 +204,7 @@ def editGebruiker(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.delete_gebuiker')
 def deleteGebruiker(request,pk):
     try :
         gebruiker = Gebruiker.objects.get(id=pk)
@@ -207,6 +222,7 @@ def deleteGebruiker(request,pk):
 
 # --- Adress
 @login_required
+@permission_required('camera.view_adress')
 def allAdress(request):
     adress_list = Adress.objects.order_by('plaats','naam')
     aantal =  adress_list.count
@@ -216,9 +232,10 @@ def allAdress(request):
     page_obj = paginator.get_page(page_number)
 
     adress_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayAdress.html',adress_dict )
+    return render(request,'displayAdress.html',adress_dict )
 
 @login_required
+@permission_required('camera.view_adress')
 def zNaamAdress (request):
     query = request.GET.get('q','')
     if query:
@@ -228,9 +245,10 @@ def zNaamAdress (request):
         adress_dict  = {'results' : adress_list , 'aantal' : aantal, "query": query}
     else:
         adress_dict = {}
-    return render(request,'../templates/zNaamAdress.html', adress_dict ) 
+    return render(request,'zNaamAdress.html', adress_dict ) 
 
 @login_required
+@permission_required('camera.view_adress')
 def zPlaatsAdress (request):
     query = request.GET.get('q','')
     if query:
@@ -245,11 +263,12 @@ def zPlaatsAdress (request):
         adress_dict  = {'results' : adress_list , 'aantal' : aantal, "query": query}
     else:
         adress_dict = {}
-    #return render(request,'../templates/displayAdress.html', adress_dict ) 
-    return render(request,'../templates/zPlaatsAdress.html', adress_dict ) 
+    #return render(request,'displayAdress.html', adress_dict ) 
+    return render(request,'zPlaatsAdress.html', adress_dict ) 
 
 #CRUD
 @login_required
+@permission_required('camera.add_adress')
 def createAdress(request):
     form = AdressForm(request.POST or None)
     if form.is_valid():
@@ -261,6 +280,7 @@ def createAdress(request):
 
 
 @login_required
+@permission_required('camera.change_adress')
 def editAdress(request,pk):
         try :
             adress = Adress.objects.get(id=pk)
@@ -279,6 +299,7 @@ def editAdress(request,pk):
         return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.delete_adress')
 def deleteAdress(request,pk):
         try :
             adress = Adress.objects.get(id=pk)
@@ -296,14 +317,16 @@ def deleteAdress(request,pk):
 
 # --- Bedrijf
 @login_required
+@permission_required('camera.view_bedrijf')
 def allBedrijf(request):
     bedrijven_list = Bedrijf.objects.order_by('naam')
     aantal =  bedrijven_list.count
     bedrijf_dict  = {'bedrijven' : bedrijven_list , 'aantal' : aantal}
-    return render(request,'../templates/displayBedrijf.html',bedrijf_dict )
+    return render(request,'displayBedrijf.html',bedrijf_dict )
 
 # Zoek
 @login_required
+@permission_required('camera.view_bedrijf')
 def zNaamBedrijf (request):
     query = request.GET.get('q','')
     if query:
@@ -315,9 +338,10 @@ def zNaamBedrijf (request):
         bedrijf_dict  = {'results' : bedrijf_list , 'aantal' : aantal, "query": query}
     else:
         bedrijf_dict = {}
-    return render(request,'../templates/zNaamBedrijf.html', bedrijf_dict ) 
+    return render(request,'zNaamBedrijf.html', bedrijf_dict ) 
 
 @login_required
+@permission_required('camera.view_bedrijf')
 def zPlaatsBedrijf(request):
     query = request.GET.get('q','')
     if query:
@@ -327,11 +351,12 @@ def zPlaatsBedrijf(request):
         bedrijf_dict  = {'results' : bedrijf_list , 'aantal' : aantal, "query": query}
     else:
         bedrijf_dict = {}
-    return render(request,'../templates/zNaamBedrijf.html', bedrijf_dict ) 
-    #return render(request,"../templates/zPlaatsBedrijf.html", bedrijf_dict)
+    return render(request,'zNaamBedrijf.html', bedrijf_dict ) 
+    #return render(request,"zPlaatsBedrijf.html", bedrijf_dict)
 
 #Export
 @login_required
+@permission_required('camera.view_bedrijf')
 def exportBedrijf(request):
         response = HttpResponse(content_type='application/ms-excel')
         now = time.now()
@@ -365,6 +390,7 @@ def exportBedrijf(request):
 
 #CRUD
 @login_required
+@permission_required('camera.add_bedrijf')
 def createBedrijf(request):
     form = BedrijfForm(request.POST or None)
     if form.is_valid():
@@ -375,6 +401,7 @@ def createBedrijf(request):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.change_bedrijf')
 def editBedrijf(request,pk):
         try :
             bedrijf = Bedrijf.objects.get(id=pk)
@@ -393,6 +420,7 @@ def editBedrijf(request,pk):
         return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.delete_bedrijf')
 def deleteBedrijf(request,pk):
         try :
             bedrijf = Bedrijf.objects.get(id=pk)
@@ -410,6 +438,7 @@ def deleteBedrijf(request,pk):
 
 # --- Gebied -----------------
 @login_required
+@permission_required('camera.view_gebied')
 def allGebied(request):
     aList = Gebied.objects.order_by('bedrijf','gebiedNr')
     aantal =  aList.count
@@ -419,12 +448,13 @@ def allGebied(request):
     page_obj = paginator.get_page(page_number)
 
     aDict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayGebied.html',aDict )
+    return render(request,'displayGebied.html',aDict )
 
 # Zoek
 
 # Export
 @login_required
+@permission_required('camera.view_gebied')
 def exportGebied(request):
         '''
         response = HttpResponse(content_type='application/ms-excel')
@@ -458,6 +488,7 @@ def exportGebied(request):
 
 #CRUD
 @login_required
+@permission_required('camera.add_gebied')
 def createGebied(request):
     form = GebiedForm(request.POST or None)
     if form.is_valid():
@@ -468,6 +499,7 @@ def createGebied(request):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.change_gebied')
 def editGebied(request,pk):
     try :
         gebied = Gebied.objects.get(id=pk)
@@ -486,6 +518,7 @@ def editGebied(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.delete_gebied')
 def deleteGebied(request,pk):
     try :
         gebied = Gebied.objects.get(id=pk)
@@ -503,6 +536,7 @@ def deleteGebied(request,pk):
                   
 # --- Locatie -----------------
 @login_required
+@permission_required('camera.view_locatie')
 def allLocatie(request):
     locatie_list = Locatie.objects.order_by('bedrijf','adres')
     aantal =  locatie_list.count
@@ -512,10 +546,11 @@ def allLocatie(request):
     page_obj = paginator.get_page(page_number)
 
     Locatie_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayLocatie.html',Locatie_dict )
+    return render(request,'displayLocatie.html',Locatie_dict )
 
 # Zoek
 @login_required
+@permission_required('camera.view_locatie')
 def zNaamLocatie (request):
     query = request.GET.get('q','')
     if query:
@@ -525,10 +560,11 @@ def zNaamLocatie (request):
         Locatie_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         Locatie_dict = {}
-    return render(request,'../templates/zNaamLocatie.html', Locatie_dict ) 
+    return render(request,'zNaamLocatie.html', Locatie_dict ) 
 
 # Export
 @login_required
+@permission_required('camera.view_locatie')
 def exportLocatie(request):
         response = HttpResponse(content_type='application/ms-excel')
         now = datetime.now()
@@ -560,6 +596,7 @@ def exportLocatie(request):
 
 #CRUD
 @login_required
+@permission_required('camera.add_locatie')
 def createLocatie(request):
     form = LocatieForm(request.POST or None)
     if form.is_valid():
@@ -570,6 +607,7 @@ def createLocatie(request):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.change_locatie')
 def editLocatie(request,pk):
     try :
         locatie = Locatie.objects.get(id=pk)
@@ -588,6 +626,7 @@ def editLocatie(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.delete_locatie')
 def deleteLocatie(request,pk):
     try :
         locatie = Locatie.objects.get(id=pk)
@@ -605,6 +644,7 @@ def deleteLocatie(request,pk):
 
 # --- Camera -----------------
 @login_required
+@permission_required('camera.view_camera')
 def allCamera(request):
     camera_list = Camera.objects.order_by('locatie','naam')
     aantal =  camera_list.count
@@ -614,9 +654,10 @@ def allCamera(request):
     page_obj = paginator.get_page(page_number)
 
     camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayCamera.html',camera_dict )
+    return render(request,'displayCamera.html',camera_dict )
     
 @login_required
+@permission_required('camera.view_camera')
 def allCameraStadgenoot(request):
     #camera__locatie__bedrijf__naam__
     camera_list = Camera.objects.filter(locatie__bedrijf__naam__icontains="Stadgenoot").select_related("locatie").order_by('locatie','naam')
@@ -629,10 +670,11 @@ def allCameraStadgenoot(request):
     page_obj = paginator.get_page(page_number)
 
     camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayCamera.html',camera_dict )
+    return render(request,'displayCamera.html',camera_dict )
 
 # Zoek
 @login_required
+@permission_required('camera.view_camera')
 def zNaamCamera (request):
     query = request.GET.get('q','')
     if query:
@@ -642,9 +684,10 @@ def zNaamCamera (request):
         camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
     else:
         camera_dict = {}
-    return render(request,'../templates/zNaamCamera.html', camera_dict ) 
+    return render(request,'zNaamCamera.html', camera_dict ) 
 
 @login_required
+@permission_required('camera.view_camera')
 def zLocatieCamera (request):
     query = request.GET.get('q','')
     if query:
@@ -654,11 +697,12 @@ def zLocatieCamera (request):
         camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
     else:
         camera_dict = {}
-    return render(request,'../templates/zLocatieCamera.html', camera_dict ) 
+    return render(request,'zLocatieCamera.html', camera_dict ) 
 
 
 # Export
 @login_required
+@permission_required('camera.view_camera')
 def exportCamera(request):
         response = HttpResponse(content_type='application/ms-excel')
         now = datetime.now()
@@ -690,6 +734,7 @@ def exportCamera(request):
 
 #CRUD
 @login_required
+@permission_required('camera.add_camera')
 def createCamera(request):
     form = CameraForm(request.POST or None)
     if form.is_valid():
@@ -699,7 +744,8 @@ def createCamera(request):
     context = {'form' : form, 'title': 'Toevoegen Camera'}
     return render(request,template_name,context)
 
-login_required
+@login_required
+@permission_required('camera.change_camera')
 def editCamera(request,pk):
     try :
         camera = Camera.objects.get(id=pk)
@@ -720,6 +766,7 @@ def editCamera(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.delete_camera')
 def deleteCamera(request,pk):
     try :
         camera = Camera.objects.get(id=pk)
@@ -748,7 +795,7 @@ def allVideo(request):
     page_obj = paginator.get_page(page_number)
 
     video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayVideo.html',video_dict )
+    return render(request,'displayVideo.html',video_dict )
 
 @login_required
 @permission_required('camera.view_video')
@@ -769,21 +816,21 @@ def allVideoBedrijf(request,bedrijf):
 def allVideoStadgenoot(request):
     bedrijf = 'Stadgenoot'
     dict = allVideoBedrijf(request, bedrijf)
-    return render(request,'../templates/displayVideo.html',dict )
+    return render(request,'displayVideo.html',dict )
 
 @login_required
 @permission_required('camera.view_video')
 def allVideoBerkhout(request):
     bedrijf = 'Berkhout'
     dict = allVideoBedrijf(request, bedrijf)
-    return render(request,'../templates/displayVideo.html',dict )
+    return render(request,'displayVideo.html',dict )
 
 @login_required
 @permission_required('camera.view_video')
 def allVideoSmit(request):
     bedrijf = 'Smit'
     dict = allVideoBedrijf(request, bedrijf)
-    return render(request,'../templates/displayVideo.html',dict )
+    return render(request,'displayVideo.html',dict )
 
 # Zoek
 @login_required
@@ -803,7 +850,7 @@ def zNaamVideo (request):
         video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
-    return render(request,'../templates/zNaamVideo.html', video_dict )
+    return render(request,'zNaamVideo.html', video_dict )
 
 @login_required
 @permission_required('camera.view_video')
@@ -821,7 +868,7 @@ def zOrderVideo (request):
         video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
-    return render(request,'../templates/zOrderVideo.html', video_dict )
+    return render(request,'zOrderVideo.html', video_dict )
 
 @login_required
 @permission_required('camera.view_video')
@@ -842,10 +889,10 @@ def zCameraVideo (request):
         video_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
-    return render(request,'../templates/zCameraVideo.html', video_dict )
+    return render(request,'zCameraVideo.html', video_dict )
 
-@permission_required('camera.view_video')
 @login_required
+@permission_required('camera.view_video')
 def zLocatieVideo (request):
     query = request.GET.get('q','')    
     if query:
@@ -861,7 +908,7 @@ def zLocatieVideo (request):
         video_dict  = {'results' : video_list , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
-    return render(request,'../templates/zLocatieVideo.html', video_dict ) 
+    return render(request,'zLocatieVideo.html', video_dict ) 
 
 # Export
 @login_required
@@ -953,7 +1000,7 @@ def playVideo(request,pk):
     location =  functions.getVideoLocation() + video.video_link
     #location =  video.video_link
     video_dict  = {'location' : location , 'video' : video }
-    return render(request,'../templates/playVideo.html', video_dict )
+    return render(request,'playVideo.html', video_dict )
     '''
     template_name = 'playVideo.html'
     context = {'item' : video , 'title': 'Play Video'}
@@ -973,7 +1020,7 @@ def allOrder(request):
     page_obj = paginator.get_page(page_number)
 
     dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayOrder.html',dict )
+    return render(request,'displayOrder.html',dict )
 '''
 @login_required
 def zNrOrder (request):
@@ -991,9 +1038,11 @@ def zNrOrder (request):
         dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         dict = {}
-    return render(request,'../templates/zNrOrder.html', dict )
+    return render(request,'zNrOrder.html', dict )
 '''
 
+@login_required
+@permission_required('camera.view_serviceorder')
 def zContactOrder (request):
     query = request.GET.get('q','')
 
@@ -1009,10 +1058,11 @@ def zContactOrder (request):
         dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         dict = {}
-    return render(request,'../templates/zContactOrder.html', dict )
+    return render(request,'zContactOrder.html', dict )
 
 # Export
 @login_required
+@permission_required('camera.view_serviceorder')
 def exportOrder(request):
         response = HttpResponse(content_type='application/ms-excel')
         now = datetime.now()
@@ -1044,6 +1094,7 @@ def exportOrder(request):
 
 #CRUD
 @login_required
+@permission_required('camera.add_serviceorder')
 def createOrder(request):
     form = OrderForm(request.POST or None)
     if form.is_valid():
@@ -1054,6 +1105,7 @@ def createOrder(request):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.change_serviceorder')
 def editOrder(request,pk):
     try :
         order = ServiceOrder.objects.get(id=pk)
@@ -1072,6 +1124,7 @@ def editOrder(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@permission_required('camera.delete_serviceorder')
 def deleteOrder(request,pk):
     try :
         order = ServiceOrder.objects.get(id=pk)
@@ -1089,6 +1142,7 @@ def deleteOrder(request,pk):
 
 # ---- Log ---------------
 @login_required
+@permission_required('camera.view_log')
 def allLog(request):
     log_list = Log.objects.order_by('-id')
     aantal =  log_list.count
@@ -1098,10 +1152,11 @@ def allLog(request):
     page_obj = paginator.get_page(page_number)
 
     log_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayAllLog.html',log_dict )
+    return render(request,'displayAllLog.html',log_dict )
 
 # Zoek
 @login_required
+@permission_required('camera.view_log')
 def zOrderLog (request):
     query = request.GET.get('q','')
     if query:
@@ -1112,10 +1167,11 @@ def zOrderLog (request):
         log_dict  = {'results' : log_list , 'aantal' : aantal, "query": query}
     else:
         log_dict = {}
-    return render(request,'../templates/zOrderLog.html', log_dict )
+    return render(request,'zOrderLog.html', log_dict )
 
 # Export
 @login_required
+@permission_required('camera.view_log')
 def exportLog(request):
         response = HttpResponse(content_type='application/ms-excel')
         now = datetime.now()
@@ -1173,7 +1229,6 @@ def actieToggleConversionStatus(request):
 def actieGetVideoLocation(request):
     html = "<html><body><strong><center>Video location: %s </center></strong></body></html>" % functions.getVideoLocation()
     return HttpResponse(html)
-    #return redirect('indexActies')
 
 @login_required
 def actieConvertVideo(request):
@@ -1183,7 +1238,16 @@ def actieConvertVideo(request):
     else:
         html = "<html><body><strong><center>Niets te converteren(check status)</center></strong></body></html>" 
     return HttpResponse(html)
-    #return redirect('indexActies')
+
+@login_required
+def actieConvertVideoOrder(request):
+    if functions.getRunningStatus() == False:
+        order = functions.getOrder()
+        functions.ConvertingVideosOrder(order)
+        html = "<html><body><strong><center>Order conversie gestart... (check logs)</center></strong></body></html>" 
+    else:
+        html = "<html><body><strong><center>Niets te converteren(check status)</center></strong></body></html>" 
+    return HttpResponse(html)
 
 @login_required
 def actieListVideo(request):
@@ -1201,21 +1265,12 @@ def actieListConvertedVideo(request):
 
 '''
 @login_required
-def actieConvertVideo(request):
-    if getRunningStatus() == False:
-        ConvertingVideos()
-    return redirect('indexActies')
-'''
-
-@login_required
 def actieConvertVideoOrder(request):
     # TODO 
     context  = {}
-    return render(request,'todo.html',context )
+    return render(request,'todo.html',context )    
+'''
     
-    #if getRunningStatus() == False:
-    #   ConvertingVideos()
-    #return redirect('indexActies')
 
 @login_required
 def actieInsertConvertedVideos(request):
@@ -1246,6 +1301,7 @@ def actieAddVideo(request):
     #addVideo("Order S02","video 4 repeat","NVR9 2","Remijden","Stadgenoot",videoLink)
     return redirect('indexActies')
 
+@login_required
 def actieSendMail(request):
 
     recipients = ['jandeboer@gmail.com','eenwestßmail.com','eenwest@gmail.com']
@@ -1254,6 +1310,7 @@ def actieSendMail(request):
     return HttpResponse("Mail send!!")
     #return redirect('redirect to a new page')
 
+@login_required
 def actieDisplayPermissions(request):
     context  = {}
     return render(request,'displayPermissions.html',context )
@@ -1282,10 +1339,11 @@ def zNaamVideoStadgenoot (request):
         video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
-    return render(request,'../templates/zNaamVideo.html', video_dict )
+    return render(request,'zNaamVideo.html', video_dict )
 '''
 
 @login_required
+@permission_required('camera.view_video')
 def zNaamVideoStadgenoot (request):
     query = request.GET.get('q','')
     print('query: ',query)
@@ -1303,9 +1361,10 @@ def zNaamVideoStadgenoot (request):
         video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
-    return render(request,'../templates/zNaamVideo.html', video_dict )
+    return render(request,'zNaamVideo.html', video_dict )
 
 @login_required
+@permission_required('camera.view_video')
 def zOrderVideoStadgenoot (request):
     query = request.GET.get('q','')
     if query:
@@ -1320,9 +1379,10 @@ def zOrderVideoStadgenoot (request):
         video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
-    return render(request,'../templates/zOrderVideo.html', video_dict )
+    return render(request,'zOrderVideo.html', video_dict )
 
 @login_required
+@permission_required('camera.view_serviceorder')
 def allOrderStadgenoot(request):
     list = ServiceOrder.objects.filter(bedrijf__naam__icontains="Stadgenoot").select_related("bedrijf").order_by('ordernr','contact')
     aantal =  list.count
@@ -1332,9 +1392,10 @@ def allOrderStadgenoot(request):
     page_obj = paginator.get_page(page_number)
 
     dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'../templates/displayOrder.html',dict )
+    return render(request,'displayOrder.html',dict )
 
 @login_required
+@permission_required('camera.view_serviceorder')
 def zNrOrderStadgenoot (request):
     query = request.GET.get('q','')
     query = 'a'
@@ -1357,9 +1418,10 @@ def zNrOrderStadgenoot (request):
         dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         dict = {}
-    return render(request,'../templates/zNrOrder.html', dict )
+    return render(request,'zNrOrder.html', dict )
 
 @login_required
+@permission_required('camera.view_serviceorder')
 def zNrOrder (request):
     query = request.GET.get('q','')
 
@@ -1375,9 +1437,10 @@ def zNrOrder (request):
         dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         dict = {}
-    return render(request,'../templates/zNrOrder.html', dict )
+    return render(request,'zNrOrder.html', dict )
 
 @login_required
+@permission_required('camera.view_serviceorder')
 def zContactOrderStadgenoot (request):
     query = request.GET.get('q','')
     query = 'a'
@@ -1393,7 +1456,7 @@ def zContactOrderStadgenoot (request):
         dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         dict = {}
-    return render(request,'../templates/zContactOrder.html', dict )
+    return render(request,'zContactOrder.html', dict )
 
 # MFA
 class HomeView(TemplateView):
