@@ -67,7 +67,8 @@
           <li class="nav-item">
             <a class="nav-link text-danger" href="/camera/indexActies">Actie</a>
           </li>
-        {% endif %}
+        
+        {% else %}
 
           {% if request.user|has_group:"Stadgenoot"%}
               <!--
@@ -95,7 +96,7 @@
             </li>
             {% endif %}
           {% endif %}
-
+        {% endif %}
           <li class="nav-item">
             <a class="nav-link text-white" href="/camera/about">Over</a>
           </li>

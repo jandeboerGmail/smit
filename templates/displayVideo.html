@@ -27,8 +27,9 @@
         <th scope="col">Opname tot</th>
         <th scope="col">Bijgewerkt</th>
         {% if perms.camera.change_video %}
-        <th scope="col">Acties</th>
+          <th scope="col">Acties</th>
         {% endif %}
+    
     </tr>
   </thead>
 
@@ -44,10 +45,15 @@
        <td> {{video.opname_van}} </td>
        <td> {{video.opname_tot}} </td>
        <td> {{video.datum_updated}} </td>
+       {% if perms.camera.view_video %}
        <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
+       {% endif %}
+       {% if perms.camera.change_video %}
        <td><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></td>
+       {% endif %}
+       {% if perms.camera.delete_video %}
        <td><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></td>
-      
+       {% endif %}
   </tbody>
   {% endfor %}
 </table>
