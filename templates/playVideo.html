@@ -10,10 +10,16 @@
   <hr>  
   <hr>  
   </div>
+-->
+
+<!-- 16:9 aspect ratio 
+  <div class="embed-responsive embed-responsive-16by9">
+  <iframe class="embed-responsive-item" src="{% static '/media/' %}{{video.video_link}}"></iframe>
+</div>
+-->
 
 <div class="container">
--->
-  <div class="col">  
+  <div class="d-flex justify-content-center embed-responsive-item">  
     <!--
     Org <video controls autoplay muted src="{% static '/media/' %}{{video.video_link}}" width="1024" height="768"> 
     Tst   <video controls autoplay muted src="/code/video/Berkhout/Dorpstraat/Converted/Order1/voordeur264.mp4"  width="1024" height="768">
@@ -27,7 +33,7 @@
     </video>
   </div>
 
-  <div class="col text-primary">   
+  <div class="d-flex justify-content-center text-primary fs-5 text">   
       <!-- {{video.video_link}} 
         <h7>Play {% static '/media/' %}{{video.video_link}} </h7>
         <h6>Play [{{location}}]</h6>
@@ -35,7 +41,7 @@
       <h6>Play {% static '/media/' %}{{video.video_link}} </h6>
   </div>
 
-  <div class="row justify-content-center fw-bold">
+  <div class="d-flex justify-content-center fw-bold fs-5 text">
     <div class="col">
       <p> {{video.naam}}</p> 
     </div>
@@ -46,10 +52,10 @@
       <p>{{video.camera.plaats}}</p> 
     </div>
   </div>
-<!-- 
+
 </div>
 
-
+<!--
   <div class="video-player video ">
     <video
       src="{% static '/media/' %}{{video.video_link}}"

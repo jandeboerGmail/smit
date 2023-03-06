@@ -13,7 +13,7 @@ def validDate(dateIn):
     date_pattern = "^[1-9][0-9][0-9][0-9][0-2][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]$"
     return  re.match(date_pattern, dateIn) # Returns Match object
 
-def isAllowed(userID,videoId):
+def isAllowed2View(userID,videoId):
         result = False
         aUser = Gebruiker.objects.get(id=userID)
         aVideo = Video.objects.get(id=videoId)
@@ -23,8 +23,6 @@ def isAllowed(userID,videoId):
             result = True
         return result
        
-
-
 # Log functions
 def addLogEntry(orderNr,message):
     aLog = Log()
@@ -476,10 +474,15 @@ def ConvertingVideos():
                                 outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
                                 outFile = outFileName.replace(" ", "\ ")
                             
-                                #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
+                                #ffmpeg -i input_file.mp4 -c:v libx264 -crf 23 -c:a copy output_file.mp4 -- Chatgpt
+                                #command = "ffmpeg -y -i " + inFile
+                                #command = command + " -c:v libx264 -crf 23 -c:a copy " + outFile + " &"
+                                
+                                #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4 -- Option 1
                                 command = "ffmpeg -y -threads 1 -i " + inFile
                                 #command = "ffmpeg -y -i " + inFile
                                 command = command + " -map 0 -c:v libx264 -crf 18 " + outFile + " &"
+
                                 #vb9
                                 #outFileName = outFileName.replace(".mp4", ".webm")
                                 #outFileName = outFileName.replace(".MP4", ".webm")

@@ -41,7 +41,7 @@
        <td> {{camera.datum_geplaatst}} </td> 
        <td> {{camera.gps_locatie}} </td> 
 
-     
+      
        {% if perms.camera.change_camera %}
        <td><a class="btn btn-sm btn-info" href="{% url 'editCamera' camera.id %}">Edit</a></td>
        {% endif %}

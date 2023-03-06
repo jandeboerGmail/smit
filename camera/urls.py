@@ -46,13 +46,16 @@ urlpatterns = [
     path('indexStadgenoot',views.indexStadgenoot,name='indexStadgenoot'),
     path('allVideoStadgenoot',views.allVideoStadgenoot,name='allVideoStadgenoot'),
     path('zNaamVideoStadgenoot',views.zNaamVideoStadgenoot,name='zNaamVideoStadgenoot'),
+    path('zLocatieVideoStadgenoot',views.zLocatieVideoStadgenoot,name='zLocatieVideoStadgenoot'),
     path('zOrderVideoStadgenoot',views.zOrderVideoStadgenoot,name='zOrderVideoStadgenoot'),
 
     path('allOrderStadgenoot',views.allOrderStadgenoot,name='allOrderStadgenoot'),
     path('zNrOrderStadgenoot',views.zNrOrderStadgenoot,name='zNrOrderStadgenoot'),
-    path('zContactOrderStadgenoot',views.zContactOrderStadgenoot,name='zContactOrderStadgenoot'),
+    path('zContactOrderStadgenoot',views.zContactOrderStadgenoot,name='zContactOrderStadgenoot')
 
     path('allCameraStadgenoot',views.allCameraStadgenoot,name='allCameraStadgenoot'),
+    path('zNaamCameraStadgenoot',views.zNaamCameraStadgenoot,name='zNaamCameraStadgenoot'),
+    path('zLocatieCameraStadgenoot',views.zLocatieCameraStadgenoot,name='zLocatieCameraStadgenoot'),
 
 # Gebruiker
     path('allGebruiker/',views.allGebruiker,name='allGebruiker'),
