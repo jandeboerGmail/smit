@@ -24,6 +24,9 @@
           <ul class="navbar-nav mr-auto">
         
         {% if request.user|has_group:"Admin"%}
+        <li class="nav-item">
+          <a class="nav-link text-black" href="/camera/about">Admin: </a>
+        </li>
          <li class="nav-item">
            <a class="nav-link text-danger" href="/camera/indexGebruiker">Gebruiker</a>
          </li>
@@ -76,7 +79,11 @@
                 <a class="nav-link" href="/camera/indexStadgenoot">Stadgenoot</a>
               </li>
               -->
-
+  
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="/camera/about">SG: </a>
+            </li>
+              
             {% if perms.camera.view_video %}
               <li class="nav-item">
                 <a class="nav-link text-white" href="/camera/indexUserVideo">Video</a>
@@ -89,14 +96,39 @@
             </li>
             {% endif %}
         
-
             {% if perms.camera.add_serviceorder %}
             <li class="nav-item">
               <a class="nav-link text-white" href="/camera/indexUserActie">Actie</a>
             </li>
             {% endif %}
-          {% endif %}
         {% endif %}
+        
+        {% if request.user|has_group:"Smit"%}
+         
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="/camera/about">Smit: </a>
+          </li>
+            
+           {% if perms.camera.view_video %}
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/camera/indexUserVideo">Video</a>
+              </li>
+            {% endif %}
+            
+            {% if perms.camera.view_serviceorder %}
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
+              </li>
+            {% endif %}
+      
+            {% if perms.camera.add_serviceorder %}
+              <li class="nav-item">
+                <a class="nav-link text-white" href="/camera/indexUserActie">Actie</a>
+              </li>
+            {% endif %}
+          {% endif %} 
+        {% endif %}
+  
           <li class="nav-item">
             <a class="nav-link text-white" href="/camera/about">Over</a>
           </li>
