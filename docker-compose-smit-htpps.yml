@@ -7,8 +7,8 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: /home/jan/media
-        target: /code/camera/static/media
+        source: /home/jan/videos
+        target: /code/camera/videos
       - type: volume
         source: static_data
         target: /vol/web

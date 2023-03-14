@@ -6,8 +6,8 @@ services:
       context: .
     volumes:
       - type: bind
-        source: /home/jan/media
-        target: /code/camera/static/media
+        source: /home/jan/videos
+        target: /code/camera/videos
     environment:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}

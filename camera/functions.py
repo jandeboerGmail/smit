@@ -318,7 +318,7 @@ def extractDBitems(filename):
     
     #extract videoLink
     video_link = substring_after(inFile,inpath)
-    video_link = video_link.replace("\ ", " ")
+    video_link = inpath + video_link.replace("\ ", " ")
     #print("video_link: ", video_link) 
 
     if  "static" in inFile:

@@ -3,6 +3,7 @@ camera/static/media/
 /Data
 /static/
 /media/
+/vidos/
 convert/*.mp4
 ._*
 .DS_Store

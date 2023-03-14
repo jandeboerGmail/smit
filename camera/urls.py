@@ -13,13 +13,14 @@ from two_factor.gateways.twilio.urls import urlpatterns as tf_twilio_urls
 from two_factor.urls import urlpatterns as tf_urls
 
 from .views import (
-    ExampleSecretView, HomeView, RegistrationCompleteView, RegistrationView,
+    ExampleSecretView, HomeView, RegistrationCompleteView, RegistrationView, 
 )
 
 urlpatterns = [
     path('time/',views.current_datetime,name='current_datetime'),
     path('about/',views.about,name='about'),
     path('todo/',views.todo,name='todo'),
+    #path('playVideo/', playVideo, name='video_player'),
 
 #Index  
     path('',views.index,name='index'),
@@ -45,7 +46,7 @@ urlpatterns = [
 #stadgenoot
     path('indexStadgenoot',views.indexStadgenoot,name='indexStadgenoot'),
     path('allVideoStadgenoot',views.allVideoStadgenoot,name='allVideoStadgenoot'),
-    path('zNaamVideoStadgenoot',views.zNaamVideoStadgenoot,name='zNaamVideoStadgenoot'),
+    path('zNaamVideoStad',views.zNaamVideoStad,name='zNaamVideoStad'),
     path('zLocatieVideoStadgenoot',views.zLocatieVideoStadgenoot,name='zLocatieVideoStadgenoot'),
     #path('zOrderVideoStadgenoot',views.zOrderVideoStadgenoot,name='zOrderVideoStadgenoot'),
 

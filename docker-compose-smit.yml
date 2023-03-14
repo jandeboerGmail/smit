@@ -6,8 +6,13 @@ services:
       context: .
     restart: always
     volumes:
-      - static_data:/vol/web
-      - /mnt/cctv/KLANTEN/DOWNLOAD/:/code/camera/video
+      - type: bind
+        source: /mnt/cctv/KLANTEN/DOWNLOAD
+        target: /code/camera/videos
+      - type: volume
+        source: static_data
+        target: /vol/web
+    
     environment:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}

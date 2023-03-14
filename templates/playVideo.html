@@ -3,6 +3,26 @@
 {% endblock %}
 {% load static %}
 {% block content %}
+
+<video controls autoplay muted >
+  <source src="{% url 'play_video' %}" type="video/mp4">
+</video>
+
+<div>
+  <h6>Play {{video.video_link}} </h6>
+</div>
+
+<div class="col">
+  <p> {{video.naam}}</p> 
+</div>
+<div class="col-4">
+  <p>{{video.camera.naam}}</p> 
+</div>
+<div class="col-4">
+  <p>{{video.camera.plaats}}</p> 
+</div>
+
+
 <!---
 <div class="col-4">
   <img src="{% static 'media/coconut_bars.jpg' %}" alt="One Delicious chocolate coconut bars" />
@@ -16,29 +36,36 @@
   <div class="embed-responsive embed-responsive-16by9">
   <iframe class="embed-responsive-item" src="{% static '/media/' %}{{video.video_link}}"></iframe>
 </div>
--->
+
 
 <div class="container">
   <div class="d-flex justify-content-center embed-responsive-item">  
-    <!--
+  
     Org <video controls autoplay muted src="{% static '/media/' %}{{video.video_link}}" width="1024" height="768"> 
     Tst   <video controls autoplay muted src="/code/video/Berkhout/Dorpstraat/Converted/Order1/voordeur264.mp4"  width="1024" height="768">
     -->
     <!--
           <video controls autoplay muted src="{{location}}" width="1024" height="768">
-    -->
+  
 
     <video controls autoplay muted src="{% static '/media/' %}{{video.video_link}}" width="1024" height="768"> 
+      <p>This is fallback content to display for user agents that do not support the video tag.</p>
+    </video>
+    
+    <video controls autoplay muted src="{{video.video_link}}" width="1024" height="768"> 
       <p>This is fallback content to display for user agents that do not support the video tag.</p>
     </video>
   </div>
 
   <div class="d-flex justify-content-center text-primary fs-5 text">   
-      <!-- {{video.video_link}} 
+      {{video.video_link}} 
         <h7>Play {% static '/media/' %}{{video.video_link}} </h7>
         <h6>Play [{{location}}]</h6>
-      -->
+      
       <h6>Play {% static '/media/' %}{{video.video_link}} </h6>
+   
+      <h7>Play {{video.video_link}} </h7>
+  </div>
   </div>
 
   <div class="d-flex justify-content-center fw-bold fs-5 text">
@@ -55,7 +82,6 @@
 
 </div>
 
-<!--
   <div class="video-player video ">
     <video
       src="{% static '/media/' %}{{video.video_link}}"

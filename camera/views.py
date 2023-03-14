@@ -1,6 +1,6 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponse, FileResponse, HttpResponseRedirect, Http404
 from django.conf import settings
 from django.db.models import Q
 from django import forms
@@ -770,7 +770,7 @@ def deleteCamera(request,pk):
 @login_required
 @permission_required('camera.view_video')
 def allVideo(request):
-    video_list = Video.objects.order_by('ordernr','naam','camera','-datum_updated')
+    video_list = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
     aantal =  video_list.count
 
     paginator = Paginator(video_list,15)
@@ -780,11 +780,37 @@ def allVideo(request):
     video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'displayVideo.html',video_dict )
 
+#test
+@login_required
+def zNaamVideoStad(request):
+    print('zNaamVideoStad start')
+    
+    query = request.GET.get('q','')
+    #query = 'Nolen'
+    if query:
+        print ('query: ',str(query))
+        qset = (Q(naam__icontains=query))   
+        print ('qset: ', str(qset))
+        qs1 = Video.objects.filter(qset).order_by('naam')
+        print ('qs1: ',str(qs1.query))
+        aantal = qs1.count
+        print ('aantal: ',aantal)
+
+        paginator = Paginator(qs1,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
+    else:
+        video_dict = {}
+    print('zNaamVideoStad end')
+    return render(request,'zNaamVideoStad.html', video_dict )
 #
 # Zoek
 @login_required
 @permission_required('camera.view_video')
 def zNaamVideo (request):
+    print('zNaamVideo start')
     query = request.GET.get('q','')
     if query:
         print ('query: ',str(query))
@@ -802,6 +828,7 @@ def zNaamVideo (request):
         video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
     else:
         video_dict = {}
+    print('zNaamVideo end')
     return render(request,'zNaamVideo.html', video_dict )
 
 @login_required
@@ -881,7 +908,15 @@ def zLocatieVideo (request):
     else:
         video_dict = {}
     return render(request,'zLocatieVideo.html', video_dict ) 
-    '''
+
+def video_player1(request):
+    context = {
+        'video_url': 'https://www.example.com/video.mp4' #replace with the actual video URL
+    }
+    return render(request, 'video_player.html', context)
+'''
+
+
 
 # Export
 @login_required
@@ -963,6 +998,17 @@ def deleteVideo(request,pk):
     context = {'item' : video , 'title': 'Verwijder Video'}
     return render(request,template_name,context)
 
+def playVideo(request,pk):
+    try :
+        video = Video.objects.get(id=pk)
+    except Video.DoesNotExist:
+        return redirect('about')
+   
+    videoFile = open(video.video_link, 'rb')
+    #print ('location: ',location)
+    return FileResponse(videoFile)
+
+'''
 @login_required
 @permission_required('camera.view_video')
 def playVideo(request,pk):
@@ -974,7 +1020,8 @@ def playVideo(request,pk):
     #location =  video.video_link
     video_dict  = {'location' : location , 'video' : video }
     return render(request,'playVideo.html', video_dict )
-    '''
+    
+
     template_name = 'playVideo.html'
     context = {'item' : video , 'title': 'Play Video'}
     return render(request,template_name,context)
@@ -1277,30 +1324,6 @@ def actieDisplayPermissions(request):
     context  = {}
     return render(request,'displayPermissions.html',context )
 
-'''
-@login_required
-def zNaamVideoStadgenoot (request):
-    query = request.GET.get('q','')
-    if query:
-        qset = (Q(naam__icontains=query))   
-
-        #qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains="Stadgenoot").select_related('camera')
-        qs1 = Video.objects.filter(qset)
-        #qs1 = qs2 | qs3
-        aantal = qs1.count
-        print ('qs1: ',str(qs1.query))
-        print ('aantal: ',aantal)
-
-        paginator = Paginator(qs1,15)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
-    else:
-        video_dict = {}
-    return render(request,'zNaamVideo.html', video_dict )
-'''
-
 # -------  Generic Bedrijf / User  ------
 @login_required
 @permission_required('camera.view_video')
@@ -1363,10 +1386,12 @@ def allCameraBedrijf(request,bedrijf):
 @login_required
 @permission_required('camera.view_camera')
 def zNaamCameraBedrijf(request,bedrijf,naam):
-    #list = Camera.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf,camera__naam__icontains=naam).select_related("locatie").order_by('locatie','naam')
-    list = Camera.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related("locatie").order_by('locatie','naam')
+    print('ZnaamCameraBedijf start')
+    list = Camera.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf,camera__naam__icontains=naam).select_related("locatie").order_by('locatie','naam')
+    #list = Camera.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related("locatie").order_by('locatie','naam')
     
     aantal = list.count
+    print ('aantal: ',aantal)
 
     paginator = Paginator(list,15)
     page_number = request.GET.get('page')
@@ -1439,25 +1464,41 @@ def allVideoStadgenoot(request):
     bedrijf = 'Stadgenoot'
     dict = allVideoBedrijf(request, bedrijf)
     return render(request,'displayVideo.html',dict )
+'''
 
 @login_required
 @permission_required('camera.view_video')
 def zNaamVideoStadgenoot(request):
+    print('zNaamVideoStadgenoot start')
+    
     query = request.GET.get('q','')
-    naam  = query
-    bedrijf = 'Stadgenoot'
-    dict = {}
-    if naam:
-        dict = zNaamVideoBedrijf(request, bedrijf, naam)
-    #return render(request,'displayVideo.html',dict )
-    return render(request,'zNaamVideo.html',dict )
+    if query:
+        print ('query: ',str(query))
+        qset = (Q(naam__icontains=query))   
+        print ('qset: ', str(qset))
+        qs1 = Video.objects.filter(qset).order_by('naam')
+        print ('qs1: ',str(qs1.query))
+        aantal = qs1.count
+        print ('aantal: ',aantal)
+
+        paginator = Paginator(qs1,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
+    else:
+        video_dict = {}
+
+    print('zNaamVideoStadgenoot end')   
+    return render(request,'zNaamVideoGeneric.html', video_dict )
+'''
 
 @login_required
 @permission_required('camera.view_video')
 def zLocatieVideoStadgenoot(request):
     bedrijf = 'Stadgenoot'
     locatie = 'Ij'
-    dict = zNaamVideoBedrijf(request, bedrijf,locatie)
+    dict = zLocatieVideoBedrijf(request, bedrijf,locatie)
     return render(request,'displayVideo.html',dict )
     #return render(request,'zLocatieVideo.html',dict )
 
@@ -1474,6 +1515,7 @@ def allCameraStadgenoot(request):
 def zNaamCameraStadgenoot(request):
     bedrijf = 'Stadgenoot'
     naam = "cam"
+    #dict = allCameraBedrijf(request, bedrijf)
     dict = zNaamCameraBedrijf(request,bedrijf,naam)
     return render(request,'displayCamera.html',dict )
 
@@ -1511,34 +1553,6 @@ def zContactOrderStadgenoot (request):
     if contact:
         dict = zContactOrdeBedrijf(request,bedrijf,contact)
     return render(request,'zContactOrder.html', dict )
-
-'''
-@login_required
-@permission_required('camera.view_serviceorder')
-def zNrOrderStadgenoot (request):
-    query = request.GET.get('q','')
-    query = 'a'
-    if query:
-        qset = (Q(ordernr__icontains=query))
-        qs1 = ServiceOrder.objects.filter(qset).distinct().order_by('bedrijf','ordernr','contact')
-
-        #qs1 = ServiceOrder.objects.filter(bedrijf__naam__icontains="Stadgenoot").select_related("bedrijf").order_by('ordernr','contact')       
-        
-        #qs1 = ServiceOrder.objects.filter(bedrijf__naam__icontains="Stadgenoot").select_related("bedrijf").order_by('ordernr')
-        #qs1 = Video.objects.filter(camera__locatie__bedrijf__naam__icontains="Stadgenoot").select_related('camera')
-        aantal = qs1.count
-        print ('qs1: ',str(qs1.query))
-        print("aantal: ", aantal)
-
-        paginator = Paginator(qs1,15)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
-    else:
-        dict = {}
-    return render(request,'zNrOrder.html', dict )
-'''
     
 #Berkhout Vodeo
 @login_required
