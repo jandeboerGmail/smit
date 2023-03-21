@@ -126,6 +126,9 @@ urlpatterns = [
 
     path('playVideo/<int:pk>',views.playVideo,name='playVideo'),
 
+    path('allowedVideo/',views.allowedVideo,name='allowedVideo'),
+
+
 
 # Order
     path('allOrder/',views.allOrder,name='allOrder'),

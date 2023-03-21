@@ -4,12 +4,22 @@
 {% load static %}
 {% block content %}
 
+
+
 <video controls autoplay muted >
-  <source src="{% url 'play_video' %}" type="video/mp4">
+  <source src="{% url 'play_video' %}">
 </video>
+<!--
+<video controls autoplay muted src="{% url 'playVideo' %}" width="1024" height="768">
+</video>
+-->
 
 <div>
-  <h6>Play {{video.video_link}} </h6>
+  <h6>Location {{location}}</h6>
+</div>
+
+<div>
+  <h6>Video link {{video.video_link}} </h6>
 </div>
 
 <div class="col">

@@ -1,5 +1,6 @@
 from curses import def_shell_mode
 from django.db import models
+from django.contrib.auth.models import User
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.conf import settings
@@ -34,7 +35,7 @@ class Bedrijf(models.Model):
     website = models.URLField(max_length=200,blank=True,default="htpp://www.bedrijf.nl/")
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
     telefoon = models.CharField(max_length=16,blank = True,default="000 1234567")
-    #contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
+    #contact =  models.ForeignKey(User,on_delete=models.CASCADE)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
@@ -53,7 +54,6 @@ class Bedrijf(models.Model):
         return self.naam
 
 class Gebied(models.Model):
-    #id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
     gebiedNr = models.IntegerField(blank = False, null = False)
     naam = models.CharField(max_length=100,blank = False)
     bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
@@ -76,33 +76,51 @@ class Gebied(models.Model):
         return self.naam
     
 class Gebruiker(models.Model):
+
+    class Soorten(models.IntegerChoices):
+            admin = 0
+            wijkbeheerder = 1
+            contact = 2
+               
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    email2= models.EmailField(default='info2@me.nl',max_length=254,blank = True)
+    telefoon_mobiel = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
+    telefoon_vast = models.CharField(default = '00 11 22 33 44',max_length=16,blank = True)
+    soort = models.IntegerField(choices=Soorten.choices,default=2)
+    gebied  = models.ManyToManyField(Gebied)
+   
+    def __str__(self): 
+        return self.user.username 
     
+    '''
     class Soorten(models.IntegerChoices):
             admin = 0
             contact = 1
             wijkbeheerder = 2
-    
-    user = models.CharField(max_length=50,blank = False)
-    password = models.CharField(max_length=50,blank = False)
+
+    user = models.OneToOneField(User,on_delete=models.CASCADE)
+    #user = models.CharField(max_length=50,blank = False)
+    #password = models.CharField(max_length=50,blank = False)
     #email = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     #author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     # bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-    naam = models.CharField(max_length=50,blank = False)
-    email1= models.EmailField(default='info1@me.nl',max_length=254,blank = True)
+    #naam = models.CharField(max_length=50,blank = False)
+    #email1= models.EmailField(default='info1@me.nl',max_length=254,blank = True)
     email2= models.EmailField(default='info2@me.nl',max_length=254,blank = True)
     #telefoon = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
     telefoon_mobiel = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
     telefoon_vast = models.CharField(default = '00 11 22 33 44',max_length=16,blank = True)
     soort = models.IntegerField(choices=Soorten.choices,default=1)
     gebied  = models.ManyToManyField(Gebied)
-    memo = models.TextField(blank = True)
-    slug = models.SlugField(max_length=120,default='slug')
+    #memo = models.TextField(blank = True)
+    #slug = models.SlugField(max_length=120,default='slug')
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
     datum_updated = models.DateTimeField(default=timezone.now, blank=False)
    
     #REQUIRED_FIELDS = ('user','naam','email','telefoon_mobiel',)
     #USERNAME_FIELD = 'email1'
 
+ 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.naam)
         self.datum_updated = timezone.now()
@@ -114,6 +132,7 @@ class Gebruiker(models.Model):
 
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
+    '''
 
 class Locatie(models.Model):
     naam = models.CharField(max_length=50,blank = False)
@@ -121,7 +140,7 @@ class Locatie(models.Model):
     gebied  = models.ManyToManyField(Gebied)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
     bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-    contact =  models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
+    contact =  models.ForeignKey(User,on_delete=models.CASCADE)
     memo = models.TextField(blank = True)
     slug = models.SlugField(max_length=120,default='slug')
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
@@ -167,10 +186,10 @@ class Camera(models.Model):
         return self.naam
 
 class ServiceOrder(models.Model):
-        id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
+        # id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
         ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
         bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-        contact = models.ForeignKey(Gebruiker,on_delete=models.CASCADE)
+        contact = models.ForeignKey(User,on_delete=models.CASCADE)
         locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
         
         #video  = models.ForeignKey(Video,on_delete=models.CASCADE)
@@ -197,7 +216,7 @@ class ServiceOrder(models.Model):
 class Video(models.Model):
     naam = models.CharField(max_length=100,blank = False) #format bedrijflocatieddmmyyhhmmss  (utc)
     ordernr  = models.ForeignKey(ServiceOrder,on_delete=models.CASCADE)
-    #ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
+    ##ordernr = models.CharField(max_length=50,blank = False,unique=False,default="")
     opname_van = models.DateTimeField(default=timezone.now, blank=False)
     opname_tot = models.DateTimeField(default=timezone.now, blank=False)
     camera = models.ForeignKey(Camera,on_delete=models.CASCADE)

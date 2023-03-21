@@ -4,6 +4,7 @@ from datetime import datetime
 from django.core.mail import send_mail, EmailMessage
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
 
 from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video ,ServiceOrder, Log, Parameter, Gebied
 
@@ -13,15 +14,26 @@ def validDate(dateIn):
     date_pattern = "^[1-9][0-9][0-9][0-9][0-2][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]$"
     return  re.match(date_pattern, dateIn) # Returns Match object
 
+# Video security
 def isAllowed2View(userID,videoId):
         result = False
         aUser = Gebruiker.objects.get(id=userID)
         aVideo = Video.objects.get(id=videoId)
         aCamera = Camera.objects.get(id=aVideo.camera)
         aLocatie = Locatie.objects.get(id=aCamera.locatie)
+        print ('aUser,aVideo,aCamera,aLocatie.Gebied:',userID,aVideo.camera,aCamera.locatie, aUser.Gebied)
         if aLocatie.gebied == aUser.Gebied:
             result = True
         return result
+
+def checkVideos (userID,videoList):
+    checkedVideos = []
+    for video in range(len(videoList)):
+        print ('video: ',video.id)
+        if isAllowed2View(userID,video.id):
+         checkedVideos.append(video)
+
+    return checkedVideos
        
 # Log functions
 def addLogEntry(orderNr,message):
@@ -101,6 +113,27 @@ def addBedrijf(orderNr,naam):
         aBedrijf = aBedrijven[0]
     return aBedrijf   
 
+def addUser(orderNr,naam):
+
+    aGebied = Gebied.objects.get(id=1) # default rights (Noord)
+
+    aUser = User.objects.filter(username=naam)
+    if not aUser and naam:
+        aUser = User()
+        aUser.username = naam
+        aUser.first_name = naam
+        aUser.last_name = naam
+        aUser.is_superuser = True
+        #aUser.gebied = aGebied
+        aUser.save()
+
+        message = "WARNING: Default values added for user: "  + naam 
+        addLogEntry(orderNr,message)
+    else:
+        aUser =  aUser[0]
+    return aUser
+
+'''
 #Gebruiker
 def addGebruiker(orderNr,naam):
     aAdress = addAdress(orderNr,naam)
@@ -120,16 +153,18 @@ def addGebruiker(orderNr,naam):
     else:
         aGebruiker =  aGebruikers[0]
     return aGebruiker   
+    '''
 
 #Locatie
 def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
     aBedrijf   = addBedrijf(orderNr,bedrijfNaam)
-    aGebruiker = addGebruiker(orderNr,"Onbekend")
+    #aGebruiker = addGebruiker(orderNr,"Onbekend")
+    aUser      = addUser(orderNr,gebruikerNaam)
     aAdress    = addAdress(orderNr,adressNaam)
 
-    #print ("Locatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aGebruiker.naam)
-
+    print ("addLocatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aUser.username)
+    print ("User: ",aUser.username,"-", aUser.first_name)
     #aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')[0]
     #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
     #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam)
@@ -137,24 +172,25 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
     aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam)
 
     if not aLocaties and locatieNaam:
-        #print("location not found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
+        print("location not found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
         aLocatie = Locatie()
         aLocatie.naam    = locatieNaam
         aLocatie.adres   = aAdress
         aLocatie.bedrijf = aBedrijf
-        aLocatie.contact = aGebruiker
+        aLocatie.contact = aUser
         aLocatie.save()
 
         message = "WARNING: Default values added for locatie: "  + locatieNaam + " | " + adressNaam + " | " + bedrijfNaam  + " | " + gebruikerNaam
         addLogEntry(orderNr,message)
     else:
        aLocatie = aLocaties[0] 
-       #print("location found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
+       print("location found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
     return aLocatie 
 
 # Service Order
 def addServiceOrder(order,bedrijf,locatieNaam,adressNaam,gebruikerNaam):
-    aGebruiker = addGebruiker(order,gebruikerNaam)
+    #aGebruiker = addGebruiker(order,gebruikerNaam)
+    aUser = addUser(order,gebruikerNaam)
     aBedrijf   = addBedrijf(order,bedrijf)
     aLocatie   = addLocatie(order,locatieNaam,bedrijf,adressNaam,gebruikerNaam)
     #print("add Adress: ",naam)
@@ -163,7 +199,7 @@ def addServiceOrder(order,bedrijf,locatieNaam,adressNaam,gebruikerNaam):
         aOrder = ServiceOrder()
         aOrder.ordernr = order
         aOrder.bedrijf = aBedrijf
-        aOrder.contact = aGebruiker
+        aOrder.contact = aUser
         aOrder.locatie = aLocatie
         aOrder.save ()
     
@@ -216,7 +252,7 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     aAdress = addAdress(orderNr,locatieNaam)
     print ("Adress: ",aAdress.naam)
 
-    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNaam,aAdress.naam,"default")
+    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNaam,aAdress.naam,"onbekend")
 
     #print ("Camera: ",aCamera.naam)
 
@@ -225,7 +261,7 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     print ('locatieId :',locatieId)
     aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam,camera__locatie=locatieId)
 
-    aOrder=addServiceOrder(orderNr,bedrijfNaam,locatieNaam,aAdress.naam,"default")
+    aOrder=addServiceOrder(orderNr,bedrijfNaam,locatieNaam,aAdress.naam,"onbekend") # LoginUser ?
 
     #print ("aUser: ",aCamera.naam)
 

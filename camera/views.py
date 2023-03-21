@@ -13,7 +13,7 @@ from django.core import mail
 
 import camera.functions as functions
 from camera.models import Adress, Gebruiker, Bedrijf, Camera, Gebied, Locatie, Video ,ServiceOrder, Log, Parameter
-from camera.forms import AdressForm, GebruikerForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm, GebiedForm
+from camera.forms import AdressForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm, GebiedForm
 
 #MFA
 from django.contrib.auth.forms import UserCreationForm
@@ -780,6 +780,22 @@ def allVideo(request):
     video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'displayVideo.html',video_dict )
 
+@login_required
+@permission_required('camera.view_video')
+def allowedVideo(request):
+    video_list = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
+
+    video_list = functions.checkVideos (1,video_list)
+    #video_list = checkVideos (userID,video_list)
+    aantal =  video_list.count
+
+    paginator = Paginator(video_list,15)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    return render(request,'displayVideo.html',video_dict )
+
 #test
 @login_required
 def zNaamVideoStad(request):
@@ -998,17 +1014,18 @@ def deleteVideo(request,pk):
     context = {'item' : video , 'title': 'Verwijder Video'}
     return render(request,template_name,context)
 
+'''
 def playVideo(request,pk):
     try :
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
         return redirect('about')
    
-    videoFile = open(video.video_link, 'rb')
+   
     #print ('location: ',location)
     return FileResponse(videoFile)
-
 '''
+
 @login_required
 @permission_required('camera.view_video')
 def playVideo(request,pk):
@@ -1016,18 +1033,20 @@ def playVideo(request,pk):
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
         return redirect('about')
-    location =  functions.getVideoLocation() + video.video_link
+    #location =  functions.getVideoLocation() + video.video_link
     #location =  video.video_link
+    
+    videoFile = open(video.video_link, 'rb')
+    location = FileResponse(videoFile)
+
     video_dict  = {'location' : location , 'video' : video }
     return render(request,'playVideo.html', video_dict )
+
+    #template_name = 'playVideo.html'
+    #context = {'item' : video , 'title': 'Play Video'}
+    #return render(request,template_name,context)
+    #return ( redirect('indexVideo'))
     
-
-    template_name = 'playVideo.html'
-    context = {'item' : video , 'title': 'Play Video'}
-    return render(request,template_name,context)
-    return ( redirect('indexVideo'))
-    '''
-
 # -----Orders ---
 @login_required
 @permission_required('camera.view_serviceorder')

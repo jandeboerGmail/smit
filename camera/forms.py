@@ -1,6 +1,6 @@
 from re import L
 from django import forms
-from .models import Adress, Gebruiker, Bedrijf, Locatie, Camera, Video, ServiceOrder, Gebied
+from .models import Adress, Bedrijf, Locatie, Camera, Video, ServiceOrder, Gebied 
 
 #Adress
 class AdressForm(forms.ModelForm):
@@ -17,6 +17,7 @@ class AdressForm(forms.ModelForm):
             'land': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
+'''
 # Gebruiker
 class GebruikerForm(forms.ModelForm):
     class Meta:
@@ -35,7 +36,7 @@ class GebruikerForm(forms.ModelForm):
             'soort': forms.Select(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
-        
+'''        
 # Bedrijf
 class BedrijfForm(forms.ModelForm):
     class Meta:
@@ -57,14 +58,15 @@ class LocatieForm(forms.ModelForm):
     class Meta:
         model = Locatie
 
-        fields = ['naam','adres','bedrijf','gebied','contact','image','memo'] 
-        
+        #fields = ['naam','adres','bedrijf','gebied','contact','image','memo'] 
+        fields = ['naam','adres','bedrijf','gebied','image','memo'] 
+
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
             'adres': forms.Select(attrs={'class': 'form-control'}),
             'gebied': forms.Select(attrs={'class': 'form-control'}),
-            'contact': forms.Select(attrs={'class': 'form-control'}),
+            #'contact': forms.Select(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
@@ -107,11 +109,12 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = ServiceOrder
 
-        fields = ['ordernr','bedrijf','contact','locatie','keep_original','auto_cleanup','memo']
+        #fields = ['ordernr','bedrijf','contact','locatie','keep_original','auto_cleanup','memo']
+        fields = ['ordernr','bedrijf','locatie','keep_original','auto_cleanup','memo']
         widgets = {
             'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
-            'contact': forms.Select(attrs={'class': 'form-control'}),
+             #'contact': forms.Select(attrs={'class': 'form-control'}),
             'locatie': forms.Select(attrs={'class': 'form-control'}),
             'keep_original': forms.CheckboxInput(attrs={'class': 'form-control'}),
             'auto_cleanup': forms.CheckboxInput(attrs={'class': 'form-control'}),
