@@ -6,7 +6,7 @@ from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
-from camera.models import Adress, Gebruiker, Bedrijf, Parameter, Camera, Locatie, Video ,ServiceOrder, Log, Parameter, Gebied
+from camera.models import Adress, Account, Bedrijf, Parameter, Camera, Locatie, Video ,ServiceOrder, Log, Parameter, Gebied
 
 # generic functions
 def validDate(dateIn):
@@ -17,7 +17,7 @@ def validDate(dateIn):
 # Video security
 def isAllowed2View(userID,videoId):
         result = False
-        aUser = Gebruiker.objects.get(id=userID)
+        aUser = User.objects.get(id=userID)
         aVideo = Video.objects.get(id=videoId)
         aCamera = Camera.objects.get(id=aVideo.camera)
         aLocatie = Locatie.objects.get(id=aCamera.locatie)
@@ -133,38 +133,15 @@ def addUser(orderNr,naam):
         aUser =  aUser[0]
     return aUser
 
-'''
-#Gebruiker
-def addGebruiker(orderNr,naam):
-    aAdress = addAdress(orderNr,naam)
-
-    aGebied = Gebied.objects.get(id=1) # default rights (Noord)
-
-    aGebruikers = Gebruiker.objects.filter(naam=naam)
-    if not aGebruikers and naam:
-        aGebruiker = Gebruiker()
-        aGebruiker.naam = naam
-        aGebruiker.adres = aAdress
-        aGebruiker.gebied = aGebied
-        aGebruiker.save()
-
-        message = "WARNING: Default values added for gebruiker: "  + naam 
-        addLogEntry(orderNr,message)
-    else:
-        aGebruiker =  aGebruikers[0]
-    return aGebruiker   
-    '''
-
 #Locatie
 def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
     aBedrijf   = addBedrijf(orderNr,bedrijfNaam)
-    #aGebruiker = addGebruiker(orderNr,"Onbekend")
     aUser      = addUser(orderNr,gebruikerNaam)
     aAdress    = addAdress(orderNr,adressNaam)
 
-    print ("addLocatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aUser.username)
-    print ("User: ",aUser.username,"-", aUser.first_name)
+    #print ("addLocatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aUser.username)
+    #print ("User: ",aUser.username,"-", aUser.first_name)
     #aLocatie   = Locatie.objects.filter(naam=locatieNaam).select_related('bedrijf')[0]
     #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
     #aLocatie   = Locatie.objects.get(naam=locatieNaam,adres__naam=adressNaam)
@@ -189,7 +166,6 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
 # Service Order
 def addServiceOrder(order,bedrijf,locatieNaam,adressNaam,gebruikerNaam):
-    #aGebruiker = addGebruiker(order,gebruikerNaam)
     aUser = addUser(order,gebruikerNaam)
     aBedrijf   = addBedrijf(order,bedrijf)
     aLocatie   = addLocatie(order,locatieNaam,bedrijf,adressNaam,gebruikerNaam)

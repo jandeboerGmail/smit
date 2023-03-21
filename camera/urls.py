@@ -26,7 +26,7 @@ urlpatterns = [
     path('',views.index,name='index'),
     #path('zoekVideo',views.zoekVideo,name='zoekVideo'),
 
-    path('indexGebruiker',views.indexGebruiker,name='indexGebruiker'),
+    #path('indexGebruiker',views.indexGebruiker,name='indexGebruiker'),
     path('indexAdres',views.indexAdres,name='indexAdres'),
     path('indexBedrijf',views.indexBedrijf,name='indexBedrijf'),
     path('indexGebied',views.indexGebied,name='indexGebied'),
@@ -59,12 +59,12 @@ urlpatterns = [
     path('zLocatieCameraStadgenoot',views.zLocatieCameraStadgenoot,name='zLocatieCameraStadgenoot'),
 
 # Gebruiker
-    path('allGebruiker/',views.allGebruiker,name='allGebruiker'),
-    path('zNaamGebruiker/',views.zNaamGebruiker,name='zNaamGebruiker'),
-    path('exportGebruiker/',views.exportGebruiker,name='exportGebruiker'),
-    path('createGebruiker/',views.createGebruiker,name='createGebruiker'),
-    path('editGebruiker/<int:pk>',views.editGebruiker,name='editGebruiker'),
-    path('deleteGebruiker/<int:pk>',views.deleteGebruiker,name='deleteGebruiker'),
+    #path('allGebruiker/',views.allGebruiker,name='allGebruiker'),
+    #path('zNaamGebruiker/',views.zNaamGebruiker,name='zNaamGebruiker'),
+    #path('exportGebruiker/',views.exportGebruiker,name='exportGebruiker'),
+    #path('createGebruiker/',views.createGebruiker,name='createGebruiker'),
+    #path('editGebruiker/<int:pk>',views.editGebruiker,name='editGebruiker'),
+    #path('deleteGebruiker/<int:pk>',views.deleteGebruiker,name='deleteGebruiker'),
 
 # Adresss
     path('allAdress/',views.allAdress,name='allAdress'),
@@ -127,7 +127,6 @@ urlpatterns = [
     path('playVideo/<int:pk>',views.playVideo,name='playVideo'),
 
     path('allowedVideo/',views.allowedVideo,name='allowedVideo'),
-
 
 
 # Order

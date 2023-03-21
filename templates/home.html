@@ -25,11 +25,13 @@
         
         {% if request.user|has_group:"Admin"%}
         <li class="nav-item">
-          <a class="nav-link text-black" href="/camera/about">Admin: </a>
+          <a class="nav-link text-black" href="/admin">Admin: </a>
         </li>
+        <!--
          <li class="nav-item">
            <a class="nav-link text-danger" href="/camera/indexGebruiker">Gebruiker</a>
          </li>
+        -->
 
           <li class="nav-item"></li>
             <a class="nav-link text-danger" href="/camera/indexAdres">Adres</a>

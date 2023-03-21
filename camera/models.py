@@ -75,7 +75,7 @@ class Gebied(models.Model):
     def __str__(self): # For Python 2, use __unicode__ too
         return self.naam
     
-class Gebruiker(models.Model):
+class Account(models.Model):
 
     class Soorten(models.IntegerChoices):
             admin = 0
@@ -83,7 +83,7 @@ class Gebruiker(models.Model):
             contact = 2
                
     user = models.OneToOneField(User,on_delete=models.CASCADE)
-    email2= models.EmailField(default='info2@me.nl',max_length=254,blank = True)
+    email2 = models.EmailField(default='info2@me.nl',max_length=254,blank = True)
     telefoon_mobiel = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
     telefoon_vast = models.CharField(default = '00 11 22 33 44',max_length=16,blank = True)
     soort = models.IntegerField(choices=Soorten.choices,default=2)
@@ -92,48 +92,6 @@ class Gebruiker(models.Model):
     def __str__(self): 
         return self.user.username 
     
-    '''
-    class Soorten(models.IntegerChoices):
-            admin = 0
-            contact = 1
-            wijkbeheerder = 2
-
-    user = models.OneToOneField(User,on_delete=models.CASCADE)
-    #user = models.CharField(max_length=50,blank = False)
-    #password = models.CharField(max_length=50,blank = False)
-    #email = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    #author = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    # bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
-    #naam = models.CharField(max_length=50,blank = False)
-    #email1= models.EmailField(default='info1@me.nl',max_length=254,blank = True)
-    email2= models.EmailField(default='info2@me.nl',max_length=254,blank = True)
-    #telefoon = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
-    telefoon_mobiel = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
-    telefoon_vast = models.CharField(default = '00 11 22 33 44',max_length=16,blank = True)
-    soort = models.IntegerField(choices=Soorten.choices,default=1)
-    gebied  = models.ManyToManyField(Gebied)
-    #memo = models.TextField(blank = True)
-    #slug = models.SlugField(max_length=120,default='slug')
-    datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
-    datum_updated = models.DateTimeField(default=timezone.now, blank=False)
-   
-    #REQUIRED_FIELDS = ('user','naam','email','telefoon_mobiel',)
-    #USERNAME_FIELD = 'email1'
-
- 
-    def save(self, *args, **kwargs):
-        self.slug = slugify(self.naam)
-        self.datum_updated = timezone.now()
-        super(Gebruiker, self).save(*args, **kwargs)
-
-    class Meta:
-        verbose_name_plural = 'gebruiker'
-        ordering = ['naam']
-
-    def __str__(self): # For Python 2, use __unicode__ too
-        return self.naam
-    '''
-
 class Locatie(models.Model):
     naam = models.CharField(max_length=50,blank = False)
     adres = models.ForeignKey(Adress,on_delete=models.CASCADE)

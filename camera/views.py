@@ -12,7 +12,7 @@ from django.core.mail import EmailMessage
 from django.core import mail
 
 import camera.functions as functions
-from camera.models import Adress, Gebruiker, Bedrijf, Camera, Gebied, Locatie, Video ,ServiceOrder, Log, Parameter
+from camera.models import Adress, Account, Bedrijf, Camera, Gebied, Locatie, Video ,ServiceOrder, Log, Parameter
 from camera.forms import AdressForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm, GebiedForm
 
 #MFA
@@ -49,10 +49,12 @@ def index(request):
     # return render(request,'index.html',{})
     return render(request,'index.html',{})
 
+'''
 @login_required
 @permission_required('camera.view_gebruiker')
 def indexGebruiker(request):
     return render(request,'indexGebruiker.html', {} )
+'''
 
 @login_required
 @permission_required('camera.view_bedrijf')
@@ -117,6 +119,7 @@ def indexUserActie(request):
 def indexStadgenoot(request):
     return render(request,'indexStadgenoot.html', {} )
 
+'''
 # --- Gebruiker
 @login_required
 @permission_required('camera.view_gebruiker')
@@ -219,6 +222,8 @@ def deleteGebruiker(request,pk):
     template_name = 'deleteRecord.html'
     context = {'item' : gebruiker , 'title': 'Verwijder Gebruiker'}
     return render(request,template_name,context)
+
+'''
 
 # --- Adress
 @login_required
@@ -932,8 +937,6 @@ def video_player1(request):
     return render(request, 'video_player.html', context)
 '''
 
-
-
 # Export
 @login_required
 @permission_required('camera.view_video')
@@ -1014,22 +1017,21 @@ def deleteVideo(request,pk):
     context = {'item' : video , 'title': 'Verwijder Video'}
     return render(request,template_name,context)
 
-'''
+
 def playVideo(request,pk):
     try :
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
         return redirect('about')
    
-   
+    videoFile = open(video.video_link, 'rb')
     #print ('location: ',location)
     return FileResponse(videoFile)
-'''
 
+'''
 @login_required
 @permission_required('camera.view_video')
-def playVideo(request,pk):
-    try :
+def playVideo
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
         return redirect('about')
@@ -1046,7 +1048,7 @@ def playVideo(request,pk):
     #context = {'item' : video , 'title': 'Play Video'}
     #return render(request,template_name,context)
     #return ( redirect('indexVideo'))
-    
+'''    
 # -----Orders ---
 @login_required
 @permission_required('camera.view_serviceorder')
