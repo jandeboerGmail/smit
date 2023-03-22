@@ -2,7 +2,7 @@ import os,time,shutil,re
 from django.utils import timezone
 from datetime import datetime
 from django.core.mail import send_mail, EmailMessage
-from django.core.validators import validate_email
+#from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
@@ -15,25 +15,44 @@ def validDate(dateIn):
     return  re.match(date_pattern, dateIn) # Returns Match object
 
 # Video security
-def isAllowed2View(userID,videoId):
+def mayView(aUser,videoId,gebied):
         result = False
-        aUser = User.objects.get(id=userID)
+      
         aVideo = Video.objects.get(id=videoId)
         aCamera = Camera.objects.get(id=aVideo.camera)
         aLocatie = Locatie.objects.get(id=aCamera.locatie)
-        print ('aUser,aVideo,aCamera,aLocatie.Gebied:',userID,aVideo.camera,aCamera.locatie, aUser.Gebied)
+        print ('aUser,aVideo,aCamera,aLocatie.Gebied:',aUser.username ,aVideo.camera,aCamera.locatie, aUser.Gebied)
         if aLocatie.gebied == aUser.Gebied:
             result = True
         return result
 
-def checkVideos (userID,videoList):
-    checkedVideos = []
-    for video in range(len(videoList)):
-        print ('video: ',video.id)
-        if isAllowed2View(userID,video.id):
-         checkedVideos.append(video)
+def checkVideos (aUserId,aVideoList):   
+    aUser =  User.objects.get(id=aUserId)  
+       
+    aAccount = Account.objects.get(id=1)
+    
+    print ("Naam,gebied, superuser:" ,aUser.username,aAccount.email2,aAccount.gebied,aUser.is_superuser)
 
-    return checkedVideos
+    count = 0
+    for aVideo in aVideoList:
+        count += 1
+        print ('video: ',count, aVideo)
+
+    if aUser.is_superuser:
+        return aVideoList
+    else:
+        validatedVideos = []
+        #aVideoList = Camera.objects.filter(naam=cameraNaam,locatie__naam=aLocatie.naam)
+        #videoList = Locatie.objects.distinct().order_by('bedrijf','adres')
+
+        count = 0
+        for aVideo in aVideoList:
+            count += 1
+            print ('video: ',count, aVideo)
+            if True:
+            #if mayView(aUser,video.id,aAccount.gebied):y
+                 validatedVideos.append(aVideo)
+        return validatedVideos
        
 # Log functions
 def addLogEntry(orderNr,message):

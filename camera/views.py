@@ -11,6 +11,8 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 from django.core import mail
 
+from django.contrib.auth.models import User
+
 import camera.functions as functions
 from camera.models import Adress, Account, Bedrijf, Camera, Gebied, Locatie, Video ,ServiceOrder, Log, Parameter
 from camera.forms import AdressForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm, GebiedForm
@@ -25,6 +27,7 @@ from two_factor.views import OTPRequiredMixin
 from two_factor.views.utils import class_view_decorator
 
 import os,time,shutil,re,locale,xlwt
+
 
 # Create your views here.
 def current_datetime(request):
@@ -48,13 +51,6 @@ def index(request):
     # return HttpResponse("Hello, world. You're at the Camera index.")
     # return render(request,'index.html',{})
     return render(request,'index.html',{})
-
-'''
-@login_required
-@permission_required('camera.view_gebruiker')
-def indexGebruiker(request):
-    return render(request,'indexGebruiker.html', {} )
-'''
 
 @login_required
 @permission_required('camera.view_bedrijf')
@@ -119,112 +115,6 @@ def indexUserActie(request):
 def indexStadgenoot(request):
     return render(request,'indexStadgenoot.html', {} )
 
-'''
-# --- Gebruiker
-@login_required
-@permission_required('camera.view_gebruiker')
-def allGebruiker(request):
-    gebruiker_list = Gebruiker.objects.order_by('naam')
-    aantal =  gebruiker_list.count
-    gebruiker_dict  = {'results' : gebruiker_list , 'aantal' : aantal}
-    return render(request,'displayGebruiker.html',gebruiker_dict )
-
-# Zoek
-@login_required
-@permission_required('camera.view_gebruiker')
-def zNaamGebruiker (request):
-    query = request.GET.get('q','')
-    if query:
-        qset = (Q(naam__icontains=query))       
-        gebruiker_list = Gebruiker.objects.filter(qset).distinct().order_by('soort','naam')
-        aantal = gebruiker_list.count
-        gebruiker_dict  = {'results' : gebruiker_list , 'aantal' : aantal, "query": query}
-    else:
-        gebruiker_dict = {}
-    return render(request,'zNaamGebruiker.html', gebruiker_dict ) 
-
-# Export
-@login_required
-@permission_required('camera.view_gebruiker')
-def exportGebruiker(request):
-        response = HttpResponse(content_type='application/ms-excel')
-        now = datetime.now()
-        response['Content-Disposition']  = 'attachment; filename=Gebruikers_' + \
-            now.strftime ("%Y%m%d_%H%M%S") +'.xls'
-
-        wb = xlwt.Workbook(encoding='utf-8')
-        ws = wb.add_sheet('Gebruikers')
-        row_num = 0
-        font_style = xlwt.XFStyle()
-        font_style.font.bold = True
-
-        columns = ['naam','user','email','telefoon','memo']
-
-        for col_num in range(len(columns)):
-            ws.write(row_num, col_num, columns[col_num], font_style)
-
-        font_style = xlwt.XFStyle()
-
-        rows = Gebruiker.objects.order_by('soort','naam').values_list('soort','naam','user','email','telefoon','memo')
-        for row in rows:
-            row_num +=1
-
-            for col_num in range(len(columns)):
-                ws.write(row_num, col_num, str(row[col_num]), font_style)
-
-        wb.save(response)
-        return response
-
-#CRUD
-@login_required
-@permission_required('camera.add_gebruiker')
-def createGebruiker(request):
-    form = GebruikerForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        form = GebruikerForm()
-    template_name = 'inputForm.html'
-    context = {'form' : form, 'title': 'Gebruiker Toevoegen'}
-    return render(request,template_name,context)
-
-@login_required
-@permission_required('camera.edit_gebuiker')
-def editGebruiker(request,pk):
-    try :
-        gebruiker = Gebruiker.objects.get(id=pk)
-    except Gebruiker.DoesNotExist:
-        return redirect('indexGebruiker')
-
-    form = GebruikerForm(request.POST or None,instance = gebruiker)
-    # print('Request Method:',request.method)
-    if request.method == 'POST':
-        if form.is_valid():
-            form.save()
-        return ( redirect('indexGebruiker'))
-
-    template_name = 'inputForm.html'
-    context = {'form' : form, 'title': 'Wijzig Gebruiker'}
-    return render(request,template_name,context)
-
-@login_required
-@permission_required('camera.delete_gebuiker')
-def deleteGebruiker(request,pk):
-    try :
-        gebruiker = Gebruiker.objects.get(id=pk)
-    except Gebruiker.DoesNotExist:
-        return redirect('/camera/indexGebruiker')
-
-    if request.method == 'POST':
-        #print('Deleting Post:',request.POST)
-        gebruiker.delete()
-        return ( redirect('/camera/indexGebruiker'))
-
-    template_name = 'deleteRecord.html'
-    context = {'item' : gebruiker , 'title': 'Verwijder Gebruiker'}
-    return render(request,template_name,context)
-
-'''
-
 # --- Adress
 @login_required
 @permission_required('camera.view_adress')
@@ -268,7 +158,6 @@ def zPlaatsAdress (request):
         adress_dict  = {'results' : adress_list , 'aantal' : aantal, "query": query}
     else:
         adress_dict = {}
-    #return render(request,'displayAdress.html', adress_dict ) 
     return render(request,'zPlaatsAdress.html', adress_dict ) 
 
 #CRUD
@@ -788,13 +677,16 @@ def allVideo(request):
 @login_required
 @permission_required('camera.view_video')
 def allowedVideo(request):
+    
     video_list = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
 
-    video_list = functions.checkVideos (1,video_list)
-    #video_list = checkVideos (userID,video_list)
-    aantal =  video_list.count
+    currentUser = request.user
+    print ('current User: ', currentUser.id)
 
-    paginator = Paginator(video_list,15)
+    list = functions.checkVideos (currentUser.id,video_list)
+    aantal =  list.count
+
+    paginator = Paginator(list,15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
