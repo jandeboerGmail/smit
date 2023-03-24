@@ -14,24 +14,16 @@ def validDate(dateIn):
     date_pattern = "^[1-9][0-9][0-9][0-9][0-2][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]$"
     return  re.match(date_pattern, dateIn) # Returns Match object
 
-# Video securityf
-def videoGebied(videoNaam):
-        
-        #aCameras    = Camera.objects.filter(naam=cameraNaam,locatie__naam=aLocatie.naam)
-        aVideo = Video.objects.get(naam=videoNaam)
-        aCamera = Camera.objects.get(id=aVideo.camera)
-        aLocatie = Locatie.objects.get(id=aCamera.locatie)
-        print ('aVideo,aCamera,aLocatie.Gebied:',aVideo.naam,aVideo.camera,aCamera.locatie)
-        return(aLocatie.gebied)
-    
+# Video security
 
 def checkVideos (aUserId):   
     aUser =  User.objects.get(id=aUserId)     
-    aAccount = Account.objects.get(id=1)
+    #aAccount = Account.objects.get(id=1)
+    aAccount = Account.objects.get(user_id=aUserId)
     
     #print ("Naam, gebied, superuser:" ,aUser.username,aAccount.email2,aAccount.gebied,aUser.is_superuser)
 
-    aVideoList = Video.objects.all()
+    aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
 
     if aUser.is_superuser:
         return aVideoList
@@ -41,20 +33,19 @@ def checkVideos (aUserId):
         count = 0
         for aVideo in aVideoList:
             count += 1
-            print ('video: ',count, aVideo.naam,aVideo.camera)
+            #print ('video: ',count, aVideo.naam,aVideo.camera)
             aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
-            print ('Camera: ',aCamera.naam, aCamera.locatie)
+            #print ('Camera: ',aCamera.naam, aCamera.locatie)
             aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
-            print ('Locatie :',aLocatie.naam, aLocatie.gebied)
+            #print ('Locatie :',aVideo.naam, aLocatie.gebied)
 
-            #aGebiedList = Gebied.objects.filter(bedrijf="Stadgenoot")
-            #for aGebied in aGebiedList:
-            #    print ('Gebiednr : ',aGebied.gebiedNr)
-            # locatie__naam=aLocatie.naam)
-        
-            if True:
-            #if videoGebied(aVideo) == aAccount.gebied:
-                 validatedVideos.append(aVideo)
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+            
+                if aLocatie.gebied == gebied:
+                
+                    validatedVideos.append(aVideo)
+                    print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
         return validatedVideos
        
 # Log functions
@@ -155,7 +146,7 @@ def addUser(orderNr,naam):
         aUser =  aUser[0]
     return aUser
 
-
+#Gebied
 def addGebied(orderNr,bedrijfNaam):
 
     print("addGebied: ",orderNr,bedrijfNaam)
@@ -164,7 +155,6 @@ def addGebied(orderNr,bedrijfNaam):
 
     aGebieden = Gebied.objects.filter(bedrijf__naam=bedrijfNaam,gebiedNr=aGebiedNr)
     if not aGebieden and bedrijfNaam:
-        print("Gebied not found: ",aGebiedNr,bedrijfNaam)
         aGebied = Gebied()
         aGebied.gebiedNr = 0
         aGebied.naam = "onbekend"

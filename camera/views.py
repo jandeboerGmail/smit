@@ -678,10 +678,10 @@ def allVideo(request):
 @permission_required('camera.view_video')
 def allowedVideo(request):
     
-    video_list = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
+    #video_list = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
 
     currentUser = request.user
-    print ('current User: ', currentUser.id)
+    print ('current User: ', currentUser.id,currentUser.username)
 
     list = functions.checkVideos (currentUser.id)
     aantal =  list.count
