@@ -18,13 +18,10 @@ def validDate(dateIn):
 
 def checkVideos (aUserId):   
     aUser =  User.objects.get(id=aUserId)     
-    #aAccount = Account.objects.get(id=1)
     aAccount = Account.objects.get(user_id=aUserId)
-    
     #print ("Naam, gebied, superuser:" ,aUser.username,aAccount.email2,aAccount.gebied,aUser.is_superuser)
 
     aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
-
     if aUser.is_superuser:
         return aVideoList
     else:
@@ -32,7 +29,7 @@ def checkVideos (aUserId):
       
         count = 0
         for aVideo in aVideoList:
-            count += 1
+            #count += 1
             #print ('video: ',count, aVideo.naam,aVideo.camera)
             aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
             #print ('Camera: ',aCamera.naam, aCamera.locatie)
@@ -41,11 +38,9 @@ def checkVideos (aUserId):
 
             for gebied in aAccount.gebied.all():
                 #print ("Gebieden van Account: ",gebied)
-            
                 if aLocatie.gebied == gebied:
-                
                     validatedVideos.append(aVideo)
-                    print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
+                    #print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
         return validatedVideos
        
 # Log functions

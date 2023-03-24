@@ -154,6 +154,8 @@ class ServiceOrder(models.Model):
         keep_original =  models.BooleanField(default=False)
         auto_cleanup =  models.BooleanField(default=False)
         conversion_ready   =  models.BooleanField(default=False)
+        opened = models.DateField(default=timezone.now, blank=False)
+        closed = models.DateField(blank=True)
         memo = models.TextField(blank = True)
         slug = models.SlugField(max_length=120,default='slug')
         datum_inserted = models.DateTimeField(default=timezone.now, blank=False)

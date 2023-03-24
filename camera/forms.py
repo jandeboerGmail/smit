@@ -6,9 +6,7 @@ from .models import Adress, Bedrijf, Locatie, Camera, Video, ServiceOrder, Gebie
 class AdressForm(forms.ModelForm):
     class Meta:
         model = Adress
-
-        fields = ['naam','straat','postcode','plaats','land'] 
-        
+        fields = ['naam','straat','postcode','plaats','land']  
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'straat': forms.TextInput(attrs={'class': 'form-control'}),
@@ -17,33 +15,11 @@ class AdressForm(forms.ModelForm):
             'land': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-'''
-# Gebruiker
-class GebruikerForm(forms.ModelForm):
-    class Meta:
-        model = Gebruiker
-
-        fields = ['naam','user','soort','email1','email2','telefoon_mobiel','telefoon_vast','gebied','soort','memo'] 
-        
-        widgets = {
-            'naam': forms.TextInput(attrs={'class': 'form-control'}),
-            'user': forms.TextInput(attrs={'class': 'form-control'}),
-            'email1': forms.EmailInput(attrs={'class': 'form-control'}), 
-            'email2': forms.EmailInput(attrs={'class': 'form-control'}),  
-            'telefoon_mobiel': forms.TextInput(attrs={'class': 'form-control'}),
-            'telefoon_vast': forms.TextInput(attrs={'class': 'form-control'}),
-            'gebied': forms.Select(attrs={'class': 'form-control'}),
-            'soort': forms.Select(attrs={'class': 'form-control'}),
-            'memo': forms.Textarea(attrs={'class': 'form-control'}),
-        }
-'''        
 # Bedrijf
 class BedrijfForm(forms.ModelForm):
     class Meta:
         model = Bedrijf
-
         fields = ['naam','adres','telefoon','email','website','image','telefoon','memo'] 
-        
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'adres': forms.Select(attrs={'class': 'form-control'}),
@@ -53,14 +29,12 @@ class BedrijfForm(forms.ModelForm):
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
+
 # locatie
 class LocatieForm(forms.ModelForm):
     class Meta:
         model = Locatie
-
-        #fields = ['naam','adres','bedrijf','gebied','contact','image','memo'] 
         fields = ['naam','adres','bedrijf','gebied','image','memo'] 
-
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
@@ -74,13 +48,11 @@ class LocatieForm(forms.ModelForm):
 class CameraForm(forms.ModelForm):
     class Meta:
         model = Camera
-
         fields = ['naam','locatie','type','plaats','gps_locatie','datum_geplaatst','memo']
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'locatie': forms.Select(attrs={'class': 'form-control'}),
-            'type': forms.TextInput(attrs={'class': 'form-control'}),
-            
+            'type': forms.TextInput(attrs={'class': 'form-control'}),        
             'plaats': forms.TextInput(attrs={'class': 'form-control'}),
             'gps': forms.TextInput(attrs={'class': 'form-control'}),
             'datum_geplaats': forms.DateTimeInput(attrs={'class': 'form-control'}),
@@ -91,14 +63,13 @@ class CameraForm(forms.ModelForm):
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
-   
         fields = ['naam','camera','opname_van','opname_tot','video_link','codec','memo']
-
         widgets = {
            # 'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'camera': forms.Select(attrs={'class': 'form-control'}),
-            'opname_van': forms.DateTimeInput(attrs={'class': 'form-control'}),
+            #'opname_van': forms.SplitDateTimeWidget(),
+            'opname_van': forms.DateTimeInput(attrs={'class': 'form-control'}), 
             'opname_tot': forms.DateTimeInput(attrs={'class': 'form-control'}),   
             'video_link': forms.TextInput(attrs={'class': 'form-control'}), 
             'codec': forms.TextInput(attrs={'class': 'form-control'}), 
@@ -108,23 +79,21 @@ class VideoForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = ServiceOrder
-
-        #fields = ['ordernr','bedrijf','contact','locatie','keep_original','auto_cleanup','memo']
-        fields = ['ordernr','bedrijf','locatie','keep_original','auto_cleanup','memo']
+        fields = ['ordernr','bedrijf','contact','locatie','keep_original','auto_cleanup','closed','memo']
         widgets = {
             'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
-             #'contact': forms.Select(attrs={'class': 'form-control'}),
+            'contact': forms.Select(attrs={'class': 'form-control'}),
             'locatie': forms.Select(attrs={'class': 'form-control'}),
-            'keep_original': forms.CheckboxInput(attrs={'class': 'form-control'}),
-            'auto_cleanup': forms.CheckboxInput(attrs={'class': 'form-control'}),
+            'closed' : forms.SelectDateWidget(),
+            'keep_original': forms.CheckboxInput(),
+            'auto_cleanup': forms.CheckboxInput(),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
 
 class GebiedForm(forms.ModelForm):
      class Meta: 
         model = Gebied
-
         fields = ['gebiedNr','bedrijf','naam','image','memo']
         widgets = {
             'gebiedNr': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -132,14 +101,3 @@ class GebiedForm(forms.ModelForm):
             'naam': forms.TextInput(attrs={'class': 'form-control'}),             
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }                 
-
-'''
-class ZoekVideoForm(forms.ModelForm):
-    class Meta:
-        model = Video
-        fields = (['ordernr','naam','camera','opname_van','opname_tot','video_link','codec','memo'])
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['camera'].queryset = Camera.objects.none()
-'''

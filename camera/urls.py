@@ -24,9 +24,6 @@ urlpatterns = [
 
 #Index  
     path('',views.index,name='index'),
-    #path('zoekVideo',views.zoekVideo,name='zoekVideo'),
-
-    #path('indexGebruiker',views.indexGebruiker,name='indexGebruiker'),
     path('indexAdres',views.indexAdres,name='indexAdres'),
     path('indexBedrijf',views.indexBedrijf,name='indexBedrijf'),
     path('indexGebied',views.indexGebied,name='indexGebied'),
@@ -46,25 +43,41 @@ urlpatterns = [
 #stadgenoot
     path('indexStadgenoot',views.indexStadgenoot,name='indexStadgenoot'),
     path('allVideoStadgenoot',views.allVideoStadgenoot,name='allVideoStadgenoot'),
-    path('zNaamVideoStad',views.zNaamVideoStad,name='zNaamVideoStad'),
-    path('zLocatieVideoStadgenoot',views.zLocatieVideoStadgenoot,name='zLocatieVideoStadgenoot'),
+    path('zNaamVideoStadgenoot',views.zNaamVideoStadgenoot,name='zNaamVideoStadgenoot'),
+    path('zLocatieVideoStadgenoot',views.zLocatieVideoStadgenoot,name='zLocatieVideoStadgenoot'), 
     #path('zOrderVideoStadgenoot',views.zOrderVideoStadgenoot,name='zOrderVideoStadgenoot'),
-
     path('allOrderStadgenoot',views.allOrderStadgenoot,name='allOrderStadgenoot'),
     path('zNrOrderStadgenoot',views.zNrOrderStadgenoot,name='zNrOrderStadgenoot'),
     path('zContactOrderStadgenoot',views.zContactOrderStadgenoot,name='zContactOrderStadgenoot'),
-
     path('allCameraStadgenoot',views.allCameraStadgenoot,name='allCameraStadgenoot'),
     path('zNaamCameraStadgenoot',views.zNaamCameraStadgenoot,name='zNaamCameraStadgenoot'),
     path('zLocatieCameraStadgenoot',views.zLocatieCameraStadgenoot,name='zLocatieCameraStadgenoot'),
 
-# Gebruiker
-    #path('allGebruiker/',views.allGebruiker,name='allGebruiker'),
-    #path('zNaamGebruiker/',views.zNaamGebruiker,name='zNaamGebruiker'),
-    #path('exportGebruiker/',views.exportGebruiker,name='exportGebruiker'),
-    #path('createGebruiker/',views.createGebruiker,name='createGebruiker'),
-    #path('editGebruiker/<int:pk>',views.editGebruiker,name='editGebruiker'),
-    #path('deleteGebruiker/<int:pk>',views.deleteGebruiker,name='deleteGebruiker'),
+#Berkhout
+    path('indexBerkhout',views.indexBerkhout,name='indexBerkhout'),
+    path('allVideoBerkhout',views.allVideoBerkhout,name='allVideoBerkhout'),
+    path('zNaamVideoBerkhout',views.zNaamVideoBerkhout,name='zNaamVideoBerkhout'),
+    path('zLocatieVideoBerkhout',views.zLocatieVideoBerkhout,name='zLocatieVideoBerkhout'), 
+    #path('zOrderVideoBerkhout',views.zOrderVideoBerkhout,name='zOrderVideoBerkhout'),
+    path('allOrderBerkhout',views.allOrderBerkhout,name='allOrderBerkhout'),
+    path('zNrOrderBerkhout',views.zNrOrderBerkhout,name='zNrOrderBerkhout'),
+    path('zContactOrderBerkhout',views.zContactOrderBerkhout,name='zContactOrderBerkhout'),
+    path('allCameraBerkhout',views.allCameraBerkhout,name='allCameraBerkhout'),
+    path('zNaamCameraBerkhout',views.zNaamCameraBerkhout,name='zNaamCameraBerkhout'),
+    path('zLocatieCameraBerkhout',views.zLocatieCameraBerkhout,name='zLocatieCameraBerkhout'),
+
+#Smit
+    path('indexSmit',views.indexSmit,name='indexSmit'),
+    path('allVideoSmit',views.allVideoSmit,name='allVideoSmit'),
+    path('zNaamVideoSmit',views.zNaamVideoSmit,name='zNaamVideoSmit'),
+    path('zLocatieVideoSmit',views.zLocatieVideoSmit,name='zLocatieVideoSmit'), 
+    #path('zOrderVideoSmit',views.zOrderVideoSmit,name='zOrderVideoSmit'),
+    path('allOrderSmit',views.allOrderSmit,name='allOrderSmit'),
+    path('zNrOrderSmit',views.zNrOrderSmit,name='zNrOrderSmit'),
+    path('zContactOrderSmit',views.zContactOrderSmit,name='zContactOrderSmit'),
+    path('allCameraSmit',views.allCameraSmit,name='allCameraSmit'),
+    path('zNaamCameraSmit',views.zNaamCameraSmit,name='zNaamCameraSmit'),
+    path('zLocatieCameraSmit',views.zLocatieCameraSmit,name='zLocatieCameraSmit'),
 
 # Adresss
     path('allAdress/',views.allAdress,name='allAdress'),
