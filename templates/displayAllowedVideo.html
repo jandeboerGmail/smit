@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row align-items-end">
+      <h2 class="col-1 smit-h2">Videos</h2> 
+
+    <div class="smit-h2 text-end">
+      {{aantal}} 
+    </div>
+  </div>
+
+
+  <table class="table table-hover table-sm">
+    <thead class="smit-header">
+      <tr>
+        <th scope="col">Order</th>
+        <th scope="col">Naam</th>
+        <th scope="col">Camera</th>
+        <th scope="col">Locatie</th>
+        <th scope="col">Plaats</th>
+        <th scope="col">Opname van</th>
+        <th scope="col">Opname tot</th>
+        <th scope="col">Bijgewerkt</th>
+    </tr>
+  </thead>
+
+  {% if page_obj %}
+  <tbody>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    {% for video in page_obj %}
+    <tr class="smit-line">
+       <td> {{video.ordernr}} </td>
+       <td> {{video.naam}} </td>
+       <td> {{video.camera.naam}} </td>
+       <td> {{video.camera.locatie.naam}} </td>
+       <td> {{video.camera.plaats}} </td>
+       <td> {{video.opname_van}} </td>
+       <td> {{video.opname_tot}} </td>
+       <td> {{video.datum_updated}} </td>
+       {% if perms.camera.view_video %}
+       <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
+       {% endif %}
+  </tbody>
+  {% endfor %}
+</table>
+
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; eerste</a>
+            <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
+        {% endif %}
+
+        <span class="current">
+            Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">volgende</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+
+  {% else %}
+    <strong>Er zijn geen entries</strong>
+  {% endif %}
+
+ </div>
+{% endblock %}
