@@ -203,7 +203,7 @@ class Video(models.Model):
         unique_together = ('naam','camera')
 
     def __str__(self): # For Python 2, use __unicode__ too
-        return self.n
+        return self.naam
    
     
 class Log(models.Model):

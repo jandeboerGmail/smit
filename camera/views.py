@@ -720,7 +720,7 @@ def zNaamVideo (request):
 def zOrderVideo (request):
     query = request.GET.get('q','')
     if query:
-        qset = (Q(ordernr__icontains=query))       
+        qset = (Q(ordernr__ordernr__icontains=query))       
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
         aantal = video_list.count
 
@@ -757,26 +757,6 @@ def zCameraVideo (request):
 @login_required
 @permission_required('camera.view_video')
 def zLocatieVideo (request):
-    query = request.GET.get('q','')
-    if query:
-        print ('query: ',str(query))
-        qset = (Q(naam__icontains=query))   
-        print ('qset: ', str(qset))
-        qs1 = Video.objects.filter(qset).order_by('naam')
-        print ('qs1: ',str(qs1.query))
-        aantal = qs1.count
-        print ('aantal: ',aantal)
-
-        paginator = Paginator(qs1,15)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-
-        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
-    else:
-        video_dict = {}
-    return render(request,'zLocatieVideo.html', video_dict )
-   
-    '''
     query = request.GET.get('q','')    
     if query:
         qset = (Q(camera__locatie__naam__icontains=query))    
@@ -793,6 +773,7 @@ def zLocatieVideo (request):
         video_dict = {}
     return render(request,'zLocatieVideo.html', video_dict ) 
 
+'''
 def video_player1(request):
     context = {
         'video_url': 'https://www.example.com/video.mp4' #replace with the actual video URL

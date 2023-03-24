@@ -54,7 +54,7 @@ urlpatterns = [
     path('zLocatieCameraStadgenoot',views.zLocatieCameraStadgenoot,name='zLocatieCameraStadgenoot'),
 
 #Berkhout
-    path('indexBerkhout',views.indexBerkhout,name='indexBerkhout'),
+    #path('indexBerkhout',views.indexBerkhout,name='indexBerkhout'),
     path('allVideoBerkhout',views.allVideoBerkhout,name='allVideoBerkhout'),
     path('zNaamVideoBerkhout',views.zNaamVideoBerkhout,name='zNaamVideoBerkhout'),
     path('zLocatieVideoBerkhout',views.zLocatieVideoBerkhout,name='zLocatieVideoBerkhout'), 
@@ -67,7 +67,7 @@ urlpatterns = [
     path('zLocatieCameraBerkhout',views.zLocatieCameraBerkhout,name='zLocatieCameraBerkhout'),
 
 #Smit
-    path('indexSmit',views.indexSmit,name='indexSmit'),
+    #path('indexSmit',views.indexSmit,name='indexSmit'),
     path('allVideoSmit',views.allVideoSmit,name='allVideoSmit'),
     path('zNaamVideoSmit',views.zNaamVideoSmit,name='zNaamVideoSmit'),
     path('zLocatieVideoSmit',views.zLocatieVideoSmit,name='zLocatieVideoSmit'), 

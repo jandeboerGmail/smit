@@ -30,4 +30,57 @@
         <a class="nav-index" href="/camera/zLocatieCameraStadgenoot">Zoek op Locatie</a>
     </div>
 {% endif %}
+
+{% if request.user|has_group:"Berkhout" %}
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/allVideoBerkhout">Alle Video's</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNaamVideo">Zoek op Naam (Org)</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNaamVideoBerkhout">Zoek op Naam</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zLocatieVideoBerkhout">Zoek op Locatie</a>
+    </div>
+
+    <br>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/allCameraBerkhout">Alle Camera's</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNaamCameraBerkhout">Zoek op Naam</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zLocatieCameraSmit">Zoek op Locatie</a>
+    </div>
+{% endif %}
+
+{% if request.user|has_group:"Smit" %}
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/allVideoSmit">Alle Video's</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNaamVideo">Zoek op Naam (Org)</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNaamVideoSmit">Zoek op Naam</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zLocatieVideoSmit">Zoek op Locatie</a>
+    </div>
+
+    <br>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/allCameraSmit">Alle Camera's</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNaamCameraSmit">Zoek op Naam</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zLocatieCameraSmit">Zoek op Locatie</a>
+    </div>
+{% endif %}
+
 {% endblock %}

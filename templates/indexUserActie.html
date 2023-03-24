@@ -10,5 +10,15 @@
     <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
 </div>
 {% endif %}
+{% if request.user|has_group:"Berkhout" %}
+<div class="nav-index">
+    <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
+</div>
+{% endif %}
+{% if request.user|has_group:"Smit" %}
+<div class="nav-index">
+    <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
+</div>
+{% endif %}
 {% endblock %}
 

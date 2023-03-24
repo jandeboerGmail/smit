@@ -16,4 +16,26 @@
         <a class="nav-index" href="/camera/zContactOrderStadgenoot">Zoek op Contact</a>
     </div>
 {% endif %}
+{% if request.user|has_group:"Berkhout" %}
+    <div class="nav-index">
+          <a class="nav-index" href="/camera/allOrderBerkhout">Alle Orders</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNrOrderBerkhout">Zoek op Service Order</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zContactOrderBerkhout">Zoek op Contact</a>
+    </div>
+{% endif %}
+{% if request.user|has_group:"Smit" %}
+    <div class="nav-index">
+          <a class="nav-index" href="/camera/allOrderSmit">Alle Orders</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zNrOrderSmit">Zoek op Service Order</a>
+    </div>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/zContactOrderSmit">Zoek op Contact</a>
+    </div>
+{% endif %}
 {% endblock %}
