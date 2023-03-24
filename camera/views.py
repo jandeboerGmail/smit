@@ -683,7 +683,7 @@ def allowedVideo(request):
     currentUser = request.user
     print ('current User: ', currentUser.id)
 
-    list = functions.checkVideos (currentUser.id,video_list)
+    list = functions.checkVideos (currentUser.id)
     aantal =  list.count
 
     paginator = Paginator(list,15)

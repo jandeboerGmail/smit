@@ -14,43 +14,46 @@ def validDate(dateIn):
     date_pattern = "^[1-9][0-9][0-9][0-9][0-2][0-9][0-3][0-9][0-2][0-9][0-5][0-9][0-5][0-9]$"
     return  re.match(date_pattern, dateIn) # Returns Match object
 
-# Video security
-def mayView(aUser,videoId,gebied):
-        result = False
-      
-        aVideo = Video.objects.get(id=videoId)
+# Video securityf
+def videoGebied(videoNaam):
+        
+        #aCameras    = Camera.objects.filter(naam=cameraNaam,locatie__naam=aLocatie.naam)
+        aVideo = Video.objects.get(naam=videoNaam)
         aCamera = Camera.objects.get(id=aVideo.camera)
         aLocatie = Locatie.objects.get(id=aCamera.locatie)
-        print ('aUser,aVideo,aCamera,aLocatie.Gebied:',aUser.username ,aVideo.camera,aCamera.locatie, aUser.Gebied)
-        if aLocatie.gebied == aUser.Gebied:
-            result = True
-        return result
+        print ('aVideo,aCamera,aLocatie.Gebied:',aVideo.naam,aVideo.camera,aCamera.locatie)
+        return(aLocatie.gebied)
+    
 
-def checkVideos (aUserId,aVideoList):   
-    aUser =  User.objects.get(id=aUserId)  
-       
+def checkVideos (aUserId):   
+    aUser =  User.objects.get(id=aUserId)     
     aAccount = Account.objects.get(id=1)
     
-    print ("Naam,gebied, superuser:" ,aUser.username,aAccount.email2,aAccount.gebied,aUser.is_superuser)
+    #print ("Naam, gebied, superuser:" ,aUser.username,aAccount.email2,aAccount.gebied,aUser.is_superuser)
 
-    count = 0
-    for aVideo in aVideoList:
-        count += 1
-        print ('video: ',count, aVideo)
+    aVideoList = Video.objects.all()
 
     if aUser.is_superuser:
         return aVideoList
     else:
         validatedVideos = []
-        #aVideoList = Camera.objects.filter(naam=cameraNaam,locatie__naam=aLocatie.naam)
-        #videoList = Locatie.objects.distinct().order_by('bedrijf','adres')
-
+      
         count = 0
         for aVideo in aVideoList:
             count += 1
-            print ('video: ',count, aVideo)
+            print ('video: ',count, aVideo.naam,aVideo.camera)
+            aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
+            print ('Camera: ',aCamera.naam, aCamera.locatie)
+            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+            print ('Locatie :',aLocatie.naam, aLocatie.gebied)
+
+            #aGebiedList = Gebied.objects.filter(bedrijf="Stadgenoot")
+            #for aGebied in aGebiedList:
+            #    print ('Gebiednr : ',aGebied.gebiedNr)
+            # locatie__naam=aLocatie.naam)
+        
             if True:
-            #if mayView(aUser,video.id,aAccount.gebied):y
+            #if videoGebied(aVideo) == aAccount.gebied:
                  validatedVideos.append(aVideo)
         return validatedVideos
        
@@ -152,12 +155,36 @@ def addUser(orderNr,naam):
         aUser =  aUser[0]
     return aUser
 
+
+def addGebied(orderNr,bedrijfNaam):
+
+    print("addGebied: ",orderNr,bedrijfNaam)
+    aBedrijf = addBedrijf(orderNr,bedrijfNaam)
+    aGebiedNr = 0 
+
+    aGebieden = Gebied.objects.filter(bedrijf__naam=bedrijfNaam,gebiedNr=aGebiedNr)
+    if not aGebieden and bedrijfNaam:
+        print("Gebied not found: ",aGebiedNr,bedrijfNaam)
+        aGebied = Gebied()
+        aGebied.gebiedNr = 0
+        aGebied.naam = "onbekend"
+        aGebied.bedrijf = aBedrijf
+        aGebied.save ()
+    
+        message = "WARNING: Default values added for gebied: "  + aGebied.naam + " Bedrijf: " + bedrijfNaam
+        addLogEntry(orderNr,message)
+    else:
+        aGebied = aGebieden[0]
+    return aGebied
+
 #Locatie
 def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
+    print('Add Locatie: ',orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam)
     aBedrijf   = addBedrijf(orderNr,bedrijfNaam)
     aUser      = addUser(orderNr,gebruikerNaam)
     aAdress    = addAdress(orderNr,adressNaam)
+    aGebied    = addGebied(orderNr,bedrijfNaam)
 
     #print ("addLocatie: ", locatieNaam, "-",aAdress.naam,"-",aBedrijf.naam, "-",aUser.username)
     #print ("User: ",aUser.username,"-", aUser.first_name)
@@ -174,6 +201,7 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
         aLocatie.adres   = aAdress
         aLocatie.bedrijf = aBedrijf
         aLocatie.contact = aUser
+        aLocatie.gebied  = aGebied
         aLocatie.save()
 
         message = "WARNING: Default values added for locatie: "  + locatieNaam + " | " + adressNaam + " | " + bedrijfNaam  + " | " + gebruikerNaam

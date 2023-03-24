@@ -55,7 +55,7 @@ class Bedrijf(models.Model):
 
 class Gebied(models.Model):
     gebiedNr = models.IntegerField(blank = False, null = False)
-    naam = models.CharField(max_length=100,blank = False)
+    naam = models.CharField(max_length=100,blank = False, default ="onbekend")
     bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
     image = models.ImageField(upload_to ='images/',null=True,blank=True)
     memo = models.TextField(blank = True)
@@ -95,7 +95,7 @@ class Account(models.Model):
 class Locatie(models.Model):
     naam = models.CharField(max_length=50,blank = False)
     adres = models.ForeignKey(Adress,on_delete=models.CASCADE)
-    gebied  = models.ManyToManyField(Gebied)
+    gebied  = models.ForeignKey(Gebied,on_delete=models.CASCADE)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
     bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
     contact =  models.ForeignKey(User,on_delete=models.CASCADE)
@@ -201,7 +201,7 @@ class Video(models.Model):
         unique_together = ('naam','camera')
 
     def __str__(self): # For Python 2, use __unicode__ too
-        return self.naam
+        return self.n
    
     
 class Log(models.Model):
