@@ -16,23 +16,24 @@ def validDate(dateIn):
 
 # Video security
 
-def checkVideos (aUserId):   
+def checkVideos (aUserId,bedrijf):   
     aUser =  User.objects.get(id=aUserId)     
     aAccount = Account.objects.get(user_id=aUserId)
     #print ("Naam, gebied, superuser:" ,aUser.username,aAccount.email2,aAccount.gebied,aUser.is_superuser)
 
-    aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
+    if bedrijf == "*" :
+        aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
+        print("All vides")
+    else:
+        aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
+        print("Selected videos")
     if aUser.is_superuser:
         return aVideoList
     else:
         validatedVideos = []
       
-        count = 0
         for aVideo in aVideoList:
-            #count += 1
-            #print ('video: ',count, aVideo.naam,aVideo.camera)
             aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
-            #print ('Camera: ',aCamera.naam, aCamera.locatie)
             aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
             #print ('Locatie :',aVideo.naam, aLocatie.gebied)
 
@@ -50,6 +51,43 @@ def addLogEntry(orderNr,message):
     aLog.message = message
     aLog.save()
     return
+
+def checkVideosNaam(aUserId,bedrijf,naam):   
+    aUser =  User.objects.get(id=aUserId)     
+    aAccount = Account.objects.get(user_id=aUserId)
+
+    if bedrijf == "*" :
+        aVideoList = Video.objects.filter(naam__icontains=naam).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
+        print("All videos")
+    else:
+        aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
+        print("Selected videos")
+    
+    if aUser.is_superuser:
+        return aVideoList
+    else:
+        validatedVideos = []
+      
+        for aVideo in aVideoList:
+            aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
+            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+            #print ('Locatie :',aVideo.naam, aLocatie.gebied)
+
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+                if aLocatie.gebied == gebied:
+                    validatedVideos.append(aVideo)
+                    #print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
+        return validatedVideos
+       
+# Log functions
+def addLogEntry(orderNr,message):
+    aLog = Log()
+    aLog.ordernr = orderNr
+    aLog.message = message
+    aLog.save()
+    return
+
 
 # Parameter functions
 def getVideoLocation():

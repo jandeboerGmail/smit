@@ -10,10 +10,10 @@
           <a class="nav-index" href="/camera/allOrderStadgenoot">Alle Orders</a>
     </div>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zNrOrderStadgenoot">Zoek op Service Order</a>
+        <a class="nav-index" href="/camera/zOrderStadgenootNr">Zoek op Service Order</a>
     </div>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zContactOrderStadgenoot">Zoek op Contact</a>
+        <a class="nav-index" href="/camera/zOrderStadgenootContact">Zoek op Contact</a>
     </div>
 {% endif %}
 {% if request.user|has_group:"Berkhout" %}
@@ -21,10 +21,10 @@
           <a class="nav-index" href="/camera/allOrderBerkhout">Alle Orders</a>
     </div>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zNrOrderBerkhout">Zoek op Service Order</a>
+        <a class="nav-index" href="/camera/zOrderBerkhoutNr">Zoek op Service Order</a>
     </div>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zContactOrderBerkhout">Zoek op Contact</a>
+        <a class="nav-index" href="/camera/zCOrderBerkhoutContact">Zoek op Contact</a>
     </div>
 {% endif %}
 {% if request.user|has_group:"Smit" %}
@@ -32,10 +32,10 @@
           <a class="nav-index" href="/camera/allOrderSmit">Alle Orders</a>
     </div>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zNrOrderSmit">Zoek op Service Order</a>
+        <a class="nav-index" href="/camera/OrderSmitNr">Zoek op Service Order</a>
     </div>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zContactOrderSmit">Zoek op Contact</a>
+        <a class="nav-index" href="/camera/zOrderSmitContact">Zoek op Contact</a>
     </div>
 {% endif %}
 {% endblock %}
