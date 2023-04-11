@@ -1,0 +1,29 @@
+<div class='col-12 col-md-10 mb-3 mx-auto'>
+    <div class='card {% if not contact.name %} border border-warning text-dark 
+   {% endif %}'>
+       <div class='card-body'>
+           {% if bedrijf.image %}
+               <a href="{{ bedrijf.get_absolute_url }}">
+                       <img src="{{ bedrijf.image.url }}" class='card-img-top' />
+               </a>
+           {% endif %}
+           <h5 class='card-title'>{{ bedrijf.name }}</h5>
+           <p class='card-text'>
+               <small class='text-muted'>{{ bedrijf.name }}</small>
+               {% if truncate %}
+                   {{ bedrijf.content|linebreaks|truncatewords:30 }}
+               {% else %}
+                   {{ bedrijf.content|linebreaks }}
+               {% endif %}
+           </p>
+   
+           {% if not detail %}
+               {% if not bedrijf.name %} Draft {% endif %}
+               <a href="{{ bedrijf.get_absolute_url }}">View</a>
+           
+           {% endif %}
+       </div>
+   
+    </div>
+</div>
+   
