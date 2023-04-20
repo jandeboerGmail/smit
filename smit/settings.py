@@ -114,9 +114,15 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 #LOGIN_URL = '/admin/login'
 
-LOGOUT_REDIRECT_URL = 'home'
+#LOGOUT_REDIRECT_URL = 'about'
 #LOGIN_REDIRECT_URL = 'allowedVideo'
+
 LOGIN_URL = 'two_factor:login' 
+
+LOGOUT_REDIRECT_URL = 'home'
+# this one is optional
+#LOGIN_REDIRECT_URL = 'two_factor:profile'
+
 PHONENUMBER_DEFAULT_REGION = 'NL'
 
 #TWO_FACTOR_SMS_GATEWAY = 'example.gateways.Messages'0000
@@ -141,9 +147,6 @@ DEFAULT_FROM_EMAIL  = os.environ.get('DEFAULT_FROM_EMAIL')
 ACME_DEFAULT_EMAIL  = os.environ.get('ACME_DEFAULT_EMAIL ') 
 
 DOMAIN              = os.environ.get('DOMAIN')
-
-# this one is optional
-LOGIN_REDIRECT_URL = 'two_factor:profile'
 
 #MFA
 TWO_FACTOR_REMEMBER_COOKIE_AGE = 300

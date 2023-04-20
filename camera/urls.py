@@ -17,11 +17,13 @@ from .views import (
 )
 
 urlpatterns = [
+    path('/camera/', views.allowedVideo, name='camera'),
     path('allowedVideo/', views.allowedVideo, name='allowedVideo'),
     path('time/',views.current_datetime,name='current_datetime'),
     path('about/',views.about,name='about'),
     path('todo/',views.todo,name='todo'),
     #path('playVideo/', playVideo, name='video_player'),
+   
 
 #Index  
     path('',views.index,name='index'),

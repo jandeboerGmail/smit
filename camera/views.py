@@ -1319,8 +1319,9 @@ def zCameraBedrijfLocatie(request,bedrijf,locatie):
 @login_required
 @permission_required('camera.view_serviceorder')
 def allOrderBedrijf(request,bedrijf):
-    aList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf).select_related("bedrijf").order_by('ordernr','contact')
-    
+    currentUser = request.user
+    aList = functions.checkOrders(currentUser.id,bedrijf)
+
     aantal = 0
     for aItem in aList:
         aantal += 1
@@ -1335,8 +1336,8 @@ def allOrderBedrijf(request,bedrijf):
 @login_required
 @permission_required('camera.view_serviceorder')
 def zOrderBedrijfNr(request,bedrijf,order):
-    aList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf,ordernr__icontains=order).select_related("bedrijf").order_by('ordernr','contact')
-   
+    currentUser = request.user
+    aList = functions.checkOrders(currentUser.id,bedrijf)
     aantal = 0
     for aItem in aList:
         aantal += 1
@@ -1488,7 +1489,7 @@ def zVideoBerkhoutNaam(request):
     bedrijf = 'Berkhout'
     naam = 'c'
     dict = zVideoBedrijfNaam(request,bedrijf,naam)
-    return render(request,'displayVideo.html',dict )
+    return render(request,'displayVideoPlay.html',dict )
 
 @login_required
 @permission_required('camera.view_video')
@@ -1496,7 +1497,7 @@ def zVideoBerkhoutLocatie(request):
     bedrijf = 'Berkhout'
     locatie = 'a'
     dict = zVideoBedrijfLocatie(request,bedrijf,locatie)
-    return render(request,'displayVideo.html',dict )
+    return render(request,'displayVideoPlay.html',dict )
     #return render(request,'zLocatieVideo.html',dict )
 
 #Berkhout Camera

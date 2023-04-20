@@ -109,6 +109,56 @@ def checkCamerasNaam(aUserId,bedrijf,naam):
                     validatedCameras.append(aCamera)
                     #print ('Allowed :',aAccount.user, aCamera.naam, aLocatie.gebied)
         return validatedCameras
+    
+# Order Security
+def checkOrders(aUserId,bedrijf):   
+    aUser =  User.objects.get(id=aUserId)     
+    if bedrijf == "*" :
+        anOrderList = ServiceOrder.objects.order_by('ordernr','contact')
+    else:
+         #aList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf).select_related("bedrijf").order_by('ordernr','contact')
+         #anOrderList = ServiceOrder.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).order_by('locatie','naam')
+         anOrderList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf).select_related("bedrijf").order_by('ordernr','contact')
+
+    if aUser.is_superuser:
+        return anOrderList
+    else:
+        validatedOrders = []
+        aAccount = Account.objects.get(user_id=aUserId)
+        for anOrder in anOrderList:
+            aLocatie = Locatie.objects.filter(naam=anOrder.locatie)[0]
+            #print ('Locatie :',aCamera.naam, aLocatie.gebied)
+
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+                if aLocatie.gebied == gebied:
+                    validatedOrders.append(anOrder)
+                    #print ('Allowed :',aAccount.user, anOrder.ordernr, aLocatie.gebied)
+        return validatedOrders
+    
+def checkOrdersNumber(aUserId,bedrijf,number):   
+    aUser =  User.objects.get(id=aUserId)     
+    if bedrijf == "*" :
+        anOrderList = ServiceOrder.objects.filter(ordernr__icontains=number).order_by('ordernr','contact')
+    else:
+         #aList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf,ordernr__icontains=order).select_related("bedrijf").order_by('ordernr','contact')
+         anOrderList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf,ordernr__icontains=number).select_related("bedrijf").order_by('ordernr','contact')
+
+    if aUser.is_superuser:
+        return anOrderList
+    else:
+        validatedOrders = []
+        aAccount = Account.objects.get(user_id=aUserId)
+        for anOrder in anOrderList:
+            aLocatie = Locatie.objects.filter(naam=anOrder.locatie)[0]
+            #print ('Locatie :',aCamera.naam, aLocatie.gebied)
+
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+                if aLocatie.gebied == gebied:
+                    validatedOrders.append(anOrder)
+                    #print ('Allowed :',aAccount.user, anOrder.ordernr, aLocatie.gebied)
+        return validatedOrders
 
 # Log functions
 def addLogEntry(orderNr,message):
