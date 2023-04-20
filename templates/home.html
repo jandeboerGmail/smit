@@ -27,11 +27,6 @@
         <li class="nav-item">
           <a class="nav-link text-black" href="/admin">Admin: </a>
         </li>
-        <!--
-         <li class="nav-item">
-           <a class="nav-link text-danger" href="/camera/indexGebruiker">Gebruiker</a>
-         </li>
-        -->
 
           <li class="nav-item"></li>
             <a class="nav-link text-danger" href="/camera/indexAdres">Adres</a>
@@ -108,7 +103,6 @@
         {% endif %}
 
         {% if request.user|has_group:"Berkhout"%}
-     
             <li class="nav-item">
               <a class="nav-link text-dark" href="/camera/about">Berkhout: </a>
             </li>
@@ -182,8 +176,7 @@
               {% if request.user|has_group:"Admin"%}
                 <li class="nav-item">
                     <a class="nav-link text-dark"  href="{{ reg_url }}">Register</a> 
-                  </li>
-           
+                </li>
               {% endif %}
                     
             {% else %}

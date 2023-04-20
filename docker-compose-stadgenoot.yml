@@ -1,0 +1,45 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    volumes:
+      - type: bind
+        source: /mnt/cctv/KLANTEN/DOWNLOAD
+        target: /code/camera/videos
+      - type: volume
+        source: static_data
+        target: /vol/web
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - DJANGO_DEBUG=0
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+      - TWILIO_ACCOUNT_SID=${TWILIO_ACCOUNT_SID}
+      - TWILIO_AUTH_TOKEN=${TWILIO_AUTH_TOKEN}
+      - TWILIO_CALLER_ID=${TWILIO_CALLER_ID} 
+      - EMAIL_HOST=${EMAIL_HOST}
+      - EMAIL_PORT=${EMAIL_PORT}
+      - EMAIL_HOST_USER=${EMAIL_HOST_USER}
+      - EMAIL_HOST_PASSWORD=${EMAIL_HOST_PASSWORD}
+      
+      - SESSION_COOKIE_AGE=${SESSION_COOKIE_AGE} 
+      
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    volumes:
+      - static_data:/vol/static
+    ports:
+      - "9000:9000"
+    depends_on:
+      - app
+
+volumes:
+  static_data:

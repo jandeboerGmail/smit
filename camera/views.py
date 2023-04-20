@@ -1234,7 +1234,8 @@ def allVideoBedrijf(request,bedrijf):
 @permission_required('camera.view_video')
 def zVideoBedrijfNaam(request,bedrijf,naam):
     currentUser = request.user
-    naam = 'No'
+    #naam = 'No'
+    print("zVideoBedrijfNaam :",naam)
     aList = functions.checkVideosNaam(currentUser.id,bedrijf,naam)
     aantal = 0
     for aItem in aList:
@@ -1249,15 +1250,13 @@ def zVideoBedrijfNaam(request,bedrijf,naam):
 @permission_required('camera.view_video')
 def zVideoBedrijfLocatie(request,bedrijf,locatie):
     aList= Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf,camera__locatie__naam__icontains=locatie).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
-
+    
     aantal = 0
     for aItem in aList:
         aantal += 1
-
     paginator = Paginator(aList,15)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-
     dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": locatie}
     return dict
 
@@ -1266,10 +1265,14 @@ def zVideoBedrijfLocatie(request,bedrijf,locatie):
 @permission_required('camera.view_camera')
 def allCameraBedrijf(request,bedrijf):
     print('allCameraBedrijf: ', bedrijf)
-    list = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).select_related("locatie").order_by('locatie','naam')
-    aantal = list.count
+    currentUser = request.user
+    aList = functions.checkCameras(currentUser.id,bedrijf)
 
-    paginator = Paginator(list,12)
+    aantal = 0
+    for aItem in aList:
+        aantal += 1
+
+    paginator = Paginator(aList,12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -1280,8 +1283,11 @@ def allCameraBedrijf(request,bedrijf):
 @permission_required('camera.view_camera')
 def zCameraBedrijfNaam(request,bedrijf,naam):
     print('ZnaamCameraBedijf: ',bedrijf,naam)
-    aList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related("locatie").order_by('locatie','naam')
-   
+    currentUser = request.user
+
+    #aList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related("locatie").order_by('locatie','naam')
+    aList = functions.checkCamerasNaam(currentUser.id,bedrijf,naam)
+
     aantal = 0
     for aItem in aList:
         aantal += 1
@@ -1428,7 +1434,7 @@ def allCameraStadgenoot(request):
 def zCameraStadgenootNaam(request):
     print ("start zNaamCameraStadgenoot ")
     bedrijf = 'Stadgenoot'
-    naam = "cam"
+    naam = "a"
     dict = zCameraBedrijfNaam(request,bedrijf,naam)
     return render(request,'displayCameraOnly.html',dict )
 
@@ -1446,7 +1452,7 @@ def zCameraStadgenootLocatie(request):
 def allOrderStadgenoot(request):
     bedrijf = 'Stadgenoot'
     dict  = allOrderBedrijf(request,bedrijf)
-    return render(request,'displayOrder.html',dict )
+    return render(request,'displayOrderOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_serviceorder')
@@ -1454,7 +1460,7 @@ def zNrOrderStadgenoot(request):
     bedrijf = 'Stadgenoot'
     order = '1'
     dict  = zOrderBedrijfNr(request,bedrijf,order)
-    return render(request,'displayOrder.html',dict )
+    return render(request,'displayOrderOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_serviceorder')
@@ -1500,15 +1506,15 @@ def allCameraBerkhout(request):
     print('allCameraBerkhout')
     bedrijf = 'Berkhout'
     dict = allCameraBedrijf(request, bedrijf)
-    return render(request,'displayCamera.html',dict )
+    return render(request,'displayCameraOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_camera')
 def zCameraBerkhoutNaam(request):
     bedrijf = 'Berkhout'
-    naam = "cam"
+    naam = "a"
     dict = zCameraBedrijfNaam(request,bedrijf,naam)
-    return render(request,'displayCamera.html',dict )
+    return render(request,'displayCameraOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_camera')
@@ -1516,7 +1522,7 @@ def zCameraBerkhoutLocatie(request):
     bedrijf = 'Berkhout'
     locatie = "N"
     dict = zCameraBedrijfLocatie(request,bedrijf,locatie)
-    return render(request,'displayCamera.html',dict )
+    return render(request,'displayCameraOnly.html',dict )
 
 # Stadgenoot Service Order
 @login_required
@@ -1524,7 +1530,7 @@ def zCameraBerkhoutLocatie(request):
 def allOrderBerkhout(request):
     bedrijf = 'Berkhout'
     dict  = allOrderBedrijf(request,bedrijf)
-    return render(request,'displayOrder.html',dict )
+    return render(request,'displayOrderOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_serviceorder')
@@ -1532,7 +1538,7 @@ def zOrderBerkhoutNr(request):
     bedrijf = 'Berkhout'
     order = '1'
     dict  = zOrderBedrijfNr(request,bedrijf,order)
-    return render(request,'displayOrder.html',dict )
+    return render(request,'displayOrderOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_serviceorder')
@@ -1552,7 +1558,7 @@ def zOrderBerkhoutContact (request):
 def allVideoSmit(request):
     bedrijf = 'Smit'
     dict = allVideoBedrijf(request,bedrijf)
-    return render(request,'displayVideo.html',dict )
+    return render(request,'displayVideoPlay.html',dict )
 
 @login_required
 @permission_required('camera.view_video')
@@ -1560,7 +1566,7 @@ def zVideoSmitNaam(request):
     bedrijf = 'Smit'
     naam = 'o'
     dict = zVideoBedrijfNaam(request,bedrijf,naam)
-    return render(request,'displayVideo.html',dict )
+    return render(request,'displayVideoPlay.html',dict )
 
 @login_required
 @permission_required('camera.view_video')
@@ -1568,7 +1574,7 @@ def zVideoSmitLocatie(request):
     bedrijf = 'Smit'
     locatie = 'a'
     dict = zVideoBedrijfLocatie(request,bedrijf,locatie)
-    return render(request,'displayVideo.html',dict )
+    return render(request,'displayVideoPlay.html',dict )
     #return render(request,'zLocatieVideo.html',dict )
 
 #Smit Camera
@@ -1577,16 +1583,16 @@ def zVideoSmitLocatie(request):
 def allCameraSmit(request):
     bedrijf = 'Smit'
     dict = allCameraBedrijf(request,bedrijf)
-    return render(request,'displayCamera.html',dict )
+    return render(request,'displayCameraOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_camera')
 def zCameraSmitNaam(request):
     print ("start zNaamCameraSmit")
     bedrijf = 'Smit'
-    naam = "cam"
+    naam = "a"
     dict = zCameraBedrijfNaam(request,bedrijf,naam)
-    return render(request,'displayCamera.html',dict )
+    return render(request,'displayCameraOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_camera')
@@ -1594,7 +1600,7 @@ def zCameraSmitLocatie(request):
     bedrijf = 'Smit'
     locatie = "o"
     dict = zCameraBedrijfLocatie(request,bedrijf,locatie)
-    return render(request,'displayCamera.html',dict )
+    return render(request,'displayCameraOnly.html',dict )
 
 # Smit Service Order
 @login_required

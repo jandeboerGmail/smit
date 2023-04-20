@@ -2,7 +2,7 @@ import os,time,shutil,re
 from django.utils import timezone
 from datetime import datetime
 from django.core.mail import send_mail, EmailMessage
-#from django.core.validators import validate_email
+from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 
@@ -15,59 +15,18 @@ def validDate(dateIn):
     return  re.match(date_pattern, dateIn) # Returns Match object
 
 # Video security
-
 def checkVideos (aUserId,bedrijf):   
     aUser =  User.objects.get(id=aUserId)     
-    aAccount = Account.objects.get(user_id=aUserId)
-    #print ("Naam, gebied, superuser:" ,aUser.username,aAccount.email2,aAccount.gebied,aUser.is_superuser)
-
     if bedrijf == "*" :
         aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
-        print("All vides")
     else:
         aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
-        print("Selected videos")
-    if aUser.is_superuser:
-        return aVideoList
-    else:
-        validatedVideos = []
-      
-        for aVideo in aVideoList:
-            aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
-            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
-            #print ('Locatie :',aVideo.naam, aLocatie.gebied)
-
-            for gebied in aAccount.gebied.all():
-                #print ("Gebieden van Account: ",gebied)
-                if aLocatie.gebied == gebied:
-                    validatedVideos.append(aVideo)
-                    #print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
-        return validatedVideos
-       
-# Log functions
-def addLogEntry(orderNr,message):
-    aLog = Log()
-    aLog.ordernr = orderNr
-    aLog.message = message
-    aLog.save()
-    return
-
-def checkVideosNaam(aUserId,bedrijf,naam):   
-    aUser =  User.objects.get(id=aUserId)     
-    aAccount = Account.objects.get(user_id=aUserId)
-
-    if bedrijf == "*" :
-        aVideoList = Video.objects.filter(naam__icontains=naam).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
-        print("All videos")
-    else:
-        aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
-        print("Selected videos")
     
     if aUser.is_superuser:
         return aVideoList
     else:
         validatedVideos = []
-      
+        aAccount = Account.objects.get(user_id=aUserId)
         for aVideo in aVideoList:
             aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
             aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
@@ -80,6 +39,77 @@ def checkVideosNaam(aUserId,bedrijf,naam):
                     #print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
         return validatedVideos
        
+def checkVideosNaam(aUserId,bedrijf,naam):   
+    aUser =  User.objects.get(id=aUserId)     
+    if bedrijf == "*" :
+        aVideoList = Video.objects.filter(naam__icontains=naam).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
+    else:
+        aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
+    
+    if aUser.is_superuser:
+        return aVideoList
+    else:
+        validatedVideos = []
+        aAccount = Account.objects.get(user_id=aUserId)
+        for aVideo in aVideoList:
+            aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
+            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+            #print ('Locatie :',aVideo.naam, aLocatie.gebied)
+
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+                if aLocatie.gebied == gebied:
+                    validatedVideos.append(aVideo)
+                    #print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
+        return validatedVideos
+    
+# Cameras security
+def checkCameras(aUserId,bedrijf):   
+    aUser =  User.objects.get(id=aUserId)     
+    if bedrijf == "*" :
+        aCameraList = Camera.objects.order_by('locatie','naam')
+    else:
+         aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).order_by('locatie','naam')
+
+    if aUser.is_superuser:
+        return aCameraList
+    else:
+        validatedCameras = []
+        aAccount = Account.objects.get(user_id=aUserId)
+        for aCamera in aCameraList:
+            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+            #print ('Locatie :',aCamera.naam, aLocatie.gebied)
+
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+                if aLocatie.gebied == gebied:
+                    validatedCameras.append(aCamera)
+                    #print ('Allowed :',aAccount.user, aCamera.naam, aLocatie.gebied)
+        return validatedCameras
+    
+def checkCamerasNaam(aUserId,bedrijf,naam):   
+    aUser =  User.objects.get(id=aUserId)     
+    if bedrijf == "*" :
+        aCameraList = Camera.objects.filter(naam__icontains=naam).order_by('locatie','naam')
+    else:
+        aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).order_by('locatie','naam')
+
+    if aUser.is_superuser:
+        return aCameraList
+    else:
+        validatedCameras = []
+        aAccount = Account.objects.get(user_id=aUserId)
+        for aCamera in aCameraList:
+            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+            #print ('Locatie :',aCamera.naam, aLocatie.gebied)
+
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+                if aLocatie.gebied == gebied:
+                    validatedCameras.append(aCamera)
+                    #print ('Allowed :',aAccount.user, aCamera.naam, aLocatie.gebied)
+        return validatedCameras
+
 # Log functions
 def addLogEntry(orderNr,message):
     aLog = Log()
@@ -87,7 +117,6 @@ def addLogEntry(orderNr,message):
     aLog.message = message
     aLog.save()
     return
-
 
 # Parameter functions
 def getVideoLocation():
@@ -835,7 +864,7 @@ def valid_email_address(email_address):
         validate_email(email_address)
         valid_email = True
 
-    except ValidationError:
+    except ValidationError as e:
         valid_email = False
 
     return valid_email 

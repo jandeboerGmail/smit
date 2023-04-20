@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block head_title %} 
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
   <div class="row align-items-end">
       <h2 class="col-10 smit-h2">Videos</h2> 
-      <h2 id="time-text">This text color will change based on time.</h2>
+      <h2 id="id">This text color will change based on time.</h2>
+      <h2 id="id1">Demo text</h2>
+      <h4 id="id1">Welcome to LinuxHint</h4>
+      <button type="button" onclick="changeColor()">Click to See The Magic</button>
     <div class="col-1 smit-h2">{{aantal}}</div>
   </div>
   <table class="table table-hover table-sm">
@@ -68,4 +72,6 @@
   {% endif %}
 
  </div>
+    <!-- javascript -->
+    <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
 {% endblock %}
