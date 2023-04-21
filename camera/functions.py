@@ -92,6 +92,7 @@ def checkCamerasNaam(aUserId,bedrijf,naam):
     if bedrijf == "*" :
         aCameraList = Camera.objects.filter(naam__icontains=naam).order_by('locatie','naam')
     else:
+        #aList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related("locatie").order_by('locatie','naam')
         aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).order_by('locatie','naam')
 
     if aUser.is_superuser:
@@ -111,7 +112,7 @@ def checkCamerasNaam(aUserId,bedrijf,naam):
         return validatedCameras
     
 # Order Security
-def checkOrders(aUserId,bedrijf):   
+def listOwnOrders(aUserId,bedrijf):   
     aUser =  User.objects.get(id=aUserId)     
     if bedrijf == "*" :
         anOrderList = ServiceOrder.objects.order_by('ordernr','contact')
@@ -126,14 +127,10 @@ def checkOrders(aUserId,bedrijf):
         validatedOrders = []
         aAccount = Account.objects.get(user_id=aUserId)
         for anOrder in anOrderList:
-            aLocatie = Locatie.objects.filter(naam=anOrder.locatie)[0]
-            #print ('Locatie :',aCamera.naam, aLocatie.gebied)
-
-            for gebied in aAccount.gebied.all():
-                #print ("Gebieden van Account: ",gebied)
-                if aLocatie.gebied == gebied:
+            #print ("Order Accounts: ",anOrder.contact,aAccount.user)
+            if anOrder.contact == aAccount.user :
                     validatedOrders.append(anOrder)
-                    #print ('Allowed :',aAccount.user, anOrder.ordernr, aLocatie.gebied)
+                    #print ("Alloeed Order Accounts: ",anOrder.contact,aAccount.user)
         return validatedOrders
     
 def checkOrdersNumber(aUserId,bedrijf,number):   
@@ -152,6 +149,31 @@ def checkOrdersNumber(aUserId,bedrijf,number):
         for anOrder in anOrderList:
             aLocatie = Locatie.objects.filter(naam=anOrder.locatie)[0]
             #print ('Locatie :',aCamera.naam, aLocatie.gebied)
+
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+                if aLocatie.gebied == gebied:
+                    validatedOrders.append(anOrder)
+                    #print ('Allowed :',aAccount.user, anOrder.ordernr, aLocatie.gebied)
+        return validatedOrders
+    
+def checkOrders(aUserId,bedrijf):   
+    aUser =  User.objects.get(id=aUserId)
+  
+    if bedrijf == "*" :
+        anOrderList = ServiceOrder.objects.order_by('ordernr','contact')
+    else:
+        anOrderList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf).select_related("bedrijf").order_by('ordernr','contact')
+        #anOrderList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf,contact__username__icontains=aUser).select_related("bedrijf").order_by('ordernr','contact')
+ 
+    if aUser.is_superuser:
+        return anOrderList
+    else:
+        validatedOrders = []
+        aAccount = Account.objects.get(user_id=aUserId)
+        for anOrder in anOrderList:
+            aLocatie = Locatie.objects.filter(naam=anOrder.locatie)[0]
+            #print ('Locatie :',anOrder.ordernr,aLocatie.gebied)
 
             for gebied in aAccount.gebied.all():
                 #print ("Gebieden van Account: ",gebied)

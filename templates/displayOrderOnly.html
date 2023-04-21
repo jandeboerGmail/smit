@@ -20,13 +20,12 @@
 <table class="table table-hover table-sm">
   <thead class="smit-header">
     <tr>
-      <!-- <th scope="col">#</td> -->
-        <th scope="col">Bedrijf</td>
-        <th scope="col">Contact</td>
-        <th scope="col">OrderNr</td>  
-        <th scope="col">Geopend</td>
-        <th scope="col">Gesloten<td>  
-        <th scope="col">Acties</td>
+      <th scope="col">OrderNr</td> 
+      <th scope="col">Locatie</td>
+      <th scope="col">Contact</td>
+      <th scope="col">Geopend</td>  
+      <th scope="col">Gesloten</td>
+      <th scope="col">Acties</td>
     </div>
     </tr>
   </thead>
@@ -35,12 +34,11 @@
   <tbody">
     {% for order in page_obj %}
     <tr class="smit-line">
-       <td> {{order.bedrijf}} </td>
-       <td> {{order.contact}} </td>
-       <td> {{order.ordernr}} </td>  
-       <td> {{order.opened}} </td>
-       <td> {{order.closed}} </td> 
-       
+       <td>{{order.ordernr}}</td>
+       <td>{{order.locatie.naam}}</td>
+       <td>{{order.contact}}</td>
+       <td>{{order.opened}}</td>
+       <td>{{order.closed}}</td> 
        <td><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></td>
      </tr>
     </tbody>  
