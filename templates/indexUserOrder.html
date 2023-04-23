@@ -16,6 +16,10 @@
     <div class="nav-index">
         <a class="nav-index" href="/camera/zOrderStadgenootNr">Zoek in Geauthorizeerde Orders</a>
     </div>
+    <br>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
+    </div>
 {% endif %}
 {% if request.user|has_group:"Berkhout" %}
     <div class="nav-index">
@@ -28,7 +32,10 @@
     <div class="nav-index">
         <a class="nav-index" href="/camera/zOrderBerkhoutNr">Zoek in Geauthorizeerde Orders</a>
     </div>
-  
+    <br>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
+    </div>
 {% endif %}
 {% if request.user|has_group:"Smit" %}
     <div class="nav-index">
@@ -40,6 +47,10 @@
     </div>
     <div class="nav-index">
         <a class="nav-index" href="/camera/zOrderSmitNr">Zoek in Geauthorizeerde Orders</a>
+    </div>
+    <br>
+    <div class="nav-index">
+        <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
     </div>
 {% endif %}
 {% endblock %}

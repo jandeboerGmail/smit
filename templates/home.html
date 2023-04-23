@@ -94,12 +94,6 @@
               <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
             </li>
             {% endif %}
-        
-            {% if perms.camera.add_serviceorder %}
-            <li class="nav-item">
-              <a class="nav-link text-white" href="/camera/indexUserActie">Actie</a>
-            </li>
-            {% endif %}
         {% endif %}
 
         {% if request.user|has_group:"Berkhout"%}
@@ -118,14 +112,7 @@
               <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
             </li>
             {% endif %}
-        
-            {% if perms.camera.add_serviceorder %}
-            <li class="nav-item">
-              <a class="nav-link text-white" href="/camera/indexUserActie">Actie</a>
-            </li>
-            {% endif %}
-        {% endif %}
-        
+        {% endif %} 
         {% if request.user|has_group:"Smit"%}
          
           <li class="nav-item">
@@ -143,14 +130,7 @@
                 <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
               </li>
             {% endif %}
-      
-            {% if perms.camera.add_serviceorder %}
-              <li class="nav-item">
-                <a class="nav-link text-white" href="/camera/indexUserActie">Actie</a>
-              </li>
-            {% endif %}
-          {% endif %} 
-          
+          {% endif %}     
         {% endif %}
   
           <li class="nav-item">

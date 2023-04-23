@@ -3,6 +3,11 @@
 {% endblock %}
 {% load static %}
 {% block content %}
+
+<!-- Production -->
+<video controls autoplay muted >
+  <source src="{% url 'playVideo' %}">
+</video>
 <!---
 <div class="col-4">
   <img src="{% static 'media/coconut_bars.jpg' %}" alt="One Delicious chocolate coconut bars" />
@@ -11,6 +16,7 @@
   <hr>  
   </div>
 -->
+<!--
 <div class="container">
   <div class="row justify-content-center fw-bold">
     <div class="col">
@@ -23,8 +29,10 @@
       <p>{{video.camera.plaats}}</p> 
     </div>
   </div>
+  {% csrf_token %}
 
-  <div class="col">  
+  <div class="col"> 
+  --> 
     <!--
     Org <video controls autoplay muted src="{% static '/media/' %}{{video.video_link}}" width="1024" height="768"> 
     Tst   <video controls autoplay muted src="/code/video/Berkhout/Dorpstraat/Converted/Order1/voordeur264.mp4"  width="1024" height="768">
@@ -34,6 +42,9 @@
           <video controls autoplay muted src="{{video.video_link}}" type="video/mp4" width="1024" height="768"> 
     -->
 
+    <!--
+
+ 
     <video controls autoplay muted src="{{video.video_link}}"  width="1024" height="768"> 
   
       <p>This is fallback content to display for user agents that do not support the video tag.</p>
@@ -47,7 +58,7 @@
      
   </div>
 </div>
-
+   -->
   <!-- 
   <div class="video-player video ">
     <video

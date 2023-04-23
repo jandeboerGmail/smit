@@ -438,6 +438,14 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     #print ("Video: ",aVideo.naam)
     return aVideo
 
+def updateImageInDB(inFileName,imageName):
+    aVideos  = Video.objects.filter(video_link=inFileName)
+    if aVideos:
+        aVideo = aVideos[0]
+        aVideo.video_image = imageName
+        aVideo.save()
+    return
+
 # Log generic functions
 def addLogEntry(orderNr,message):
     aLog = Log()
@@ -929,22 +937,54 @@ def ListConvertedVideos():
     message = "Listing Migrated Ended"
     addLogEntry(" ", message)
     return
-                 
-def valid_email_address(email_address):
 
+def makeImage(videoFilename,imageName):
+    # ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
+    command = "ffmpeg -i  " + videoFilename  + " -ss 00:00:01.000 -vframes 1 " + imageName
+    result = os.system(command)                   
+    return result
+
+def makeImages():
+    videoPath=getVideoLocation()
+    message = "make preview Images in " + videoPath
+    addLogEntry(" ", message)
+    for root, dirs, files in os.walk(videoPath, topdown=True):
+  
+        for name in files:
+            inFileName = os.path.join(root, name)
+
+            if "Migrated" in inFileName:
+                if (".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName)  and not "._" in inFileName:
+                    after = substring_after(inFileName,"Migrated/") 
+            
+                    if (os.path.getsize(inFileName)) > 0:
+                        request = after[0:after.find("/")]
+
+                        imageName = inFileName
+                        imageName = imageName.replace(".mp4", ".png")
+                        imageName = imageName.replace(".MP4", ".png")
+                        imageName = imageName.replace(".WEBM", ".png")
+                        imageName = imageName.replace(".webm", ".png")
+        
+                        if makeImage(inFileName,imageName):
+                            message = 'Image created from '  + inFileName 
+                            updateImageInDB(inFileName,imageName)
+                        addLogEntry(request,message)
+                                                           
+    message = "Listing Migrated Ended"
+    addLogEntry(" ", message)
+    return
+
+def valid_email_address(email_address):
     try:
         validate_email(email_address)
         valid_email = True
-
     except ValidationError as e:
         valid_email = False
-
     return valid_email 
 
 def SendMail(subject,message,recipentList):
-     
     emailcheckedRecepentList = []
-    
     request = " "
     for emailAdress in recipentList:
         #print ("email_adress :",emailAdress)
@@ -953,7 +993,6 @@ def SendMail(subject,message,recipentList):
             emailcheckedRecepentList.append(emailAdress)       
             errorMessage = 'INFO : Mail send to: '  + emailAdress
             addLogEntry(request,errorMessage) 
-
         else:
             errorMessage = 'INFO : Wrong email Adress Specified: '  + emailAdress
             addLogEntry(request,errorMessage) 

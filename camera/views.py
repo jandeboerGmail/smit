@@ -11,7 +11,7 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 from django.core import mail
 import urllib
-
+ 
 from django.contrib.auth.models import User
 
 import camera.functions as functions
@@ -862,7 +862,7 @@ def deleteVideo(request,pk):
     context = {'item' : video , 'title': 'Verwijder Video'}
     return render(request,template_name,context)
 
-'''
+# production
 def playVideo(request,pk):
     try :
         video = Video.objects.get(id=pk)
@@ -871,8 +871,8 @@ def playVideo(request,pk):
    
     videoFile = open(video.video_link, 'rb')
     #print ('location: ',location)
+    print ('videoFile: ',videoFile)
     return FileResponse(videoFile)
-'''
 
 '''
 @login_required
@@ -897,6 +897,7 @@ def playVideo(request,pk):
     #return ( redirect('indexVideo'))
 '''
 
+''' new
 @login_required
 def playVideo(request,pk):
     try :
@@ -911,7 +912,7 @@ def playVideo(request,pk):
     #video_dict  = {'video' : video }
     return render(request,'../templates/playVideo.html', video_dict )
 
-    '''
+
     template_name = 'playVideo.html'
     context = {'item' : video , 'title': 'Play Video'}
     return render(request,template_name,context)
@@ -1175,6 +1176,11 @@ def actieListConvertedVideo(request):
 @login_required
 def actieInsertConvertedVideos(request):
     functions.insertConvertedVideos()
+    return redirect('indexActies')
+
+@login_required
+def actieMakeImages(request):
+    functions.makeImages()
     return redirect('indexActies')
 
 @login_required
