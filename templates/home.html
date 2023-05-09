@@ -24,9 +24,9 @@
           <ul class="navbar-nav mr-auto">
         
         {% if request.user|has_group:"Admin"%}
-        <li class="nav-item">
-          <a class="nav-link text-black" href="/admin">Admin: </a>
-        </li>
+          <li class="nav-item">
+            <a class="nav-link text-black" href="/admin">Admin: </a>
+          </li>
 
           <li class="nav-item"></li>
             <a class="nav-link text-danger" href="/camera/indexAdres">Adres</a>
@@ -52,14 +52,6 @@
             <a class="nav-link text-danger" href="/camera/indexVideo">Video</a>
           </li>
 
-          <!--
-            {% if perms.camera.can_view_video %}
-          <li class="nav-item">
-            <a class="nav-link text-danger" href="/camera/indexVideo">Video</a>
-    
-          {% endif %}
-          -->
-
           <li class="nav-item">
             <a class="nav-link text-danger" href="/camera/indexOrder">Order</a>
           </li>
@@ -67,77 +59,43 @@
           <li class="nav-item">
             <a class="nav-link text-danger" href="/camera/indexActies">Actie</a>
           </li>
-        
-       
         {% else %}
-      
 
           {% if request.user|has_group:"Stadgenoot"%}
-              <!--
-              <li class="nav-item">
-                <a class="nav-link" href="/camera/indexStadgenoot">Stadgenoot</a>
-              </li>
-              -->
-  
-            <li class="nav-item">
-              <a class="nav-link text-dark" href="/camera/about">SG: </a>
-            </li>
-              
-            {% if perms.camera.view_video %}
-              <li class="nav-item">
-                <a class="nav-link text-white" href="/camera/indexUserVideo">Video</a>
-              </li>
-            {% endif %}
-              
-            {% if perms.camera.view_serviceorder %}
-            <li class="nav-item">
-              <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
-            </li>
-            {% endif %}
-        {% endif %}
-
-        {% if request.user|has_group:"Berkhout"%}
-            <li class="nav-item">
-              <a class="nav-link text-dark" href="/camera/about">Berkhout: </a>
-            </li>
-              
-            {% if perms.camera.view_video %}
-              <li class="nav-item">
-                <a class="nav-link text-white" href="/camera/indexUserVideo">Video</a>
-              </li>
-            {% endif %}
-              
-            {% if perms.camera.view_serviceorder %}
-            <li class="nav-item">
-              <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
-            </li>
-            {% endif %}
-        {% endif %} 
-        {% if request.user|has_group:"Smit"%}
-         
           <li class="nav-item">
-            <a class="nav-link text-dark" href="/camera/about">Smit: </a>
+            <a class="nav-link text-dark" href="/camera/about">SG: </a>
           </li>
-            
-           {% if perms.camera.view_video %}
+           {% endif %}
+
+          {% if request.user|has_group:"Berkhout"%}
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="/camera/about">Berkhout: </a>
+            </li>
+          {% endif %}
+
+          {% if request.user|has_group:"Smit"%}
+            <li class="nav-item">
+              <a class="nav-link text-dark" href="/camera/about">Smit: </a>
+          </li>
+           {% endif %}    
+
+            {% if perms.camera.view_video %}
               <li class="nav-item">
                 <a class="nav-link text-white" href="/camera/indexUserVideo">Video</a>
               </li>
             {% endif %}
-            
+              
             {% if perms.camera.view_serviceorder %}
-              <li class="nav-item">
-                <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
-              </li>
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
+            </li>
             {% endif %}
-          {% endif %}     
-        {% endif %}
-  
+    
           <li class="nav-item">
             <a class="nav-link text-white" href="/camera/about">Over</a>
           </li>
-      
-            <!--
+
+          <!--
             <li class="nav-item {% block nav_secret %}{% endblock %}">
               <a class="nav-link" href="{% url 'secret' %}">{% trans "Secret Page" %}</a>
             </li>
@@ -164,6 +122,7 @@
                 <a class="nav-link text-dark" href="{% url 'two_factor:login' %}">{% trans "Login" %}</a>
               </li>
             {% endif %}
+        {% endif %}
           </ul>
         </div>
       </div>

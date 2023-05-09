@@ -5,82 +5,28 @@
 {% load user_tags %}
 <h2 class='container-fluid smit-h2-center'>Video Sectie</h2>
 <hr>
-{% if request.user|has_group:"Stadgenoot" %}
+{% if not request.user|has_group:"Admin" %}
     <div class="nav-index">
-        <a class="nav-index" href="/camera/allVideoStadgenoot">Alle Video's</a>
+        <a class="nav-index" href="/camera/allVideoUser">Alle Video's</a>
     </div>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zNaamVideo">Zoek op Naam (Org)</a>
-    </div>
+        <a class="nav-index" href="/camera/zNaamVideoUser">Zoek op Naam</a>
+    </div>   
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zVideoStadgenootNaam">Zoek op Naam</a>
+        <a class="nav-index" href="/camera/zLocatieVideoUser">Zoek op Locatie</a>
     </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zVideoStadgenootLocatie">Zoek op Locatie</a>
-    </div>
-
     <br>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/allCameraStadgenoot">Alle Camera's</a>
+        <a class="nav-index" href="/camera/allCameraUser">Alle Camera's</a>
     </div>
+    
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zCameraStadgenootNaam">Zoek op Naam</a>
+        <a class="nav-index" href="/camera/zNaamCameraUer">Zoek op Naam</a>
     </div>
+    <!--
     <div class="nav-index">
         <a class="nav-index" href="/camera/zCameraStadgenootLocaie">Zoek op Locatie</a>
     </div>
+    -->
 {% endif %}
-
-{% if request.user|has_group:"Berkhout" %}
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/allVideoBerkhout">Alle Video's</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zNaamVideo">Zoek op Naam (Org)</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zVideoBerkhoutNaam">Zoek op Naam</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zVideoBerkhoutLocatie">Zoek op Locatie</a>
-    </div>
-
-    <br>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/allCameraBerkhout">Alle Camera's</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zCameraBerkhoutNaam">Zoek op Naam</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zCameraBerkhoutLocatie">Zoek op Locatie</a>
-    </div>
-{% endif %}
-
-{% if request.user|has_group:"Smit" %}
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/allVideoSmit">Alle Video's</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zNaamVideo">Zoek op Naam (Org)</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zVideoSmitNaam">Zoek op Naam</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zVideoSmitLocatie">Zoek op Locatie</a>
-    </div>
-
-    <br>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/allCameraSmit">Alle Camera's</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zCameraSmitNaam">Zoek op Naam</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zCameraSmitLocatie">Zoek op Locatie</a>
-    </div>
-{% endif %}
-
 {% endblock %}
