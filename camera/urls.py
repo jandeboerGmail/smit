@@ -40,13 +40,14 @@ urlpatterns = [
 #User
     path('indexUserVideo',views.indexUserVideo,name='indexUserVideo'),
     path('indexUserOrder',views.indexUserOrder,name='indexUserOrder'),
-    path('indexUserActie',views.indexUserActie,name='indexUserActie'),
+   
     path('allVideoUser',views.allVideoUser,name='allVideoUser'),
     path('zNaamVideoUser',views.zNaamVideoUser,name='zNaamVideoUser'),
     path('zLocatieVideoUser',views.zLocatieVideoUser,name='zLocatieVideoUser'),
 
     path('allCameraUser',views.allCameraUser,name='allCameraUser'),
     path('zNaamCameraUser',views.zNaamCameraUser,name='zNaamCameraUser'),
+    path('zLocatieCameraUser',views.zLocatieCameraUser,name='zLocatieCameraUser'),
 
 #stadgenoot
     path('allOrderStadgenoot',views.allOrderStadgenoot,name='allOrderStadgenoot'),
@@ -54,7 +55,6 @@ urlpatterns = [
     path('zOwnOrderStadgenoot',views.zOwnOrderStadgenoot,name='zOwnOrderStadgenoot'),
 
 #Berkhout
-    #path('zVideoBerkhoutOrder',views.zVideoBerkhoutOrder,name='zVideoBerkhoutOrder'),
     path('allOrderBerkhout',views.allOrderBerkhout,name='allOrderBerkhout'),
     path('zOrderBerkhoutNr',views.zOrderBerkhoutNr,name='zOrderBerkhoutNr'),
     path('zOwnOrderBerkhout',views.zOwnOrderBerkhout,name='zOwnOrderBerkhout'),
@@ -108,12 +108,11 @@ urlpatterns = [
 
 # Video
     path('allVideo/',views.allVideo,name='allVideo'),
+    path('allowedVideo/',views.allowedVideo,name='allowedVideo'),
 
     path('allVideoStadgenoot/',views.allVideoStadgenoot,name='allVideoStadgenoot'),
     path('allVideoSmit/',views.allVideoSmit,name='allVideoSmit'),
     path('allVideoBerkhout/',views.allVideoBerkhout,name='allVideoBerkhout'),
-
-    path('zVideoNaamSmit/',views.zVideoNaamSmit,name='zVideoNaamSmit'),
 
     path('zNaamVideo/',views.zNaamVideo,name='zNaamVideo'),
     path('zOrderVideo/',views.zOrderVideo,name='zOrderVideo'),
@@ -125,9 +124,6 @@ urlpatterns = [
     path('deleteVideo/<int:pk>',views.deleteVideo,name='deleteVideo'),
 
     path('playVideo/<int:pk>',views.playVideo,name='playVideo'),
-
-    path('allowedVideo/',views.allowedVideo,name='allowedVideo'),
-
 
 # Order
     path('allOrder/',views.allOrder,name='allOrder'),

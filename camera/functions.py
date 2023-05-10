@@ -91,7 +91,7 @@ def checkVideosLocatie(aUserId,bedrijf,locatie):
         for aVideo in aVideoList:
             aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
             aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
-            print ('Locatie :',aVideo.naam, aLocatie.gebied)
+            #print ('Locatie :',aVideo.naam, aLocatie.gebied)
 
             for gebied in aAccount.gebied.all():
                 #print ("Gebieden van Account: ",gebied)
@@ -106,7 +106,7 @@ def checkCameras(aUserId,bedrijf):
     if bedrijf == "*" :
         aCameraList = Camera.objects.order_by('locatie','naam')
     else:
-         aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).order_by('locatie','naam')
+        aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).order_by('locatie','naam')
 
     if aUser.is_superuser:
         return aCameraList
@@ -124,14 +124,39 @@ def checkCameras(aUserId,bedrijf):
                     #print ('Allowed :',aAccount.user, aCamera.naam, aLocatie.gebied)
         return validatedCameras
     
-def checkCamerasNaam(aUserId,bedrijf,naam):   
-    aUser =  User.objects.get(id=aUserId)     
+def checkCamerasNaam(aUserId,bedrijf,naam):    
+    aUser =  User.objects.get(id=aUserId) 
+      
     if bedrijf == "*" :
         aCameraList = Camera.objects.filter(naam__icontains=naam).order_by('locatie','naam')
     else:
         #aList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related("locatie").order_by('locatie','naam')
         aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).order_by('locatie','naam')
+       
+    if aUser.is_superuser:
+        return aCameraList
+    else:
+        validatedCameras = []
+        aAccount = Account.objects.get(user_id=aUserId)
+        for aCamera in aCameraList:
+            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+            #print ('Locatie :',aCamera.naam, aLocatie.gebied)
 
+            for gebied in aAccount.gebied.all():
+                #print ("Gebieden van Account: ",gebied)
+                if aLocatie.gebied == gebied:
+                    validatedCameras.append(aCamera)
+                    # print ('Allowed :',aAccount.user, aCamera.naam, aLocatie.gebied)
+        return validatedCameras
+    
+def checkCamerasLocatie(aUserId,bedrijf,locatie):   
+    aUser =  User.objects.get(id=aUserId)   
+        
+    if bedrijf == "*" :
+        aCameraList = Camera.objects.filter(locatie__naam__icontains=locatie).select_related("locatie").order_by('locatie','naam')
+    else:
+        aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,locatie__naam__icontains=locatie).select_related("locatie").order_by('locatie','naam')
+        
     if aUser.is_superuser:
         return aCameraList
     else:
