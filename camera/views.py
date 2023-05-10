@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required, permission_required
+from django.views.decorators.csrf import csrf_protect 
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, FileResponse, HttpResponseRedirect, Http404
 from django.conf import settings
@@ -55,52 +56,62 @@ def serve_video(request, video_id):
 
 #index
 @login_required
+@csrf_protect
 def index(request):
     # return HttpResponse("Hello, world. You're at the Camera index.")
     # return render(request,'index.html',{})
     return render(request,'index.html',{})
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_bedrijf')
 def indexBedrijf(request):
     return render(request,'indexBedrijf.html', {} )
 
+@csrf_protect
 @login_required
 @permission_required('camera.view_adress')
 def indexAdres(request):
     return render(request,'indexAdres.html', {} )
 
+@csrf_protect
 @login_required
 @permission_required('camera.view_gebied')
 def indexGebied(request):
     return render(request,'indexGebied.html', {} )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_locatie')
 def indexLocatie(request):
     return render(request,'indexLocatie.html', {} )
 
+@csrf_protect
 @login_required
 @permission_required('camera.view_camera')
 def indexCamera(request):
     return render(request,'indexCamera.html', {} )
 
 @login_required
+@csrf_protect 
 @permission_required('camera.view_video')
 def indexVideo(request):
     return render(request,'indexVideo.html', {} )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def indexOrder(request):
     return render(request,'indexOrder.html', {} )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_log')
 def indexLog(request):
     return render(request,'indexLog.html', {} )
 
 @login_required
+@csrf_protect
 def indexActies(request):
     return render(request,'indexActies.html', {} )
 
@@ -117,6 +128,7 @@ def indexUserOrder(request):
 
 # --- Adress
 @login_required
+@csrf_protect
 @permission_required('camera.view_adress')
 def allAdress(request):
     adress_list = Adress.objects.order_by('plaats','naam')
@@ -130,6 +142,7 @@ def allAdress(request):
     return render(request,'displayAdress.html',adress_dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_adress')
 def zNaamAdress (request):
     query = request.GET.get('q','')
@@ -143,6 +156,7 @@ def zNaamAdress (request):
     return render(request,'zNaamAdress.html', adress_dict ) 
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_adress')
 def zPlaatsAdress (request):
     query = request.GET.get('q','')
@@ -162,9 +176,11 @@ def zPlaatsAdress (request):
 
 #CRUD
 @login_required
+@csrf_protect
 @permission_required('camera.add_adress')
 def createAdress(request):
     form = AdressForm(request.POST or None)
+
     if form.is_valid():
         form.save()
         form = AdressForm()
@@ -174,6 +190,7 @@ def createAdress(request):
 
 
 @login_required
+@csrf_protect
 @permission_required('camera.change_adress')
 def editAdress(request,pk):
         try :
@@ -193,6 +210,7 @@ def editAdress(request,pk):
         return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.delete_adress')
 def deleteAdress(request,pk):
         try :
@@ -211,6 +229,7 @@ def deleteAdress(request,pk):
 
 # --- Bedrijf
 @login_required
+@csrf_protect
 @permission_required('camera.view_bedrijf')
 def allBedrijf(request):
     bedrijven_list = Bedrijf.objects.order_by('naam')
@@ -220,6 +239,7 @@ def allBedrijf(request):
 
 # Zoek
 @login_required
+@csrf_protect
 @permission_required('camera.view_bedrijf')
 def zNaamBedrijf (request):
     query = request.GET.get('q','')
@@ -235,6 +255,7 @@ def zNaamBedrijf (request):
     return render(request,'zNaamBedrijf.html', bedrijf_dict ) 
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_bedrijf')
 def zPlaatsBedrijf(request):
     query = request.GET.get('q','')
@@ -250,6 +271,7 @@ def zPlaatsBedrijf(request):
 
 #Export
 @login_required
+@csrf_protect
 @permission_required('camera.view_bedrijf')
 def exportBedrijf(request):
         response = HttpResponse(content_type='application/ms-excel')
@@ -284,6 +306,7 @@ def exportBedrijf(request):
 
 #CRUD
 @login_required
+@csrf_protect
 @permission_required('camera.add_bedrijf')
 def createBedrijf(request):
     form = BedrijfForm(request.POST or None)
@@ -295,6 +318,7 @@ def createBedrijf(request):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.change_bedrijf')
 def editBedrijf(request,pk):
         try :
@@ -314,6 +338,7 @@ def editBedrijf(request,pk):
         return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.delete_bedrijf')
 def deleteBedrijf(request,pk):
         try :
@@ -332,6 +357,7 @@ def deleteBedrijf(request,pk):
 
 # --- Gebied -----------------
 @login_required
+@csrf_protect
 @permission_required('camera.view_gebied')
 def allGebied(request):
     aList = Gebied.objects.order_by('bedrijf','gebiedNr')
@@ -346,6 +372,7 @@ def allGebied(request):
 
 # Export
 @login_required
+@csrf_protect
 @permission_required('camera.view_gebied')
 def exportGebied(request):
         '''
@@ -391,6 +418,7 @@ def createGebied(request):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.change_gebied')
 def editGebied(request,pk):
     try :
@@ -410,6 +438,7 @@ def editGebied(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.delete_gebied')
 def deleteGebied(request,pk):
     try :
@@ -428,6 +457,7 @@ def deleteGebied(request,pk):
                   
 # --- Locatie -----------------
 @login_required
+@csrf_protect
 @permission_required('camera.view_locatie')
 def allLocatie(request):
     locatie_list = Locatie.objects.order_by('bedrijf','adres')
@@ -442,6 +472,7 @@ def allLocatie(request):
 
 # Zoek
 @login_required
+@csrf_protect
 @permission_required('camera.view_locatie')
 def zNaamLocatie (request):
     query = request.GET.get('q','')
@@ -456,6 +487,7 @@ def zNaamLocatie (request):
 
 # Export
 @login_required
+@csrf_protect
 @permission_required('camera.view_locatie')
 def exportLocatie(request):
         response = HttpResponse(content_type='application/ms-excel')
@@ -488,6 +520,7 @@ def exportLocatie(request):
 
 #CRUD
 @login_required
+@csrf_protect
 @permission_required('camera.add_locatie')
 def createLocatie(request):
     form = LocatieForm(request.POST or None)
@@ -499,6 +532,7 @@ def createLocatie(request):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.change_locatie')
 def editLocatie(request,pk):
     try :
@@ -518,6 +552,7 @@ def editLocatie(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.delete_locatie')
 def deleteLocatie(request,pk):
     try :
@@ -536,6 +571,7 @@ def deleteLocatie(request,pk):
 
 # --- Camera -----------------
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def allCamera(request):
     camera_list = Camera.objects.order_by('locatie','naam')
@@ -548,9 +584,9 @@ def allCamera(request):
     camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'displayCamera.html',camera_dict )
     
-
 # Zoek
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def zNaamCamera (request):
     query = request.GET.get('q','')
@@ -564,6 +600,7 @@ def zNaamCamera (request):
     return render(request,'zNaamCamera.html', camera_dict ) 
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def zLocatieCamera (request):
     query = request.GET.get('q','')
@@ -579,6 +616,7 @@ def zLocatieCamera (request):
 
 # Export
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def exportCamera(request):
         response = HttpResponse(content_type='application/ms-excel')
@@ -611,6 +649,7 @@ def exportCamera(request):
 
 #CRUD
 @login_required
+@csrf_protect
 @permission_required('camera.add_camera')
 def createCamera(request):
     form = CameraForm(request.POST or None)
@@ -622,6 +661,7 @@ def createCamera(request):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.change_camera')
 def editCamera(request,pk):
     try :
@@ -643,6 +683,7 @@ def editCamera(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.delete_camera')
 def deleteCamera(request,pk):
     try :
@@ -670,6 +711,7 @@ def play_external_video(request):
 '''
 
 @login_required
+@csrf_protect 
 @permission_required('camera.view_video')
 def allVideo(request):
     video_list = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
@@ -683,6 +725,7 @@ def allVideo(request):
     return render(request,'displayVideo.html',video_dict )
 
 @login_required
+@csrf_protect 
 @permission_required('camera.view_video')
 def allowedVideo(request):
     currentUser = request.user
@@ -699,18 +742,18 @@ def allowedVideo(request):
     return render(request,'displayAllowedVideo.html',video_dict )
 
 # Zoek
-
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def zNaamVideo(request):
     currentUser = request.user
     bedrijf = functions.isFromBedrijf(currentUser)
     query = request.GET.get('q','')
     dict = zVideoBedrijfNaam(request,bedrijf,query)
-    #return render(request,'zVideoNaamSmit.html',dict )
     return render(request,'zNaamVideo.html',dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def zOrderVideo (request):
     query = request.GET.get('q','')
@@ -729,6 +772,7 @@ def zOrderVideo (request):
     return render(request,'zOrderVideo.html', video_dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def zCameraVideo (request):
     query = request.GET.get('q','')
@@ -750,6 +794,7 @@ def zCameraVideo (request):
     return render(request,'zCameraVideo.html', video_dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def zLocatieVideo (request):
     query = request.GET.get('q','')    
@@ -778,6 +823,7 @@ def video_player1(request):
 
 # Export
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def exportVideo(request):
         response = HttpResponse(content_type='application/ms-excel')
@@ -810,6 +856,7 @@ def exportVideo(request):
 
 #CRUD
 @login_required
+@csrf_protect
 @permission_required('camera.add_video')
 def createVideo(request):
     form = VideoForm(request.POST or None)
@@ -821,6 +868,7 @@ def createVideo(request):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.edit_video')
 def editVideo(request,pk):
     try :
@@ -840,6 +888,7 @@ def editVideo(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.delete_video')
 def deleteVideo(request,pk):
     try :
@@ -857,16 +906,22 @@ def deleteVideo(request,pk):
     return render(request,template_name,context)
 
 # production
+@login_required
+@csrf_protect
+@permission_required('camera.view_video')
 def playVideo(request,pk):
     try :
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
         return redirect('about')
    
-    videoFile = open(video.video_link, 'rb')
-    #print ('location: ',location)
-    print ('videoFile: ',videoFile)
-    return FileResponse(videoFile)
+    if functions.videoIsAllowed(request,video):
+        videoFile = open(video.video_link, 'rb')
+        #print ('location: ',location)
+        print ('videoFile: ',videoFile)
+        return FileResponse(videoFile)
+    else:
+        return render(request,'notAllowed.html',{})
 
 '''
 @login_required
@@ -915,6 +970,7 @@ def playVideo(request,pk):
 
 # -----Orders ---
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def allOrder(request):
     list = ServiceOrder.objects.order_by('bedrijf','contact','ordernr')
@@ -928,6 +984,7 @@ def allOrder(request):
     return render(request,'displayOrder.html',dict )
 
 @login_required
+@csrf_protect
 def zNrOrder (request):
     query = request.GET.get('q','')
 
@@ -946,6 +1003,7 @@ def zNrOrder (request):
     return render(request,'zNrOrder.html', dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def zContactOrder (request):
     query = request.GET.get('q','')
@@ -966,6 +1024,7 @@ def zContactOrder (request):
 
 # Export
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def exportOrder(request):
         response = HttpResponse(content_type='application/ms-excel')
@@ -998,6 +1057,7 @@ def exportOrder(request):
 
 #CRUD
 @login_required
+@csrf_protect
 @permission_required('camera.add_serviceorder')
 def createOrder(request):
     form = OrderForm(request.POST or None)
@@ -1009,6 +1069,7 @@ def createOrder(request):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.change_serviceorder')
 def editOrder(request,pk):
     try :
@@ -1028,6 +1089,7 @@ def editOrder(request,pk):
     return render(request,template_name,context)
 
 @login_required
+@csrf_protect
 @permission_required('camera.delete_serviceorder')
 def deleteOrder(request,pk):
     try :
@@ -1046,6 +1108,7 @@ def deleteOrder(request,pk):
 
 # ---- Log ---------------
 @login_required
+@csrf_protect
 @permission_required('camera.view_log')
 def allLog(request):
     log_list = Log.objects.order_by('-id')
@@ -1060,6 +1123,7 @@ def allLog(request):
 
 # Zoek
 @login_required
+@csrf_protect
 @permission_required('camera.view_log')
 def zOrderLog (request):
     query = request.GET.get('q','')
@@ -1075,6 +1139,7 @@ def zOrderLog (request):
 
 # Export
 @login_required
+@csrf_protect
 @permission_required('camera.view_log')
 def exportLog(request):
         response = HttpResponse(content_type='application/ms-excel')
@@ -1107,6 +1172,7 @@ def exportLog(request):
 
 # ---- Aktie ---------------
 @login_required
+@csrf_protect
 def actieDisplayConversionStatus(request):
     if functions.getRunningStatus():
         message  = "Running"
@@ -1119,6 +1185,7 @@ def actieDisplayConversionStatus(request):
     #return redirect('indexActies')
 
 @login_required
+@csrf_protect
 def actieToggleConversionStatus(request):
     if functions.getRunningStatus():
         functions.setRunningStatus(False)
@@ -1130,11 +1197,13 @@ def actieToggleConversionStatus(request):
     #return redirect('indexActies')
 
 @login_required
+@csrf_protect
 def actieGetVideoLocation(request):
     html = "<html><body><strong><center>Video location: %s </center></strong></body></html>" % functions.getVideoLocation()
     return HttpResponse(html)
 
 @login_required
+@csrf_protect
 def actieConvertVideo(request):
     if functions.getRunningStatus() == False:
         functions.ConvertingVideos()
@@ -1144,6 +1213,7 @@ def actieConvertVideo(request):
     return HttpResponse(html)
 
 @login_required
+@csrf_protect
 def actieConvertVideoOrder(request):
     if functions.getRunningStatus() == False:
         order = functions.getOrder()
@@ -1154,6 +1224,7 @@ def actieConvertVideoOrder(request):
     return HttpResponse(html)
 
 @login_required
+@csrf_protect
 def actieListVideo(request):
     functions.ListVideos()
     html = "<html><body><strong><center>Listing video's Done.. (check logs) </center></strong></body></html>" 
@@ -1161,6 +1232,7 @@ def actieListVideo(request):
     #return redirect('indexActies')
 
 @login_required
+@csrf_protect
 def actieListConvertedVideo(request):
     functions.ListConvertedVideos()
     html = "<html><body><strong><center>Listing Converted video's Done.. (check logs) </center></strong></body></html>" 
@@ -1168,16 +1240,19 @@ def actieListConvertedVideo(request):
     #return redirect('indexActies')
     
 @login_required
+@csrf_protect
 def actieInsertConvertedVideos(request):
     functions.insertConvertedVideos()
     return redirect('indexActies')
 
 @login_required
+@csrf_protect
 def actieMakeImages(request):
     functions.makeImages()
     return redirect('indexActies')
 
 @login_required
+@csrf_protect
 def actieAddVideo(request):
     videoLink = "Default/earth.mp4"
 
@@ -1202,6 +1277,7 @@ def actieAddVideo(request):
     return redirect('indexActies')
 
 @login_required
+@csrf_protect
 def actieSendMail(request):
     recipients = ['jandeboer@gmail.com','eenwest@gmail.com']
   
@@ -1210,12 +1286,14 @@ def actieSendMail(request):
     #return redirect('redirect to a new page')
 
 @login_required
+@csrf_protect
 def actieDisplayPermissions(request):
     context  = {}
     return render(request,'displayPermissions.html',context )
 
 # -------  Generic Bedrijf / User  ------
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def allVideoBedrijf(request,bedrijf):
     currentUser = request.user
@@ -1232,6 +1310,7 @@ def allVideoBedrijf(request,bedrijf):
     return dict
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def zVideoBedrijfNaam(request,bedrijf,naam):
     if naam:
@@ -1249,6 +1328,7 @@ def zVideoBedrijfNaam(request,bedrijf,naam):
     return dict
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def zVideoBedrijfLocatie(request,bedrijf,locatie):
     print ('zVideoBedrijfLocatie: ', bedrijf,locatie)
@@ -1271,6 +1351,7 @@ def zVideoBedrijfLocatie(request,bedrijf,locatie):
 
 #Generic Camera
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def allCameraBedrijf(request,bedrijf):
     #print('allCameraBedrijf: ', bedrijf)
@@ -1289,6 +1370,7 @@ def allCameraBedrijf(request,bedrijf):
     return dict
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def zCameraBedrijfNaam(request,bedrijf,naam):
     #print('zCameraBedrijfNaam: ',bedrijf,naam)
@@ -1306,6 +1388,7 @@ def zCameraBedrijfNaam(request,bedrijf,naam):
     return dict
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def zCameraBedrijfLocatie(request,bedrijf,locatie):
     #print('zCameraBedrijfLocatie: ',bedrijf,locatie)
@@ -1325,6 +1408,7 @@ def zCameraBedrijfLocatie(request,bedrijf,locatie):
 
 # Generic Service Order
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def allOrderBedrijf(request,bedrijf):
     currentUser = request.user
@@ -1342,6 +1426,7 @@ def allOrderBedrijf(request,bedrijf):
     return dict
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def zOrderBedrijfNr(request,bedrijf,order):
     currentUser = request.user
@@ -1358,6 +1443,7 @@ def zOrderBedrijfNr(request,bedrijf,order):
     return dict
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def zOwnOrderBedrijf(request,bedrijf):
     currentUser = request.user
@@ -1376,12 +1462,16 @@ def zOwnOrderBedrijf(request,bedrijf):
     return dict
 # end Generic
 
+@login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def allVideoStadgenoot(request):
     bedrijf = 'Stadgenoot'
     dict = allVideoBedrijf(request,bedrijf)
     return render(request,'displayVideoPlay.html',dict )
+
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def allVideoBerkhout(request):
     bedrijf = 'Berkhout'
@@ -1389,6 +1479,7 @@ def allVideoBerkhout(request):
     return render(request,'displayVideoPlay.html',dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def allVideoSmit(request):
     bedrijf = 'Berkhout'
@@ -1396,6 +1487,7 @@ def allVideoSmit(request):
     return render(request,'displayVideoPlay.html',dict )
     
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def allVideoSmit(request):
     bedrijf = 'Smit'
@@ -1404,6 +1496,7 @@ def allVideoSmit(request):
 
 ###  User video
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def allVideoUser(request):
     currentUser = request.user
@@ -1412,6 +1505,7 @@ def allVideoUser(request):
     return render(request,'displayVideoPlay.html',dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def zNaamVideoUser(request):
     currentUser = request.user
@@ -1421,6 +1515,7 @@ def zNaamVideoUser(request):
     return render(request,'zNaamVideoUser.html',dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_video')
 def zLocatieVideoUser(request):
     currentUser = request.user
@@ -1431,6 +1526,7 @@ def zLocatieVideoUser(request):
 
 ###  User video
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def allCameraUser(request):
     currentUser = request.user
@@ -1439,6 +1535,7 @@ def allCameraUser(request):
     return render(request,'displayCameraOnly.html',dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def zNaamCameraUser(request):
     currentUser = request.user
@@ -1448,6 +1545,7 @@ def zNaamCameraUser(request):
     return render(request,'zNaamCameraUser.html',dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_camera')
 def zLocatieCameraUser(request):
     currentUser = request.user
@@ -1458,6 +1556,7 @@ def zLocatieCameraUser(request):
 
 # Service Order
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def allOrderUser(request):
     currentUser = request.user
@@ -1466,6 +1565,7 @@ def allOrderUser(request):
     return render(request,'displayOrderOnly.html',dict )
 
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def zOrderUserNr(request):
     currentUser = request.user
@@ -1475,6 +1575,7 @@ def zOrderUserNr(request):
     return render(request,'zOrderUserNr.html', dict )
     
 @login_required
+@csrf_protect
 @permission_required('camera.view_serviceorder')
 def zOwnOrderUser(request):
     currentUser = request.user

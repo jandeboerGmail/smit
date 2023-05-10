@@ -5,6 +5,7 @@
 {% block content %}
 
 <!-- Production -->
+{% csrf_token %}
 <video controls autoplay muted >
   <source src="{% url 'playVideo' %}">
 </video>

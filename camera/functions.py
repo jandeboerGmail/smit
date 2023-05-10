@@ -24,6 +24,27 @@ def isFromBedrijf(aUser):
         result= 'admin'
     return result
 
+def videoIsAllowed(request,aVideo):
+    #print('videoIsAllowed')
+    currentUser = request.user
+    aUser =  User.objects.get(id=currentUser.id)
+
+    if aUser.is_superuser:
+        return True
+    else:
+        result = False
+        aAccount = Account.objects.get(user_id=currentUser.id)
+        aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
+        aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+        #print ('Locatie :',aVideo.naam, aLocatie.gebied)
+
+        for gebied in aAccount.gebied.all():
+            #print ("Gebieden van Account: ",gebied)
+            if not result and aLocatie.gebied == gebied:
+                result = True
+                # print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
+        return result
+        
 def checkVideos (aUserId,bedrijf):  
     aUser =  User.objects.get(id=aUserId)     
     if bedrijf == "admin" :

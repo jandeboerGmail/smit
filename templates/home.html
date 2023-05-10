@@ -21,7 +21,7 @@
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="navbar-nav mr-auto">
+        <ul class="navbar-nav mr-auto">
         
         {% if request.user|has_group:"Admin"%}
           <li class="nav-item">
@@ -76,7 +76,7 @@
           {% if request.user|has_group:"Smit"%}
             <li class="nav-item">
               <a class="nav-link text-dark" href="/camera/about">Smit: </a>
-          </li>
+            </li>
            {% endif %}    
 
             {% if perms.camera.view_video %}
@@ -93,15 +93,15 @@
     
           <li class="nav-item">
             <a class="nav-link text-white" href="/camera/about">Over</a>
-          </li>
-
+          </li> 
+         </ul>
+        {% endif %}
           <!--
             <li class="nav-item {% block nav_secret %}{% endblock %}">
               <a class="nav-link" href="{% url 'secret' %}">{% trans "Secret Page" %}</a>
             </li>
           -->
-          </ul>
-
+          
           <ul class="navbar-nav mlrauto">
             {% if user.is_authenticated %}
               <li class="nav-item">
@@ -121,9 +121,8 @@
               <li class="nav-item">
                 <a class="nav-link text-dark" href="{% url 'two_factor:login' %}">{% trans "Login" %}</a>
               </li>
-            {% endif %}
-        {% endif %}
           </ul>
+          {% endif %}
         </div>
       </div>
   </nav>
