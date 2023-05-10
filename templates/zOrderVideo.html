@@ -22,16 +22,11 @@
       <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
     </div>
 
-    <!---
-    <div class="col-1">
-      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
-    </div>
-  -->
-
   </div>
 </form>
 
 {% if query %}
+{% if page_obj %}
   <table class="table table-hover table-sm">
     <thead class="smit-header">
       <tr>
@@ -45,7 +40,7 @@
         <th scope="col">Acties</td>
       </tr>
     </thead>
-    {% if page_obj %}
+  
     <tbody>
       {% for video in page_obj %}
       <tr class="smit-line">

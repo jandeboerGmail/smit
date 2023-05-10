@@ -5,52 +5,19 @@
 {% load user_tags %}
 <h2 class='container-fluid smit-h2-center'>Order Sectie</h2>
 <hr>
-{% if request.user|has_group:"Stadgenoot" %}
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zOwnOrderStadgenoot">Mijn Orders</a>
+        <a class="nav-index" href="/camera/zOwnOrderUser">Mijn Orders</a>
     </div>
     <br>
     <div class="nav-index">
-          <a class="nav-index" href="/camera/allOrderStadgenoot">Geauthorizeerde Orders</a>
+          <a class="nav-index" href="/camera/allOrderUser">Geauthorizeerde Orders</a>
     </div>
     <div class="nav-index">
-        <a class="nav-index" href="/camera/zOrderStadgenootNr">Zoek in Geauthorizeerde Orders</a>
-    </div>
-    <br>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
-    </div>
-{% endif %}
-{% if request.user|has_group:"Berkhout" %}
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zOwnOrderBerkhout">Mijn Orders</a>
-    </div>
-    <br>
-    <div class="nav-index">
-          <a class="nav-index" href="/camera/allOrderBerkhout">Geauthorizeerde Orders</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zOrderBerkhoutNr">Zoek in Geauthorizeerde Orders</a>
+        <a class="nav-index" href="/camera/zOrderUserNr">Zoek in Geauthorizeerde Orders</a>
     </div>
     <br>
     <div class="nav-index">
         <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
     </div>
-{% endif %}
-{% if request.user|has_group:"Smit" %}
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zOwnOrderSmit">Mijn Orders</a>
-    </div>
-    <br>
-    <div class="nav-index">
-          <a class="nav-index" href="/camera/allOrderSmit">Geauthorizeerde Orders</a>
-    </div>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/zOrderNrSmit">Zoek in Geauthorizeerde Orders</a>
-    </div>
-    <br>
-    <div class="nav-index">
-        <a class="nav-index" href="/camera/createOrder">Voeg Service Order toe</a>
-    </div>
-{% endif %}
+
 {% endblock %}

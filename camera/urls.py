@@ -49,20 +49,9 @@ urlpatterns = [
     path('zNaamCameraUser',views.zNaamCameraUser,name='zNaamCameraUser'),
     path('zLocatieCameraUser',views.zLocatieCameraUser,name='zLocatieCameraUser'),
 
-#stadgenoot
-    path('allOrderStadgenoot',views.allOrderStadgenoot,name='allOrderStadgenoot'),
-    path('zOrderStadfgenootNr',views.zOrderStadgenootNr,name='zOrderStadgenootNr'),
-    path('zOwnOrderStadgenoot',views.zOwnOrderStadgenoot,name='zOwnOrderStadgenoot'),
-
-#Berkhout
-    path('allOrderBerkhout',views.allOrderBerkhout,name='allOrderBerkhout'),
-    path('zOrderBerkhoutNr',views.zOrderBerkhoutNr,name='zOrderBerkhoutNr'),
-    path('zOwnOrderBerkhout',views.zOwnOrderBerkhout,name='zOwnOrderBerkhout'),
-
-#Smit
-    path('allOrderSmit',views.allOrderSmit,name='allOrderSmit'),
-    path('zOrderNrSmit',views.zOrderNrSmit,name='zOrderNrSmit'),
-    path('zOwnOrderSmit',views.zOwnOrderSmit,name='zOwnOrderSmit'),
+    path('allOrderUser',views.allOrderUser,name='allOrderUser'),
+    path('zOrderUserNr',views.zOrderUserNr,name='zOrderUserNr'),
+    path('zOwnOrderUser',views.zOwnOrderUser,name='zOwnOrderUser'),
 
 # Adresss
     path('allAdress/',views.allAdress,name='allAdress'),

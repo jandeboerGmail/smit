@@ -26,6 +26,7 @@
 </form>
 
 {% if query %} 
+{% if results %}
 <table class="table table-hover table-sm">
   <thead class="smit-header">
       <tr>
@@ -38,7 +39,7 @@
       </div>
       </tr>
     </thead>
-    {% if results %}
+
     <tbody>
       {% for adress in results %}
       <tr class="smit-line">

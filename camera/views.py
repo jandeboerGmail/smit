@@ -687,7 +687,7 @@ def allVideo(request):
 def allowedVideo(request):
     currentUser = request.user
     #print ('current User: ', currentUser.id,currentUser.username)
-    list = functions.checkVideos (currentUser.id,"*")
+    list = functions.checkVideos (currentUser.id,"admin")
     # aantal =  list.count
     aantal = 0
     for aItem in list:
@@ -1273,7 +1273,7 @@ def zVideoBedrijfLocatie(request,bedrijf,locatie):
 @login_required
 @permission_required('camera.view_camera')
 def allCameraBedrijf(request,bedrijf):
-    print('allCameraBedrijf: ', bedrijf)
+    #print('allCameraBedrijf: ', bedrijf)
     currentUser = request.user
     aList = functions.checkCameras(currentUser.id,bedrijf)
 
@@ -1456,78 +1456,32 @@ def zLocatieCameraUser(request):
     dict = zCameraBedrijfLocatie(request,bedrijf,query)
     return render(request,'zLocatieCameraUser.html',dict )
 
-# Stadgenoot Service Order
+# Service Order
 @login_required
 @permission_required('camera.view_serviceorder')
-def allOrderStadgenoot(request):
-    bedrijf = 'Stadgenoot'
+def allOrderUser(request):
+    currentUser = request.user
+    bedrijf = functions.isFromBedrijf(currentUser)
     dict  = allOrderBedrijf(request,bedrijf)
     return render(request,'displayOrderOnly.html',dict )
 
 @login_required
 @permission_required('camera.view_serviceorder')
-def zOrderStadgenootNr(request):
-    bedrijf = 'Stadgenoot'
-    order = '1'
-    dict  = zOrderBedrijfNr(request,bedrijf,order)
-    return render(request,'displayOrderOnly.html',dict )
-
+def zOrderUserNr(request):
+    currentUser = request.user
+    bedrijf = functions.isFromBedrijf(currentUser)
+    query = request.GET.get('q','')
+    dict  = zOrderBedrijfNr(request,bedrijf,query)
+    return render(request,'zOrderUserNr.html', dict )
+    
 @login_required
 @permission_required('camera.view_serviceorder')
-def zOwnOrderStadgenoot(request):
-    bedrijf = 'Stadgenoot'
+def zOwnOrderUser(request):
+    currentUser = request.user
+    bedrijf = functions.isFromBedrijf(currentUser)
     dict = zOwnOrderBedrijf(request,bedrijf)
-    return render(request,'displayOrderOnly.html', dict )
-
-### Berkhout
-# Berkhout Service Order
-@login_required
-@permission_required('camera.view_serviceorder')
-def allOrderBerkhout(request):
-    bedrijf = 'Berkhout'
-    dict  = allOrderBedrijf(request,bedrijf)
     return render(request,'displayOrderOnly.html',dict )
-
-@login_required
-@permission_required('camera.view_serviceorder')
-def zOrderBerkhoutNr(request):
-    print('zOrderBerkhoutNr')
-    bedrijf = 'Berkhout'
-    order = '1'
-    dict  = zOrderBedrijfNr(request,bedrijf,order)
-    return render(request,'displayOrderOnly.html',dict )
-
-@login_required
-@permission_required('camera.view_serviceorder')
-def zOwnOrderBerkhout(request):
-    bedrijf = 'Berkhout'
-    dict = zOwnOrderBedrijf(request,bedrijf)
-    return render(request,'displayOrderOnly.html', dict )
-
-## Smit
-# Smit Service Order
-@login_required
-@permission_required('camera.view_serviceorder')
-def allOrderSmit(request):
-    bedrijf = 'Smit'
-    dict  = allOrderBedrijf(request,bedrijf)
-    return render(request,'displayOrderOnly.html',dict )
-
-@login_required
-@permission_required('camera.view_serviceorder')
-def zOrderNrSmit(request):
-    bedrijf = 'Smit'
-    order = '1'
-    dict  = zOrderBedrijfNr(request,bedrijf,order)
-    return render(request,'displayOrderOnly.html',dict )
-
-@login_required
-@permission_required('camera.view_serviceorder')
-def zOwnOrderSmit (request):
-    bedrijf = 'Smit'
-    dict = zOwnOrderBedrijf(request,bedrijf)
-    return render(request,'displayOrderOnly.html', dict )
-
+    
 # MFA
 class HomeView(TemplateView):
     template_name = 'home.html'

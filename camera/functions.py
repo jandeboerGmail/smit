@@ -21,12 +21,12 @@ def isFromBedrijf(aUser):
     if results:
         result  = results[0]
     else:
-        result= '*'
+        result= 'admin'
     return result
 
 def checkVideos (aUserId,bedrijf):  
     aUser =  User.objects.get(id=aUserId)     
-    if bedrijf == "*" :
+    if bedrijf == "admin" :
         aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
     else:
         aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
@@ -50,7 +50,7 @@ def checkVideos (aUserId,bedrijf):
        
 def checkVideosNaam(aUserId,bedrijf,naam):   
     aUser =  User.objects.get(id=aUserId)     
-    if bedrijf == "*" :
+    if bedrijf == "admin" :
         aVideoList = Video.objects.filter(naam__icontains=naam).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
     else:
         aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
@@ -78,7 +78,7 @@ def checkVideosLocatie(aUserId,bedrijf,locatie):
     #qset = (Q(camera__locatie__naam__icontains=locatie))    
     #video_list = Video.objects.filter(qset).select_related('camera').distinct().order_by('naam')  
     
-    if bedrijf == "*" :
+    if bedrijf == "admin" :
         aVideoList = Video.objects.filter(camera__locatie__naam__icontains=locatie).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
     else:
         aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf,camera__locatie__naam__icontains=locatie).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
@@ -103,12 +103,13 @@ def checkVideosLocatie(aUserId,bedrijf,locatie):
 # Cameras security
 def checkCameras(aUserId,bedrijf):   
     aUser =  User.objects.get(id=aUserId)     
-    if bedrijf == "*" :
+    if bedrijf == "admin":
         aCameraList = Camera.objects.order_by('locatie','naam')
     else:
         aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).order_by('locatie','naam')
 
     if aUser.is_superuser:
+        print
         return aCameraList
     else:
         validatedCameras = []
@@ -127,7 +128,7 @@ def checkCameras(aUserId,bedrijf):
 def checkCamerasNaam(aUserId,bedrijf,naam):    
     aUser =  User.objects.get(id=aUserId) 
       
-    if bedrijf == "*" :
+    if bedrijf == "admin" :
         aCameraList = Camera.objects.filter(naam__icontains=naam).order_by('locatie','naam')
     else:
         #aList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related("locatie").order_by('locatie','naam')
@@ -152,7 +153,7 @@ def checkCamerasNaam(aUserId,bedrijf,naam):
 def checkCamerasLocatie(aUserId,bedrijf,locatie):   
     aUser =  User.objects.get(id=aUserId)   
         
-    if bedrijf == "*" :
+    if bedrijf == "admin":
         aCameraList = Camera.objects.filter(locatie__naam__icontains=locatie).select_related("locatie").order_by('locatie','naam')
     else:
         aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,locatie__naam__icontains=locatie).select_related("locatie").order_by('locatie','naam')
@@ -176,7 +177,7 @@ def checkCamerasLocatie(aUserId,bedrijf,locatie):
 # Order Security
 def listOwnOrders(aUserId,bedrijf):   
     aUser =  User.objects.get(id=aUserId)     
-    if bedrijf == "*" :
+    if bedrijf == "admin":
         anOrderList = ServiceOrder.objects.order_by('ordernr','contact')
     else:
          #aList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf).select_related("bedrijf").order_by('ordernr','contact')
@@ -197,7 +198,7 @@ def listOwnOrders(aUserId,bedrijf):
     
 def checkOrdersNumber(aUserId,bedrijf,number):   
     aUser =  User.objects.get(id=aUserId)     
-    if bedrijf == "*" :
+    if bedrijf == "admin":
         anOrderList = ServiceOrder.objects.filter(ordernr__icontains=number).order_by('ordernr','contact')
     else:
          #aList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf,ordernr__icontains=order).select_related("bedrijf").order_by('ordernr','contact')
@@ -222,7 +223,7 @@ def checkOrdersNumber(aUserId,bedrijf,number):
 def checkOrders(aUserId,bedrijf):   
     aUser =  User.objects.get(id=aUserId)
   
-    if bedrijf == "*" :
+    if bedrijf == "admin":
         anOrderList = ServiceOrder.objects.order_by('ordernr','contact')
     else:
         anOrderList = ServiceOrder.objects.filter(bedrijf__naam__icontains=bedrijf).select_related("bedrijf").order_by('ordernr','contact')

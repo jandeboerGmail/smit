@@ -21,20 +21,15 @@
     <div class="form-group col-1">
       <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
     </div>
-
-    <!---
-    <div class="col-1">
-      <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="/camera/indexGebruiker">
-    </div>
-  -->
   </div>
 </form>
 <hr>
   {% if query %}
+  {% if results %}
   <table class="table table-hover table-sm">
   <thead class="smit-header">
       <tr>
-        <!-- <th scope="col">#</td> -->
+      
         <th scope="col">Naam</td>
         <th scope="col">Straat</td>
         <th scope="col">Postcode</td>
@@ -42,13 +37,10 @@
         <th scope="col">Akties</td>
       </tr>
     </thead>
-    <!--- <h3>Resultaat for "{{ query|escape }}":</h3> --->
-    
-    {% if results %}
+   
     <tbody>
       {% for bedrijf in results %}
       <tr class="smit-line">
-         <!-- <th scope="row">{{bedrijf.id}}</td> -->
          <td> {{bedrijf.naam}} </td>
          <td> {{bedrijf.adres.straat}} </td> 
          <td> {{bedrijf.adres.postcode}} </td> 

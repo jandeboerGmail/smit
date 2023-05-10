@@ -24,10 +24,11 @@
     </div>
   </form>
 
+{% if query %}
+{% if page_obj %}
 <table class="table table-hover table-sm">
   <thead class="smit-header">
     <tr>
-      <!-- <th scope="col">#</td> -->
       <th scope="col">Bedrijf</td>
       <th scope="col">Locatie</td>
       <th scope="col">Adres</td>
@@ -36,8 +37,7 @@
       <th scope="col">Acties</td>
     </tr>
   </thead>
- 
-  {% if page_obj %}
+
   <tbody>
     {% for locatie in page_obj %}
     <tr class="smit-line">
@@ -53,10 +53,8 @@
   </tbody> 
   {% endfor %}
 </table>
- 
-
   {% else %}
     <strong>Er zijn geen entries</strong>
   {% endif %}
- </div>
+{% endif %}
 {% endblock %}
