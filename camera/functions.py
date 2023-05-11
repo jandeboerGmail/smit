@@ -261,7 +261,9 @@ def checkOrders(aUserId,bedrijf):
 
             for gebied in aAccount.gebied.all():
                 #print ("Gebieden van Account: ",gebied)
-                if aLocatie.gebied == gebied or anOrder.contact == aAccount.user:
+                #if aLocatie.gebied == gebied or anOrder.contact == aAccount.user:
+                if aLocatie.gebied == gebied:
+                
                     validatedOrders.append(anOrder)
                     #print ('Allowed :',aAccount.user, anOrder.ordernr, aLocatie.gebied)
         return validatedOrders
