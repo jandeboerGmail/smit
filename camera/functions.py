@@ -212,7 +212,7 @@ def listOwnOrders(aUserId,bedrijf):
         aAccount = Account.objects.get(user_id=aUserId)
         for anOrder in anOrderList:
             #print ("Order Accounts: ",anOrder.contact,aAccount.user)
-            if anOrder.contact == aAccount.user :
+            if anOrder.contact == aAccount.user:
                     validatedOrders.append(anOrder)
                     #print ("Alloeed Order Accounts: ",anOrder.contact,aAccount.user)
         return validatedOrders
@@ -236,7 +236,7 @@ def checkOrdersNumber(aUserId,bedrijf,number):
 
             for gebied in aAccount.gebied.all():
                 #print ("Gebieden van Account: ",gebied)
-                if aLocatie.gebied == gebied:
+                if aLocatie.gebied == gebied or anOrder.contact == aAccount.user:
                     validatedOrders.append(anOrder)
                     #print ('Allowed :',aAccount.user, anOrder.ordernr, aLocatie.gebied)
         return validatedOrders
@@ -261,7 +261,7 @@ def checkOrders(aUserId,bedrijf):
 
             for gebied in aAccount.gebied.all():
                 #print ("Gebieden van Account: ",gebied)
-                if aLocatie.gebied == gebied:
+                if aLocatie.gebied == gebied or anOrder.contact == aAccount.user:
                     validatedOrders.append(anOrder)
                     #print ('Allowed :',aAccount.user, anOrder.ordernr, aLocatie.gebied)
         return validatedOrders
