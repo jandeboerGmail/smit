@@ -89,20 +89,20 @@
             <li class="nav-item">
               <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
             </li>
-            {% endif %}
-    
-          <li class="nav-item">
-            <a class="nav-link text-white" href="/camera/about">Over</a>
-          </li> 
+            {% endif %}   
          </ul>
         {% endif %}
+
           <!--
             <li class="nav-item {% block nav_secret %}{% endblock %}">
               <a class="nav-link" href="{% url 'secret' %}">{% trans "Secret Page" %}</a>
             </li>
           -->
-          
+               
           <ul class="navbar-nav mlrauto">
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/camera/about">Over</a>
+            </li> 
             {% if user.is_authenticated %}
               <li class="nav-item">
                 <a class="nav-link text-dark">{{ user }} {% if user.otp_device %}🔒{% endif %}</a>

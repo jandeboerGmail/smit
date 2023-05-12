@@ -675,8 +675,8 @@ def editCamera(request,pk):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-
-        return ( redirect('about'))
+        return ( redirect('/camera/indexCamera'))
+        #return ( redirect('about'))
 
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Camera'}
@@ -694,8 +694,8 @@ def deleteCamera(request,pk):
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
         camera.delete()
-        ##return ( redirect('/camera/indexCamera'))
-        return redirect('about')
+        return ( redirect('/camera/indexCamera'))
+        #return redirect('about')
 
     template_name = 'deleteRecord.html'
     context = {'item' : camera , 'title': 'Verwijder Camera'}
@@ -881,7 +881,8 @@ def editVideo(request,pk):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-        return ( redirect('about'))
+        #return ( redirect('about'))
+        return ( redirect('/camera/indexVideo'))
 
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Video'}
@@ -899,7 +900,8 @@ def deleteVideo(request,pk):
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
         video.delete()
-        return ( redirect('about'))
+        return ( redirect('/camera/indexVideo'))
+        #return ( redirect('about'))
 
     template_name = 'deleteRecord.html'
     context = {'item' : video , 'title': 'Verwijder Video'}
@@ -1082,7 +1084,8 @@ def editOrder(request,pk):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-        return ( redirect('about'))
+        #return ( redirect('about'))
+        return ( redirect('/camera/IndexUserOrder'))
 
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Service Order'}
@@ -1100,7 +1103,8 @@ def deleteOrder(request,pk):
     if request.method == 'POST':
         #print('Deleting Post:',request.POST)
         order.delete()
-        return ( redirect('about'))
+        #return ( redirect('about'))
+        return ( redirect('/camera/indexOrder'))
 
     template_name = 'deleteRecord.html'
     context = {'item' : order , 'title': 'Verwijder Service Order'}
@@ -1331,7 +1335,7 @@ def zVideoBedrijfNaam(request,bedrijf,naam):
 @csrf_protect
 @permission_required('camera.view_video')
 def zVideoBedrijfLocatie(request,bedrijf,locatie):
-    print ('zVideoBedrijfLocatie: ', bedrijf,locatie)
+    #print ('zVideoBedrijfLocatie: ', bedrijf,locatie)
     if locatie:
         currentUser = request.user
         aList = functions.checkVideosLocatie(currentUser.id,bedrijf,locatie)
@@ -1339,7 +1343,7 @@ def zVideoBedrijfLocatie(request,bedrijf,locatie):
         aantal = 0
         for aItem in aList:
             aantal += 1
-        print('aantal: ',aantal)
+        #print('aantal: ',aantal)
 
         paginator = Paginator(aList,15)
         page_number = request.GET.get('page')

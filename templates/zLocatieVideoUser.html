@@ -26,7 +26,7 @@
 </form>
 
 {% if query %}
-{% if results %}
+{% if page_obj %}
 <table class="table table-hover table-sm">
   <thead class="smit-header">
       <tr>
@@ -41,7 +41,7 @@
     </thead>
  
     <tbody>
-      {% for video in results %}
+      {% for video in page_obj %}
       <tr class="smit-line">
          <td> {{video.camera.locatie.naam}} </td>
          <td> {{video.camera.naam}} </td>
