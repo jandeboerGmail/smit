@@ -746,11 +746,21 @@ def allowedVideo(request):
 @csrf_protect
 @permission_required('camera.view_video')
 def zNaamVideo(request):
-    currentUser = request.user
-    bedrijf = functions.isFromBedrijf(currentUser)
     query = request.GET.get('q','')
-    dict = zVideoBedrijfNaam(request,bedrijf,query)
-    return render(request,'zNaamVideo.html',dict )
+    if query:
+        qset = (Q(naam__icontains=query))    
+        video_list = Video.objects.filter(qset).distinct().order_by('naam')
+        #video_list = Video.objects.order_by('naam')
+        aantal = video_list.count
+
+        paginator = Paginator(video_list,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+     
+        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": query}
+    else:
+        video_dict = {}
+    return render(request,'zNaamVideo.html', video_dict )
 
 @login_required
 @csrf_protect

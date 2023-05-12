@@ -6,6 +6,7 @@
 
 {% if request.user|has_group:"Admin"%}
 <h2 class='container-fluid smit-h2'>Acties</h2>
+{% csrf_token %}
 <ul>
 <hr>
   <div class="nav-index">

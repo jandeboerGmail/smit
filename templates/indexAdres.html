@@ -5,8 +5,8 @@
 {% load user_tags %}
 
 {% if request.user|has_group:"Admin"%}
-
 <h2 class='container-fluid smit-h2'>Adres</h2>
+{% csrf_token %}
 <ul>
   <hr>
   <div class="nav-index">
