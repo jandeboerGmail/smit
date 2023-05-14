@@ -1021,7 +1021,7 @@ def zContactOrder (request):
     query = request.GET.get('q','')
 
     if query:
-        qset = (Q(contact__naam__contains=query))       
+        qset = (Q(contact__username__contains=query))       
         list = ServiceOrder.objects.filter(qset).distinct().order_by('contact','bedrijf','ordernr')
         aantal = list.count
 
