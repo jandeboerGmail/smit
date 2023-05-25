@@ -1267,6 +1267,12 @@ def actieMakeImages(request):
 
 @login_required
 @csrf_protect
+def actieSetLength(request):
+    functions.setLengthVideos()
+    return redirect('indexActies')
+
+@login_required
+@csrf_protect
 def actieAddVideo(request):
     videoLink = "Default/earth.mp4"
 

@@ -532,6 +532,7 @@ def updateImageInDB(inFileName,imageName):
         aVideo.save()
     return
 
+
 # Log generic functions
 def addLogEntry(orderNr,message):
     aLog = Log()
@@ -976,7 +977,6 @@ def ListVideos():
                         fSize = "%.5f" % fileSize
 
                         #probe format
-                        command = "ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 " + inFile  + " > ._isFormat"
                         result = os.system(command)
                         with open('._isFormat', 'r') as file:
                             formatData= file.read().replace('\n', '')
@@ -1024,6 +1024,7 @@ def ListConvertedVideos():
     addLogEntry(" ", message)
     return
 
+# make Preview Images
 def makeImage(videoFilename,imageName):
     # ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
     command = "ffmpeg -i  " + videoFilename  + " -ss 00:00:01.000 -vframes 1 " + imageName
@@ -1032,7 +1033,7 @@ def makeImage(videoFilename,imageName):
 
 def makeImages():
     videoPath=getVideoLocation()
-    message = "make preview Images in " + videoPath
+    message = "Make preview Images in " + videoPath
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
@@ -1057,9 +1058,70 @@ def makeImages():
                             updateImageInDB(inFileName,imageName)
                         addLogEntry(request,message)
                                                            
-    message = "Listing Migrated Ended"
+    message = "Make preview Images Ended"
     addLogEntry(" ", message)
     return
+
+#Set Length Video
+def noDurationVideo(videoFilename):
+    aVideos  = Video.objects.filter(video_link=videoFilename)
+    if aVideos:
+        aVideo = aVideos[0]
+        if aVideo.duration == "":
+            return True 
+    return False
+
+def updateLengthVideoInDB(videoFilename,lengthVideo):
+    aVideos  = Video.objects.filter(video_link=videoFilename)
+    if aVideos and lengthVideo:
+        print ('UpdateLengthInDB', videoFilename, lengthVideo)
+        aVideo = aVideos[0]
+        aVideo.duration = lengthVideo
+        aVideo.save()
+    return
+
+def getLengthVideo(videoFilename):
+    print('setLengthVideo: ',  videoFilename)
+    command = "ffprobe -v error -show_entries format=duration  -sexagesimal -of default=noprint_wrappers=1:nokey=1 " +  videoFilename  + " > ._isSize"                                                                                                                                                                                                                        
+    result = os.system(command)  
+    with open('._isSize', 'r') as file:
+        lengthVideo = file.read().replace('\n', '')  
+ 
+    if result == 0 and lengthVideo != '':
+        print('Length: ',lengthVideo)
+        updateLengthVideoInDB(videoFilename,lengthVideo)    
+        return True
+    else:
+        return False
+
+def setLengthVideos():
+    videoPath=getVideoLocation()
+    message = "Getting the Lengh of the Videos" + videoPath
+    addLogEntry(" ", message)
+    for root, dirs, files in os.walk(videoPath, topdown=True):
+  
+        for name in files:
+            inFileName = os.path.join(root, name)
+
+            if "Migrated" in inFileName:
+                if (".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName)  and not "._" in inFileName:
+                    after = substring_after(inFileName,"Migrated/") 
+            
+                    if (os.path.getsize(inFileName)) > 0:
+                        request = after[0:after.find("/")]
+        
+                        if noDurationVideo(inFileName):
+                            #print('Setting the length of ', inFileName) 
+                            if getLengthVideo(inFileName):
+                                message = 'Setting the length of '  + inFileName
+                            else:
+                                message = 'ERROR: Setting the length of '  + inFileName
+                            addLogEntry(request,message)
+                                                           
+    message = "Set the Lengh of the Videos Ended"
+    addLogEntry(" ", message)
+    return
+
 
 def valid_email_address(email_address):
     try:

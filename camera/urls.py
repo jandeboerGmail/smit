@@ -142,6 +142,7 @@ urlpatterns = [
     path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
     path('actieInsertConvertedVideos/',views.actieInsertConvertedVideos,name='actieInsertConvertedVideos'),
     path('actieMakeImages/',views.actieMakeImages,name='actieMakeImages'),
+    path('actieSetLength/',views.actieSetLength,name='actieSetLength'),
     
 #MFA
     path( '', HomeView.as_view(),name='home',),

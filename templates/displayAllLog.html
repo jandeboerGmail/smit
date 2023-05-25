@@ -16,18 +16,12 @@
       <a class="btn btn-sm btn-dark" href="{% url 'exportLog' %}">Export </a>
     </div>
     
-    <!--
-    <div class="col-1">
-    <input type="button" class="btn btn-primary btn-sm" value="Terug" onclick="history.back()">
+    <div class="col-1 smit-h2">
+      {{aantal}} 
     </div>
-    -->
-  
-  <div class="col-1">
-    <div class="alert-md alert-dark" role="alert"> {{aantal}} </div>
-  </div>
-
 </div>
 
+{% if page_obj %}
 <div class="smit-log">
  <table class="table">
    <thead class="text-primary" >
@@ -38,7 +32,7 @@
     </tr>
   </thead>
 
-  {% if page_obj %}
+
   <tbody">
     {% for log in page_obj %}
        <th> {{log.ordernr}} </th>

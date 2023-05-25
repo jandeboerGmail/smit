@@ -183,7 +183,7 @@ class Video(models.Model):
     video_link = models.CharField(max_length=500,blank=True)
     #video_image = models.CharField(max_length=500,blank=True)
     video_image = models.ImageField(upload_to ='images/',max_length=500,null=True,blank=True)
-    duration = models.CharField(max_length=10,blank = True)
+    duration = models.CharField(max_length=20,blank = True)
     codec = models.CharField(max_length=50,blank = True,default='vb9')
     memo = models.TextField(blank = True)
     #conversion_started =  models.BooleanField(default=False)

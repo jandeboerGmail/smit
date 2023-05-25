@@ -13,7 +13,7 @@
     </div>
   </div>
 
-
+  {% if page_obj %}
   <table class="table table-hover table-sm">
     <thead class="smit-header">
       <tr>
@@ -23,7 +23,7 @@
         <th scope="col">Locatie</th>
         <th scope="col">Plaats</th>
         <th scope="col">Opname van</th>
-        <th scope="col">Opname tot</th>
+        <th scope="col">Tijdsduur</th>
         <th scope="col">Bijgewerkt</th>
     </tr>
   </thead>
@@ -38,7 +38,7 @@
        <td> {{video.camera.locatie.naam}} </td>
        <td> {{video.camera.plaats}} </td>
        <td> {{video.opname_van}} </td>
-       <td> {{video.opname_tot}} </td>
+       <td> {{video.duration}} </td>
        <td> {{video.datum_updated}} </td>
        {% if perms.camera.view_video %}
        <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
