@@ -36,7 +36,7 @@
         <th scope="col">Naam</td>
         <th scope="col">Order</td>
         <th scope="col">Opname van</td>
-        <th scope="col">Opname tot</td>
+        <th scope="col">Tijdsduur</td>
       </tr>
     </thead>
  
@@ -49,7 +49,7 @@
          <td> {{video.naam}} </td>
          <td> {{video.ordernr}} </td> 
          <td> {{video.opname_van}} </td>
-         <td> {{video.opname_tot}} </td>
+         <td> {{video.duration}} </td>
          <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
       </tr>
       </tbody> 

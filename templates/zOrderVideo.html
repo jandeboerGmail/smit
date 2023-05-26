@@ -37,7 +37,7 @@
         <th scope="col">Locatie</td>
         <th scope="col">Plaats</td>
         <th scope="col">Opname van</td>
-        <th scope="col">Opname tot</td>
+        <th scope="col">Tijdsduur</td>
         <th scope="col">Acties</td>
       </tr>
     </thead>
@@ -51,7 +51,7 @@
          <td> {{video.camera.locatie.naam}} </td>
          <td> {{video.camera.plaats}} </td>
          <td> {{video.opname_van}} </td>
-         <td> {{video.opname_tot}} </td>
+         <td> {{video.duration}} </td>
          <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
          <td><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></td>
          <td><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></td>

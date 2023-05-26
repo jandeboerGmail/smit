@@ -1074,21 +1074,22 @@ def noDurationVideo(videoFilename):
 def updateLengthVideoInDB(videoFilename,lengthVideo):
     aVideos  = Video.objects.filter(video_link=videoFilename)
     if aVideos and lengthVideo:
-        print ('UpdateLengthInDB', videoFilename, lengthVideo)
+        #print ('UpdateLengthInDB', videoFilename, lengthVideo)
         aVideo = aVideos[0]
-        aVideo.duration = lengthVideo
+        aVideo.duration = substring_before(lengthVideo, ".") # hh:mmm:ss 
         aVideo.save()
     return
 
 def getLengthVideo(videoFilename):
-    print('setLengthVideo: ',  videoFilename)
-    command = "ffprobe -v error -show_entries format=duration  -sexagesimal -of default=noprint_wrappers=1:nokey=1 " +  videoFilename  + " > ._isSize"                                                                                                                                                                                                                        
+    #print('setLengthVideo: ',  videoFilename)
+    inFilename = videoFilename.replace(" ", "\ ")
+    command = "ffprobe -v error -show_entries format=duration  -sexagesimal -of default=noprint_wrappers=1:nokey=1 " +  inFilename  + " > ._isSize"                                                                                                                                                                                                                        
     result = os.system(command)  
     with open('._isSize', 'r') as file:
         lengthVideo = file.read().replace('\n', '')  
  
     if result == 0 and lengthVideo != '':
-        print('Length: ',lengthVideo)
+        #print('Length: ',lengthVideo)
         updateLengthVideoInDB(videoFilename,lengthVideo)    
         return True
     else:
