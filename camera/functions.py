@@ -1027,7 +1027,8 @@ def ListConvertedVideos():
 # make Preview Images
 def makeImage(videoFilename,imageName):
     # ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
-    command = "ffmpeg -i  " + videoFilename  + " -ss 00:00:01.000 -vframes 1 " + imageName
+    #inFilename = videoFilename.replace(" ", "\ ")
+    command = "ffmpeg -y -i  " + videoFilename  + " -ss 00:00:01.000 -vframes 1 " + imageName
     result = os.system(command)                   
     return result
 
@@ -1053,9 +1054,11 @@ def makeImages():
                         imageName = imageName.replace(".WEBM", ".png")
                         imageName = imageName.replace(".webm", ".png")
         
-                        if makeImage(inFileName,imageName):
+                        if makeImage(inFileName,imageName) == 0:
                             message = 'Image created from '  + inFileName 
                             updateImageInDB(inFileName,imageName)
+                        else:
+                            message = 'ERROR: Image created from '  + inFileName 
                         addLogEntry(request,message)
                                                            
     message = "Make preview Images Ended"
