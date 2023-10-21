@@ -1,5 +1,6 @@
 from re import L
 from django import forms
+# from .widgets import DateTimePickerInput
 from .models import Adress, Bedrijf, Locatie, Camera, Video, ServiceOrder, Gebied 
 
 #Adress
@@ -87,9 +88,9 @@ class OrderForm(forms.ModelForm):
             'opdrachtnummer': forms.TextInput(attrs={'class': 'form-control'}),
             'locatie': forms.Select(attrs={'class': 'form-control'}),
             #'opened' : forms.SplitDateTimeWidget(),
-            #'closed' : forms.SelectDateWidget(),
-            'opened' : forms.SelectDateWidget(),
-            'closed' : forms.SelectDateWidget(),
+            '#closed' : forms.SelectDateWidget(),
+             #'opened' : forms.DateTimePickerInput(attrs={'class': 'form-control'}),
+            #'closed' : forms.DateTimePickerInput(attrs={'class': 'form-control'}),
             'keep_original': forms.CheckboxInput(),
             'auto_cleanup': forms.CheckboxInput(),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),

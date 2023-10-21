@@ -729,7 +729,7 @@ def allVideo(request):
 @permission_required('camera.view_video')
 def allowedVideo(request):
     currentUser = request.user
-    #print ('current User: ', currentUser.id,currentUser.username)
+    print ('current User: ', currentUser.id,currentUser.username)
     list = functions.checkVideos (currentUser.id,"admin")
     # aantal =  list.count
     aantal = 0
@@ -1318,33 +1318,42 @@ def actieDisplayPermissions(request):
 def allVideoBedrijf(request,bedrijf):
     currentUser = request.user
     aList = functions.checkVideos(currentUser.id,bedrijf)
-    aantal = 0
-    for aItem in aList:
-        aantal += 1
-    paginator = Paginator(aList,15)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    
-    current_time = datetime.now().time()
-    dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'current_time': current_time}
-    return dict
-
-@login_required
-@csrf_protect
-@permission_required('camera.view_video')
-def zVideoBedrijfNaam(request,bedrijf,naam):
-    if naam:
-        currentUser = request.user
-        aList = functions.checkVideosNaam(currentUser.id,bedrijf,naam)
+    dict = {}
+    if aList:
         aantal = 0
         for aItem in aList:
             aantal += 1
         paginator = Paginator(aList,15)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
-        dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' : naam}
-    else:
-        dict = {}
+    
+        current_time = datetime.now().time()
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'current_time': current_time}
+    return dict
+
+@login_required
+@csrf_protect
+@permission_required('camera.view_video')
+def zVideoBedrijfNaam(request,bedrijf,naam):
+    dict = {}
+    if naam:
+        currentUser = request.user
+        aList = functions.checkVideosNaam(currentUser.id,bedrijf,naam)
+        print("naam: ",naam)
+       
+        if aList:
+            print ("alist")
+            aantal = 0
+            for aItem in aList:
+                aantal += 1
+            paginator = Paginator(aList,15)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' : naam}
+        else:
+            print ("NO alist")
+            
+    print("Return")
     return dict
 
 @login_required
@@ -1352,6 +1361,8 @@ def zVideoBedrijfNaam(request,bedrijf,naam):
 @permission_required('camera.view_video')
 def zVideoBedrijfLocatie(request,bedrijf,locatie):
     #print ('zVideoBedrijfLocatie: ', bedrijf,locatie)
+    
+    dict = {}
     if locatie:
         currentUser = request.user
         aList = functions.checkVideosLocatie(currentUser.id,bedrijf,locatie)
@@ -1360,13 +1371,12 @@ def zVideoBedrijfLocatie(request,bedrijf,locatie):
         for aItem in aList:
             aantal += 1
         #print('aantal: ',aantal)
-
-        paginator = Paginator(aList,15)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": locatie}
-    else:
-        dict = {}
+        if aList:
+            paginator = Paginator(aList,15)
+            page_number = request.GET.get('page')
+            page_obj = paginator.get_page(page_number)
+            dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": locatie}
+         
     return dict
 
 #Generic Camera
@@ -1382,9 +1392,11 @@ def allCameraBedrijf(request,bedrijf):
     for aItem in aList:
         aantal += 1
 
-    paginator = Paginator(aList,12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    dict = {}
+    if aList:
+        paginator = Paginator(aList,12)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
     dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return dict
@@ -1401,10 +1413,12 @@ def zCameraBedrijfNaam(request,bedrijf,naam):
     for aItem in aList:
         aantal += 1
 
-    paginator = Paginator(aList,15)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' : naam}
+    dict = {}
+    if aList:
+        paginator = Paginator(aList,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' : naam}
     return dict
 
 @login_required
@@ -1418,12 +1432,13 @@ def zCameraBedrijfLocatie(request,bedrijf,locatie):
     aantal = 0
     for aItem in aList:
         aantal += 1
+    dict = {}
+    if aList:
+        paginator = Paginator(aList,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    paginator = Paginator(aList,15)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' :  locatie}
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' :  locatie}
     return dict
 
 # Generic Service Order
@@ -1438,11 +1453,13 @@ def allOrderBedrijf(request,bedrijf):
     for aItem in aList:
         aantal += 1
 
-    paginator = Paginator(aList,15)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    dict = {}
+    if aList:
+        paginator = Paginator(aList,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return dict
 
 @login_required
@@ -1455,11 +1472,13 @@ def zOrderBedrijfNr(request,bedrijf,order):
     for aItem in aList:
         aantal += 1 
 
-    paginator = Paginator(aList,15)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    dict = {}   
+    if aList:
+        paginator = Paginator(aList,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
 
-    dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' :  order}
+        dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' :  order}
     return dict
 
 @login_required
@@ -1474,11 +1493,13 @@ def zOwnOrderBedrijf(request,bedrijf):
     for aItem in aList:
         aantal += 1
 
-    paginator = Paginator(aList,15)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+    dict  = {}
+    if aList:
+        paginator = Paginator(aList,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
         
-    dict = {'page_obj' : page_obj , 'aantal' : aantal }
+        dict = {'page_obj' : page_obj , 'aantal' : aantal }
     return dict
 # end Generic
 

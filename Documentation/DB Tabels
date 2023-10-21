@@ -1,0 +1,31 @@
+-authentication
+`auth_group`  
+`auth_group_permissions`  
+`auth_permission`  
+`auth_user`  
+`auth_user_groups`  
+`auth_user_user_permissions`  
+-- camera tables
+`camera_account`  
+`camera_account_gebied`  
+`camera_adress`  
+`camera_bedrijf`  
+`camera_camera`  
+`camera_gebied`  
+`camera_locatie`  
+`camera_locatie_gebied`  
+`camera_log`  
+`camera_parameter`  
+`camera_serviceorder`  
+`camera_video` 
+--djangio 
+`django_admin_log`  
+`django_content_type`  
+`django_migrations`  
+`django_session`
+--two factor  
+`otp_email_emaildevice`     leeg
+`otp_static_staticdevice`   leeg
+`otp_static_statictoken`    leeg
+`otp_totp_totpdevice`  `    gevuld
+`two_factor_phonedevice`    leeg

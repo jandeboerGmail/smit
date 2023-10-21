@@ -46,16 +46,19 @@ def videoIsAllowed(request,aVideo):
         return result
         
 def checkVideos (aUserId,bedrijf):  
-    aUser =  User.objects.get(id=aUserId)     
+    aUser =  User.objects.get(id=aUserId)   
+    # print ("User = ",aUser,bedrijf )  
+    
     if bedrijf == "admin" :
-        aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
+       aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
     else:
-        aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
+      aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
     
     if aUser.is_superuser:
         return aVideoList
     else:
         validatedVideos = []
+        
         aAccount = Account.objects.get(user_id=aUserId)
         for aVideo in aVideoList:
             aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
