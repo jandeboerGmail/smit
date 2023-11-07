@@ -1267,8 +1267,14 @@ def actieMakeImages(request):
 
 @login_required
 @csrf_protect
-def actieSetLength(request):
-    functions.setLengthVideos()
+def actieGetDurationVideos(request):
+    functions.getDurationVideos()
+    return redirect('indexActies')
+
+@login_required
+@csrf_protect
+def actieGetFileSize(request):
+    functions.getFileSizeVideos()
     return redirect('indexActies')
 
 @login_required

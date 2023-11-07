@@ -1038,6 +1038,7 @@ def makeImage(videoFilename,imageName):
 def makeImages():
     videoPath=getVideoLocation()
     message = "Make preview Images in " + videoPath
+    print (message)
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
@@ -1068,68 +1069,125 @@ def makeImages():
     addLogEntry(" ", message)
     return
 
-#Set Length Video
-def noDurationVideo(videoFilename):
+#Set duration/Length Video
+def DurationVideo(videoFilename):
     aVideos  = Video.objects.filter(video_link=videoFilename)
     if aVideos:
         aVideo = aVideos[0]
-        if aVideo.duration == "":
-            return True 
-    return False
+        #print('Dxxx' ,videoFilename, aVideo.duration)
+        #if aVideo.duration == "":
+        if aVideo.duration:
+            return True
+        else:
+            return False
 
-def updateLengthVideoInDB(videoFilename,lengthVideo):
+def updateDurationVideoInDB(videoFilename,duration):
     aVideos  = Video.objects.filter(video_link=videoFilename)
-    if aVideos and lengthVideo:
-        #print ('UpdateLengthInDB', videoFilename, lengthVideo)
+    if aVideos and duration:
         aVideo = aVideos[0]
-        aVideo.duration = substring_before(lengthVideo, ".") # hh:mmm:ss 
+        aVideo.duration = substring_before(duration, ".") # hh:mmm:ss 
         aVideo.save()
     return
 
-def getLengthVideo(videoFilename):
-    #print('setLengthVideo: ',  videoFilename)
-    inFilename = videoFilename.replace(" ", "\ ")
+def getDurationVideo(videoFileName):
+    inFilename = videoFileName.replace(" ", "\ ")
+    inFilename = inFilename.replace("(", "\(")
+    inFilename = inFilename.replace(")", "\)")
+    
     command = "ffprobe -v error -show_entries format=duration  -sexagesimal -of default=noprint_wrappers=1:nokey=1 " +  inFilename  + " > ._isSize"                                                                                                                                                                                                                        
     result = os.system(command)  
     with open('._isSize', 'r') as file:
-        lengthVideo = file.read().replace('\n', '')  
+        durationVideo = file.read().replace('\n', '')  
  
-    if result == 0 and lengthVideo != '':
-        #print('Length: ',lengthVideo)
-        updateLengthVideoInDB(videoFilename,lengthVideo)    
+    if result == 0 and durationVideo != '':
+        #print('Duration: ',durationVideo)
+        updateDurationVideoInDB(videoFileName,durationVideo)    
         return True
     else:
         return False
 
-def setLengthVideos():
+def getDurationVideos():
     videoPath=getVideoLocation()
-    message = "Getting the Lengh of the Videos" + videoPath
+    message = "Getting the duration of the Videos in " + videoPath
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
-  
         for name in files:
             inFileName = os.path.join(root, name)
-
             if "Migrated" in inFileName:
                 if (".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName)  and not "._" in inFileName:
                     after = substring_after(inFileName,"Migrated/") 
-            
                     if (os.path.getsize(inFileName)) > 0:
                         request = after[0:after.find("/")]
-        
-                        if noDurationVideo(inFileName):
-                            #print('Setting the length of ', inFileName) 
-                            if getLengthVideo(inFileName):
-                                message = 'Setting the length of '  + inFileName
+                        
+                        # is it set in the db ?
+                        if not DurationVideo(inFileName):
+                            print('Setting the duration of ', inFileName) 
+                            if getDurationVideo(inFileName):
+                                message = 'Setting the duration from '  + inFileName
                             else:
-                                message = 'ERROR: Setting the length of '  + inFileName
-                            addLogEntry(request,message)
-                                                           
-    message = "Set the Lengh of the Videos Ended"
+                                message = 'ERROR: Setting duration from '  + inFileName
+                                addLogEntry(request,message)
+                                                  
+    message = "End :set the duration from the Videos"
     addLogEntry(" ", message)
     return
 
+#Get the Filesize from the VideoFile
+def FileSizeVideo(videoFilename):
+    aVideos  = Video.objects.filter(video_link=videoFilename)
+    if aVideos:
+        aVideo = aVideos[0]
+       
+        if aVideo.file_size:
+            return True
+    return False
 
+def updateFileSizeVideoInDB(videoFilename,fileSize):
+    aVideos  = Video.objects.filter(video_link=videoFilename)
+    if aVideos and fileSize :
+        print ('UpdateLengthInDB', videoFilename, fileSize)
+        aVideo = aVideos[0]
+        aVideo.file_size = fileSize
+        aVideo.save()
+    return
+
+def getFileSizeVideo(inFilename):
+    file_stats = os.stat(inFilename)
+    fileSize = file_stats.st_size / (1024 * 1024)
+    fSize = "%.5f" % fileSize
+
+    if fSize != 0:
+        updateFileSizeVideoInDB(inFilename,fSize)    
+        return True
+    else:
+        return False
+
+def getFileSizeVideos():
+    videoPath=getVideoLocation()
+    message = "Getting the File Size  from the migrated Videos in " + videoPath
+    addLogEntry(" ", message)
+    for root, dirs, files in os.walk(videoPath, topdown=True):
+        for name in files:
+            inFileName = os.path.join(root, name)
+            if "Migrated" in inFileName:
+                if (".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName)  and not "._" in inFileName:
+                    after = substring_after(inFileName,"Migrated/") 
+                    if (os.path.getsize(inFileName)) > 0:
+                        request = after[0:after.find("/")]
+
+                         # is it set in the db ?
+                        if not FileSizeVideo(inFileName):
+                            if getFileSizeVideo(inFileName):
+                                message = 'Getting the FileSize of '  + inFileName
+                            else:
+                                message = 'ERROR: Getting the FileSize of '  + inFileName
+                            addLogEntry(request,message)
+                                                           
+    message = "Getting the Filesize of the Videos Ended"
+    addLogEntry(" ", message)
+    return
+
+#mail stuff
 def valid_email_address(email_address):
     try:
         validate_email(email_address)
@@ -1158,7 +1216,7 @@ def SendMail(subject,message,recipentList):
         subject, message, 
         'sgportal@smitelektrotechniek.nl', 
         emailcheckedRecepentList, 
-        reply_to=['sgportal@smitelektrotechniek.nl'], 
+        reply_to=['sgportal@smitelektrotechniek.uyhnl'], 
                 #headers={'Message-ID': 'foo'},
     )
     email.send()

@@ -118,18 +118,22 @@ DATABASES = {
 #LOGIN_REDIRECT_URL = 'allowedVideo'
 
 LOGIN_URL = 'two_factor:login' 
+# this one is optional
+LOGIN_REDIRECT_URL = 'two_factor:profile'
 
 LOGOUT_REDIRECT_URL = 'home'
-# this one is optional
-#LOGIN_REDIRECT_URL = 'two_factor:profile'
+
+# Develop
+#TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake' 
+#TWO_FACTOR_SMS_GATEWAY =  'two_factor.gateways.fake.Fake'
+
+# Prod
+TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio' 
+TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 
 PHONENUMBER_DEFAULT_REGION = 'NL'
-
-#TWO_FACTOR_SMS_GATEWAY = 'example.gateways.Messages'0000
-#TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 TWO_FACTOR_WEBAUTHN_RP_NAME = 'Smit Video App'
 
-TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID')
 TWILIO_AUTH_TOKEN  =  os.environ.get('TWILIO_AUTH_TOKEN')
 TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
@@ -149,7 +153,7 @@ ACME_DEFAULT_EMAIL  = os.environ.get('ACME_DEFAULT_EMAIL ')
 DOMAIN              = os.environ.get('DOMAIN')
 
 #MFA
-TWO_FACTOR_REMEMBER_COOKIE_AGE = 300
+TWO_FACTOR_REMEMBER_COOKIE_AGE =  None # 300
 TWO_FACTOR_LOGIN_TIMEOUT=60
 
 #Cookie settings 
@@ -195,5 +199,7 @@ STATIC_ROOT = '/vol/web/static'
 #MEDIA_URL = '/media/'
 #MEDIA_ROOT = '/vol/web/media'
 
-MEDIA_ROOT = '/home/jan/video/'
+#lsls
+# MEDIA_ROOT = '/home/jan/video/'
+MEDIA_ROOT = '/home/jan/videos'
 MEDIA_URL = '/media/'
