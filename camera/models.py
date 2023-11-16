@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from django.conf import settings
+from datetime import timedelta
+
+def in_a_year():
+    return timezone.now() + timedelta(days=365)
 
 class Adress (models.Model):
     naam = models.CharField(max_length=50,blank = False)
@@ -145,7 +149,7 @@ class Camera(models.Model):
 
 class ServiceOrder(models.Model):
         # id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
-        ordernr = models.CharField(max_length=50,blank = False,unique=False,default="",verbose_name="Serviceorder")
+        ordernr = models.CharField(max_length=50,blank = True,unique=False,default="",verbose_name="Smit intern Serviceorder nummer")
         opdrachtnummer  =  models.CharField(max_length=50,blank = False,unique=False,default="",verbose_name="Opdrachtnummer")
         bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
         contact = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -155,8 +159,8 @@ class ServiceOrder(models.Model):
         keep_original =  models.BooleanField(default=False,verbose_name="Behoud orgineel")
         auto_cleanup =  models.BooleanField(default=False,verbose_name="Automatisch opruimen")
         conversion_ready =  models.BooleanField(default=False)
-        opened = models.DateField(blank=True,default=timezone.now,verbose_name="Startdatum tijd incidend")
-        closed = models.DateField(blank=True,null=True,verbose_name="Einddatum tijd incidend")
+        opened = models.DateField(blank=False,default=timezone.now,verbose_name="Startdatum tijd incidend")
+        closed = models.DateField(blank=False,null=True,verbose_name="Einddatum tijd incidend")
         memo = models.TextField(blank = True,verbose_name="Omschrijf voorval")
         slug = models.SlugField(max_length=120,default='slug')
         datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
@@ -191,6 +195,7 @@ class Video(models.Model):
     memo = models.TextField(blank = True)
     #conversion_started =  models.BooleanField(default=False)
     conversion_ready   =  models.BooleanField(default=False)
+    verwijder_datum = models.DateField(default=in_a_year, blank=False)
     slug = models.SlugField(max_length=120,default='slug')
     datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
     datum_updated = models.DateTimeField(default=timezone.now, blank=False)

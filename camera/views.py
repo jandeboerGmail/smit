@@ -717,7 +717,7 @@ def allVideo(request):
     video_list = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
     aantal =  video_list.count
 
-    paginator = Paginator(video_list,15)
+    paginator = Paginator(video_list,10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -1077,7 +1077,7 @@ def createOrder(request):
         form.save()
         form = OrderForm()
     template_name = 'inputForm.html'
-    context = {'form' : form, 'title': 'Toevoegen Service Order'}
+    context = {'form' : form, 'title': 'Aanvragen Beelden'}
     return render(request,template_name,context)
 
 @login_required

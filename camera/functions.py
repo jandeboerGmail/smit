@@ -1031,6 +1031,7 @@ def ListConvertedVideos():
 def makeImage(videoFilename,imageName):
     # ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
     #inFilename = videoFilename.replace(" ", "\ ")
+    # imagename = $
     command = "ffmpeg -y -i  " + videoFilename  + " -ss 00:00:01.000 -vframes 1 " + imageName
     result = os.system(command)                   
     return result
@@ -1053,10 +1054,10 @@ def makeImages():
                         request = after[0:after.find("/")]
 
                         imageName = inFileName
-                        imageName = imageName.replace(".mp4", ".png")
-                        imageName = imageName.replace(".MP4", ".png")
-                        imageName = imageName.replace(".WEBM", ".png")
-                        imageName = imageName.replace(".webm", ".png")
+                        imageName = imageName.replace(".mp4", ".jpg")
+                        imageName = imageName.replace(".MP4", ".jpg")
+                        imageName = imageName.replace(".WEBM", ".jpg")
+                        imageName = imageName.replace(".webm", ".jpg")
         
                         if makeImage(inFileName,imageName) == 0:
                             message = 'Image created from '  + inFileName 
