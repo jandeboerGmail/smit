@@ -1,8 +1,11 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic.base import TemplateView
+
+#from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 #MFA
 from django.contrib import admin
@@ -22,7 +25,6 @@ urlpatterns = [
     path('time/',views.current_datetime,name='current_datetime'),
     path('about/',views.about,name='about'),
     path('todo/',views.todo,name='todo'),
-    #path('playVideo/', playVideo, name='video_player'),
 
 #Index  
     path('',views.index,name='index'),
@@ -144,28 +146,21 @@ urlpatterns = [
     path('actieMakeImages/',views.actieMakeImages,name='actieMakeImages'),
     path('actieGetDurationVideos/',views.actieGetDurationVideos,name='actieGetDurationVideos'),
     path('actieGetFileSize/',views.actieGetFileSize,name='actieGetFileSize'),
-    
+
+#Authenticate
+    #path ('accounts/', include('django.contrib.auth.urls')),
+ 
 #MFA
-    path( '', HomeView.as_view(),name='home',),
-    path('account/logout/',LogoutView.as_view(),name='logout',),
-    path('secret/',ExampleSecretView.as_view(),name='secret',),
-    path('account/register/',RegistrationView.as_view(),name='registration',),
-    path('account/register/done/',RegistrationCompleteView.as_view(),name='registration_complete',),
+    #path( '', HomeView.as_view(),name='home',),
+    #path('account/logout/',LogoutView.as_view(),name='logout',),
+    #path('secret/',ExampleSecretView.as_view(),name='secret',),
+    #path('account/register/done/',RegistrationCompleteView.as_view(),name='registration_complete',),
     
-    path('', include(tf_urls)),
-    path('', include(tf_twilio_urls)),
+    #path('', include(tf_urls)),
+    #path('', include(tf_twilio_urls)),
     #path('', include('user_sessions.urls', 'user_sessions')),
     path('admin/', admin.site.urls),
-
-]   + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-'''
-if settings.DEBUG:
-    import debug_toolbar
-    urlpatterns += [
-        path('__debug__/', include(debug_toolbar.urls)),
-    ]
-'''
-
+    #path('', include('smit.urls'))
+]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

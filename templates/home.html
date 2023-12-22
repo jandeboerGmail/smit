@@ -6,7 +6,7 @@
 {% url 'registration' as reg_url %}
 {% url 'two_factor:login' as login_url %}
 {% url 'two_factor:setup' as setup_url %}
-{% url 'logout' as logout_url %}
+{% url 'login' as logout_url %}
 {% url 'secret' as secret_url %}
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-primary"> 
@@ -21,6 +21,7 @@
         </button>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
+        {% if request.user.is_authenticated %}
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="navbar-nav mr-auto">
         
@@ -93,13 +94,7 @@
             {% endif %}   
          </ul>
         {% endif %}
-
-          <!--
-            <li class="nav-item {% block nav_secret %}{% endblock %}">
-              <a class="nav-link" href="{% url 'secret' %}">{% trans "Secret Page" %}</a>
-            </li>
-          -->
-               
+        {% endif %}
           <ul class="navbar-nav mlrauto">
             <li class="nav-item">
               <a class="nav-link text-white" href="/camera/about">Over</a>

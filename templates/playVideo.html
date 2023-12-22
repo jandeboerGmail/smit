@@ -3,94 +3,122 @@
 {% endblock %}
 {% load static %}
 {% block content %}
-
-<!-- Production -->
 {% csrf_token %}
-<video controls autoplay muted >
-  <source src="{% url 'playVideo' %}">
-</video>
-<!---
-<div class="col-4">
-  <img src="{% static 'media/coconut_bars.jpg' %}" alt="One Delicious chocolate coconut bars" />
-  <img src="{% static '/media/coconut_bars.jpg' %}" alt="Two elicious chocolate coconut bars" />
-  <hr>  
-  <hr>  
-  </div>
--->
+
 <!--
-<div class="container">
-  <div class="row justify-content-center fw-bold">
-    <div class="col">
-      <p> {{video.naam}}</p> 
-    </div>
-    <div class="col-4">
-      <p>{{video.camera.naam}}</p> 
-    </div>
-    <div class="col-4">
-      <p>{{video.camera.plaats}}</p> 
-    </div>
-  </div>
-  {% csrf_token %}
+<h3>Naam       ->  {{item.naam}} </h3>
+<h3>Link url   ->  {{item.video_link}} </h3>
+-->
 
-  <div class="col"> 
-  --> 
-    <!--
-    Org <video controls autoplay muted src="{% static '/media/' %}{{video.video_link}}" width="1024" height="768"> 
-    Tst   <video controls autoplay muted src="/code/video/Berkhout/Dorpstraat/Converted/Order1/voordeur264.mp4"  width="1024" height="768">
-    -->
-    <!--
-          <video controls autoplay muted src="{{location}}" width="1024" height="768">
-          <video controls autoplay muted src="{{video.video_link}}" type="video/mp4" width="1024" height="768"> 
-    -->
 
-    <!--
+<!--
+<video 
+  id="my-video"
+    class="video-js"
+    controls
+    preload="auto"
+    width="320"
+    height="240"
+    data-setup="{}"controls>
+  <source src="{%static 'images/bunnysmall.mp4' %}" type="video/mp4">
+  <p class="vjs-no-js">
+    To view this video please enable JavaScript, and consider upgrading to a
+    web browser that
+    <a href="https://videojs.com/html5-video-support/" target="_blank"
+      >supports HTML5 video</a
+    >
+  </p>
+</video>
 
- 
-    <video controls autoplay muted src="{{video.video_link}}"  width="1024" height="768"> 
-  
-      <p>This is fallback content to display for user agents that do not support the video tag.</p>
-    </video>
-  </div>
 
-  <div class="col text-primary">   
-      <h6>Play {{video.video_link}} </h6>
-      <h6>locatie {{location}}} </h6>
-        <h6>Play met  {% get_media_prefix %} {% get_media_prefix %}  </h6>
-     
-  </div>
+<video width="320" height="240" controls>
+  <source src="{%static 'images/nolen.mp4' %}" type="video/mp4">
+   Your browser does not support the video tag.
+</video>
+
+
+<video width="320" height="240" controls>
+  <source src="{{ item.video_link.url }}" type="video/mp4">
+   Your browser does not support the video tag.
+</video>
+-->
+<div class="d-flex justify-content-center">
+  <video 
+    id="my-video" 
+    class="video-js" 
+    muted
+    playbackRates: [0.5, 1, 2, 3, 4]
+    controls preload="auto"
+    width="640" height="480" 
+    data-setup="{}">
+    <source src="{{ item.video_link.url }}"  type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
 </div>
-   -->
-  <!-- 
-  <div class="video-player video ">
-    <video
-      src="{% static '/media/' %}{{video.video_link}}"
-      width="640" height="480"
-      class = "video"
-      muted
-    ></video>
 
-    <div class="player-controls">
-      <div class="video-progress">
-        <div class="video-progress-filled"></div>
-      </div>
+<div class="d-flex justify-content-center"></div>
+  <h3>{{item.naam}} </h3>
+  <h3> {{item.camera.plaats}} </h3>
+  <h3> {{item.camera.locatie.naam}} </h3>
+  <h3> {{item.opname_van}} </h3>
+</div>
 
-      <button class="play-button" title="Play">►</button>
+<!--
+<video 
+    id="my-video"
+    muted
+    class="video-js"
+    controls
+    preload="auto"
+    width="320"
+    height="240"
+    poster="{{ video.video_image.url }}" 
+    data-setup="{}" width="320" height="240" controls>
+    <source src="{{ item.video_link.url }}" type="video/mp4">
+  <p class="vjs-no-js">
+    To view this video please enable JavaScript, and consider upgrading to a
+    web browser that
+    <a href="https://videojs.com/html5-video-support/" target="_blank"
+      >supports HTML5 video</a
+    >
+  </p>
+</video>
+--->
 
-      <input
-        type="range"
-        class="volume"
-        min="0"
-        max="1"
-        step="0.01"
-        value="1"
-      />
+<!---
+<video 
+    id="my-video"
+    muted
+    class="video-js"
+    controls
+    preload="auto"
+    width="320"
+    height="240"
+    liveui
+    playbackRates: [0.5, 1, 1.5, 2]
+    poster="{{ video.video_image.url }}" 
+    data-setup="{}" width="320" height="240" controls>
+    <source src="{{ item.video_link.url }}" type="video/mp4">
+  <p class="vjs-no-js">
+    To view this video please enable JavaScript, and consider upgrading to a
+    web browser that
+    <a href="https://videojs.com/html5-video-support/" target="_blank"
+      >supports HTML5 video</a
+    >
+  </p>
+</video>
+-->
 
-      <div class="time">
-        <span class="current">0:00</span> / <span class="duration">0:00</span>
-      </div>
+<!--
+<script>
+  // Initialize the video player
+  var player = videojs('my-video');
 
-    </div>
-  </div>
-  -->
- <!-- {% include 'videojs.html' %} --> 
+  // Add event listener for seeking
+  player.on('seeking', function() {
+    console.log('User is seeking to:', player.currentTime());
+  });
+</script>
+-->
+
 {% endblock %}

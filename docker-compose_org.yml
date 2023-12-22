@@ -4,6 +4,10 @@ services:
   app:
     build:
       context: .
+    volumes:
+      - type: bind
+        source: /home/jan/media
+        target: /code/camera/media
     environment:
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}

@@ -13,7 +13,7 @@ TWILIO_AUTH_TOKEN=token
 TWILIO_CALLER_ID=number
 
 EMAIL_HOST=mailhost
-EMAIL_PORT=milhostport
+EMAIL_PORT=mailhostport
 #EMAIL_USE_SSL=False
 EMAIL_USE_TLS=True
 EMAIL_HOST_USER=loginuser
@@ -23,7 +23,7 @@ ACME_DEFAULT_EMAIL=emailadress
 
 #MFA
 # this one is optional
-LOGIN_REDIRECT_URL = 'two_factor:profile'
+#LOGIN_REDIRECT_URL = 'two_factor:profile'
 TWO_FACTOR_REMEMBER_COOKIE_AGE = 300
 TWO_FACTOR_LOGIN_TIMEOUT=60
 

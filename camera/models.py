@@ -185,11 +185,13 @@ class Video(models.Model):
     opname_van = models.DateTimeField(default=timezone.now, blank=False)
     opname_tot = models.DateTimeField(default=timezone.now, blank=False)
     camera = models.ForeignKey(Camera,on_delete=models.CASCADE)
-    video_link = models.CharField(max_length=500,blank=True)
-    #video_image = models.CharField(max_length=500,blank=True)
-    video_image = models.ImageField(upload_to ='images/',max_length=500,null=True,blank=True)
-    duration = models.CharField(max_length=20,blank = True)
+    #video_link = models.CharField(max_length=500,blank=True)
     #
+    video_link = models.FileField(max_length=500,blank=True)
+    #video_image = models.CharField(max_length=500,blank=True)  
+    video_image = models.ImageField(max_length=500,null=True,blank=True)
+    
+    duration = models.CharField(max_length=20,blank = True)
     file_size = models.CharField(max_length=30,blank = False,default = '0')
     codec = models.CharField(max_length=50,blank = True,default='mp4')
     memo = models.TextField(blank = True)

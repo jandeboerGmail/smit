@@ -2,6 +2,8 @@
 {% block head_title %} 
 {% endblock %}
 {% block content %}
+{% load static %}
+
 <form action="/camera/zNaamVideoUser" method="GET">
   {% csrf_token %}
    <div class="row form-inline">
@@ -51,6 +53,12 @@
          <td> {{video.camera.plaats}} </td>
          <td> {{video.opname_van}} </td>
          <td> {{video.opname_tot}} </td>
+         {% if video.video_image %}
+            <td><img src="{{ video.video_image.url }}"  width="50" height="50"> </td>
+          {% else %}
+            <td><img src="{%static 'images/stadgenoot.jpg' %}" width="50" height="50"> </td>
+            <!--- <td><img src="{%static 'images/smit-logo.png' %}" width="50" height="50"> </td> -->
+          {% endif %}
          <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
       </tr>
       </tbody> 

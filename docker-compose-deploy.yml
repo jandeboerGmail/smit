@@ -7,11 +7,12 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: /home/jan/videos
-        target: /code/camera/videos
+        source: /home/jan/media
+        target: /code/media
       - type: volume
         source: static_data
         target: /vol/web
+  
     environment:
       - DB_HOST=${DB_HOST}
       - DB_NAME=${DB_NAME}
@@ -42,4 +43,3 @@ services:
 
 volumes:
   static_data:
-

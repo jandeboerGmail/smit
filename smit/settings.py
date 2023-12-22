@@ -110,18 +110,22 @@ DATABASES = {
             },
     }
 }
+
 # Password validation
-# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+# https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validaton
+
+#LOGIN / LOGOUT
 #LOGIN_URL = '/admin/login'
-
 #LOGOUT_REDIRECT_URL = 'about'
-#LOGIN_REDIRECT_URL = 'allowedVideo'
+#LOGIN_URL = 'two_factor:login' 
+# this one is optional
+#LOGIN_REDIRECT_URL = 'two_factor:profile'
 
-LOGIN_URL = 'two_factor:login' 
-## this one is optional
-LOGIN_REDIRECT_URL = 'two_factor:profile'
-
-LOGOUT_REDIRECT_URL = 'home'
+#LOGIN_URL = 'home' 
+#LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "indexVideo"
+#LOGIN_REDIRECT_URL = "allowedVideo"
+LOGOUT_REDIRECT_URL = "login"
 
 # Develop
 #TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake' 
@@ -153,15 +157,15 @@ ACME_DEFAULT_EMAIL  = os.environ.get('ACME_DEFAULT_EMAIL ')
 DOMAIN              = os.environ.get('DOMAIN')
 
 #MFA
-TWO_FACTOR_REMEMBER_COOKIE_AGE =  None # 300
-TWO_FACTOR_LOGIN_TIMEOUT=60
+#TWO_FACTOR_REMEMBER_COOKIE_AGE =  None # 300
+#TWO_FACTOR_LOGIN_TIMEOUT=60
 
 #Cookie settings 
-SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+#SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 #SESSION_COOKIE_AGE=3600
-SESSION_COOKIE_AGE  = int(os.environ.get('SESSION_COOKIE_AGE','3600'))
+#SESSION_COOKIE_AGE  = int(os.environ.get('SESSION_COOKIE_AGE','3600'))
 #SESSION_COOKIE_SECURE=True
-PASSWORD_RESET_TIMEOUT_DAYS=30
+#PASSWORD_RESET_TIMEOUT_DAYS=30
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -192,13 +196,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-#MEDIA_URL = '/static/media/'
-#MEDIA_URL = '/media/'
-#MEDIA_ROOT = '/vol/web/media'
-
 STATIC_URL = '/static/static/'
 STATIC_ROOT = '/vol/web/static'
-# MEDIA_ROOT = '/home/jan/video/'
-MEDIA_ROOT = '/home/jan/media/'
-MEDIA_URL = '/media/'
+
+#MEDIA_ROOT = '/vol/web/media'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+#MEDIA_ROOT = '/home/jan/media/'
+MEDIA_URL = '/media/'
+#MEDIA_ROOT = BASE_DIR / 'media'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+

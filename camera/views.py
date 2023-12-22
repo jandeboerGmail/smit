@@ -12,7 +12,7 @@ from datetime import datetime
 from django.core.mail import EmailMessage
 from django.core import mail
 import urllib
- 
+
 from django.contrib.auth.models import User
 
 import camera.functions as functions
@@ -54,6 +54,7 @@ def serve_video(request, video_id):
     response['X-Accel-Redirect'] = '/videos/' + video.path
     return response
 
+
 #index
 @login_required
 @csrf_protect
@@ -92,9 +93,9 @@ def indexLocatie(request):
 def indexCamera(request):
     return render(request,'indexCamera.html', {} )
 
-@login_required
-@csrf_protect 
-@permission_required('camera.view_video')
+#@login_required
+#@csrf_protect 
+#@permission_required('camera.view_video')
 def indexVideo(request):
     return render(request,'indexVideo.html', {} )
 
@@ -724,9 +725,9 @@ def allVideo(request):
     video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'displayVideo.html',video_dict )
 
-@login_required
-@csrf_protect 
-@permission_required('camera.view_video')
+#@login_required
+#@csrf_protect 
+#@permission_required('camera.view_video')
 def allowedVideo(request):
     currentUser = request.user
     print ('current User: ', currentUser.id,currentUser.username)
@@ -811,7 +812,7 @@ def zLocatieVideo (request):
     if query:
         qset = (Q(camera__locatie__naam__icontains=query))    
         video_list = Video.objects.filter(qset).select_related('camera').distinct().order_by('naam')
-       #print ('video_list: ',str(video_list.query))
+        #print ('video_list: ',str(video_list.query))
         aantal = video_list.count
 
         paginator = Paginator(video_list,15)
@@ -917,7 +918,6 @@ def deleteVideo(request,pk):
     context = {'item' : video , 'title': 'Verwijder Video'}
     return render(request,template_name,context)
 
-# production
 @login_required
 @csrf_protect
 @permission_required('camera.view_video')
@@ -926,60 +926,14 @@ def playVideo(request,pk):
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
         return redirect('about')
-   
+    
     if functions.videoIsAllowed(request,video):
-        videoFile = open(video.video_link, 'rb')
-        #print ('location: ',location)
-        print ('videoFile: ',videoFile)
-        return FileResponse(videoFile)
+        template_name = 'playVideo.html'
+        context = {'item' : video , 'title': 'Speel Video '}
+        return render(request,template_name,context)
     else:
         return render(request,'notAllowed.html',{})
-
-'''
-@login_required
-@permission_required('camera.view_video')
-def playVideo(request,pk):
-    try:
-        video = Video.objects.get(id=pk)
-    except Video.DoesNotExist:
-        return redirect('/')
-    #location =  functions.getVideoLocation() + video.video_link
-    #location =  video.video_link
     
-    #videoFile = open(video.video_link, 'rb')
-    #location = FileResponse(videoFile)
-
-    #video_dict  = {'location' : location , 'video' : video }
-    #return render(request,'playVideo.html', video_dict )
-
-    template_name = 'playVideo.html'
-    context = {'item' : video , 'title': 'Play Video'}
-    return render(request,template_name,context)
-    #return ( redirect('indexVideo'))
-'''
-
-''' new
-@login_required
-def playVideo(request,pk):
-    try :
-        video = Video.objects.get(id=pk)
-    except Video.DoesNotExist:
-        return redirect('indexVideo')
-    
-    videoFile = open(video.video_link, 'rb')
-    location = FileResponse(videoFile)
-
-    video_dict  = {'location' : location , 'video' : video }
-    #video_dict  = {'video' : video }
-    return render(request,'../templates/playVideo.html', video_dict )
-
-
-    template_name = 'playVideo.html'
-    context = {'item' : video , 'title': 'Play Video'}
-    return render(request,template_name,context)
-    return ( redirect('indexVideo'))
-    '''
-
 # -----Orders ---
 @login_required
 @csrf_protect
@@ -1220,7 +1174,7 @@ def actieGetVideoLocation(request):
 @csrf_protect
 def actieConvertVideo(request):
     if functions.getRunningStatus() == False:
-        functions.ConvertingVideos()
+        functions.ConvertingVideos(request)
         html = "<html><body><strong><center>Conversie gestart... (check logs)</center></strong></body></html>" 
     else:
         html = "<html><body><strong><center>Niets te converteren(check status)</center></strong></body></html>" 
@@ -1231,7 +1185,7 @@ def actieConvertVideo(request):
 def actieConvertVideoOrder(request):
     if functions.getRunningStatus() == False:
         order = functions.getOrder()
-        functions.ConvertingVideosOrder(order)
+        functions.ConvertingVideosOrder(request,order)
         html = "<html><body><strong><center>Order conversie gestart... (check logs)</center></strong></body></html>" 
     else:
         html = "<html><body><strong><center>Niets te converteren(check status)</center></strong></body></html>" 
@@ -1243,7 +1197,7 @@ def actieListVideo(request):
     functions.ListVideos()
     html = "<html><body><strong><center>Listing video's Done.. (check logs) </center></strong></body></html>" 
     return HttpResponse(html)
-    #return redirect('indexActies')
+    #return redirectcheckCamerasindexActies')
 
 @login_required
 @csrf_protect
@@ -1256,7 +1210,7 @@ def actieListConvertedVideo(request):
 @login_required
 @csrf_protect
 def actieInsertConvertedVideos(request):
-    functions.insertConvertedVideos()
+    functions.insertConvertedVideos(request)
     return redirect('indexActies')
 
 @login_required

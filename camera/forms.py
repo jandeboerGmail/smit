@@ -35,13 +35,13 @@ class BedrijfForm(forms.ModelForm):
 class LocatieForm(forms.ModelForm):
     class Meta:
         model = Locatie
-        fields = ['naam','adres','bedrijf','gebied','image','memo'] 
+        fields = ['naam','adres','bedrijf','gebied','contact','image','memo'] 
         widgets = {
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
             'adres': forms.Select(attrs={'class': 'form-control'}),
             'gebied': forms.Select(attrs={'class': 'form-control'}),
-            #'contact': forms.Select(attrs={'class': 'form-control'}),
+            'contact': forms.Select(attrs={'class': 'form-control'}),
             'image': forms.FileInput(attrs={'class': 'form-control'}),
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }
@@ -64,7 +64,7 @@ class CameraForm(forms.ModelForm):
 class VideoForm(forms.ModelForm):
     class Meta:
         model = Video
-        fields = ['naam','camera','opname_van','opname_tot','video_link','codec','memo']
+        fields = ['naam','camera','opname_van','opname_tot','video_link','video_image','codec','memo']
         widgets = {
            # 'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'naam': forms.TextInput(attrs={'class': 'form-control'}),
@@ -73,6 +73,7 @@ class VideoForm(forms.ModelForm):
             'opname_van': forms.DateTimeInput(attrs={'class': 'form-control'}), 
             'opname_tot': forms.DateTimeInput(attrs={'class': 'form-control'}),   
             'video_link': forms.TextInput(attrs={'class': 'form-control'}), 
+            'video_image': forms.TextInput(attrs={'class': 'form-control'}), 
             'codec': forms.TextInput(attrs={'class': 'form-control'}), 
             'memo': forms.Textarea(attrs={'class': 'form-control'}),
         }

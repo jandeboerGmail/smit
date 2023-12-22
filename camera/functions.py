@@ -374,10 +374,12 @@ def addGebied(orderNr,bedrijfNaam):
 
     print("addGebied: ",orderNr,bedrijfNaam)
     aBedrijf = addBedrijf(orderNr,bedrijfNaam)
-    aGebiedNr = 0 
+
+    aGebiedNr = 0 # Not yet known. Set Manually
 
     aGebieden = Gebied.objects.filter(bedrijf__naam=bedrijfNaam,gebiedNr=aGebiedNr)
     if not aGebieden and bedrijfNaam:
+        print ('Add gebied: ',orderNr,'-',bedrijfNaam)
         aGebied = Gebied()
         aGebied.gebiedNr = 0
         aGebied.naam = "onbekend"
@@ -393,7 +395,7 @@ def addGebied(orderNr,bedrijfNaam):
 #Locatie
 def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
 
-    print('Add Locatie: ',orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam)
+    print('Add Locatie: ',orderNr,'-',locatieNaam,'-',bedrijfNaam,'-',adressNaam,'-',gebruikerNaam)
     aBedrijf   = addBedrijf(orderNr,bedrijfNaam)
     aUser      = addUser(orderNr,gebruikerNaam)
     aAdress    = addAdress(orderNr,adressNaam)
@@ -407,7 +409,7 @@ def addLocatie(orderNr,locatieNaam,bedrijfNaam,adressNaam,gebruikerNaam):
     #aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam,bedrijf__naam=bedrijfNaam,contact__naam=gebruikerNaam)
     aLocaties   = Locatie.objects.filter(naam=locatieNaam,adres__naam=adressNaam)
 
-    if not aLocaties and locatieNaam:
+    if not aLocaties or not locatieNaam:
         print("location not found: ",locatieNaam,adressNaam,bedrijfNaam,gebruikerNaam)
         aLocatie = Locatie()
         aLocatie.naam    = locatieNaam
@@ -463,8 +465,8 @@ def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNm,adressNaam,ge
         aCamera = Camera()
         aCamera.naam      = cameraNaam
         aCamera.locatie   = aLocatie
-        aCamera.type      = "default"
-        aCamera.plaats    = "default"
+        aCamera.type      = "Dahua"
+        aCamera.plaats    = "onbekend"
         aCamera.save()
         print('add aCamera name: ',aCamera.naam)
 
@@ -476,7 +478,7 @@ def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNm,adressNaam,ge
     return aCamera 
 
 #Video
-def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recFrom,recTill):
+def addVideo(request,orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recFrom,recTill):
     
     print("---------- addVideo -------------")
     print("ordernr:    ",orderNr)
@@ -488,26 +490,28 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     aAdress = addAdress(orderNr,locatieNaam)
     print ("Adress: ",aAdress.naam)
 
-    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNaam,aAdress.naam,"onbekend")
+    currentUser = request.user
+    aUser =  User.objects.get(id=currentUser.id)
+
+    aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNaam,aAdress.naam,aUser.username)
+    #aCamera  = addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNaam,aAdress.naam,"onbekend")
 
     #print ("Camera: ",aCamera.naam)
-
     #aVideo   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
+
     locatieId = Locatie.objects.filter(naam=locatieNaam)[0]
     print ('locatieId :',locatieId)
+
     aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam,camera__locatie=locatieId)
-
-    aOrder=addServiceOrder(orderNr,bedrijfNaam,locatieNaam,aAdress.naam,"onbekend") # LoginUser ?
-
-    #print ("aUser: ",aCamera.naam)
-
+    aOrder=addServiceOrder(orderNr,bedrijfNaam,locatieNaam,aAdress.naam,aUser.username) # LoginUser ?
+    
     if not aVideos:
         print("not found aVideo;  ",videoNaam, aCamera.naam)
         aVideo = Video()
         aVideo.naam         = videoNaam
         aVideo.camera       = aCamera
         aVideo.ordernr      = aOrder
-        aVideo.video_link   = videoLink
+        aVideo.video_link   = substring_after(videoLink,getVideoLocation()) 
         if validDate(recFrom):
             aVideo.opname_van   = datetime.strptime(recFrom, '%Y%m%d%H%M%S')
         if validDate(recTill):
@@ -528,13 +532,13 @@ def addVideo(orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoLink,recF
     return aVideo
 
 def updateImageInDB(inFileName,imageName):
-    aVideos  = Video.objects.filter(video_link=inFileName)
+    videoNaam = extractVideoNaam(inFileName)
+    aVideos  = Video.objects.filter(naam=videoNaam)
     if aVideos:
         aVideo = aVideos[0]
-        aVideo.video_image = imageName
+        aVideo.video_image = substring_after(imageName,getVideoLocation())
         aVideo.save()
     return
-
 
 # Log generic functions
 def addLogEntry(orderNr,message):
@@ -582,12 +586,20 @@ def substring_after(s, delim):
 
 def substring_before(s, delim):
         return s.split(delim)[0]
+ 
+def extractVideoNaam(filename):
+    s = filename
+    while substring_after(s, "/"):
+        s = substring_after(s, "/")
+        #print ("s" ,s)
+        naam = substring_before(s, ".mp4")
+    return naam
 
-def extractDBitems(filename):
+def extractDBitems(request,filename):
     inpath=getVideoLocation()
     # print("----------- extractDBitems -----")
    
-    inFile = filename.replace(" ", "\ ")
+    inFile = filename.replace(" ", "\\ ")
     print("filename: ",inFile)
     fileItems = re.split("/",inFile)
 
@@ -599,20 +611,21 @@ def extractDBitems(filename):
     
     #extract videoLink
     video_link = substring_after(inFile,inpath)
-    video_link = inpath + video_link.replace("\ ", " ")
+    video_link = inpath + video_link.replace("\\ ", " ")
+ 
+    #print("video_link: ", video_link) 
     #print("video_link: ", video_link) 
 
     if  "static" in inFile:
-        ordernr   = fileItems[8].replace("\ ", " ")
-        bedrijf   = fileItems[5].replace("\ ", " ")
-        locatie   = fileItems[6].replace("\ ", " ")
-        videoNaam = fileItems[9].replace("\ ", " ")
+        ordernr   = fileItems[6].replace("\\ " , " ")
+        bedrijf   = fileItems[5].replace("\\ ", " ")
+        locatie   = fileItems[6].replace("\\ ", " ")
+        videoNaam = fileItems[9].replace("\\ ", " ")
     else:
-        ordernr   = fileItems[7].replace("\ ", " ")
-        bedrijf   = fileItems[4].replace("\ ", " ")
-        locatie   = fileItems[5].replace("\ ", " ")
-        videoNaam = fileItems[8].replace("\ ", " ")
-
+        ordernr   = fileItems[6].replace("\\ ", " ")
+        bedrijf   = fileItems[3].replace("\\ ", " ")
+        locatie   = fileItems[4].replace("\\ ", " ")
+        videoNaam = fileItems[7].replace("\\ ", " ")
 
     #extract videonaam
     naam = substring_before(videoNaam, ".mp4")
@@ -652,10 +665,10 @@ def extractDBitems(filename):
     #print ("RecTill: " , recTill)
     #print ("Codec:    vp9\n\n")
 
-    addVideo(ordernr,naam,camera,locatie,bedrijf,video_link,recFrom,recTill)
+    addVideo(request,ordernr,naam,camera,locatie,bedrijf,video_link,recFrom,recTill)
     return
 
-def insertConvertedVideos():
+def insertConvertedVideos(request):
     inpath=getVideoLocation()
     print('Add Migrated Videos to DB from:',inpath)
     message = 'Add Migrated Videos to DB from:' + inpath
@@ -668,12 +681,12 @@ def insertConvertedVideos():
             if "Migrated" in filename and "._" not in filename:
                 #print('Filename :',filename)
                 if ".webm" in filename or ".mp4" in filename and "._" not in filename:
-                    extractDBitems(filename)
+                    extractDBitems(request,filename)
     message = 'Add Converted Videos to DB Ended'
     addLogEntry(" ", message)
     return   
 
-def ConvertingVideos():
+def ConvertingVideos(request):
     print('Conversion')
    
     videoPath     = getVideoLocation()
@@ -698,8 +711,8 @@ def ConvertingVideos():
                     if (after and size_changed(inFileName,5)) and (os.path.getsize(inFileName)) > 0:
                       
                         print('After :',after)
-                        request = after[0:after.find("/")]
-                        print('request:',request)
+                        orderNr = after[0:after.find("/")]
+                        print('request:',orderNr)
                         
                         #make/check output dir
                         destDir = substring_before(inFileName, "2Convert") + "Migrated/" 
@@ -709,15 +722,15 @@ def ConvertingVideos():
                             os.mkdir(destDir)
 
                         # check / create request directory
-                        reqDir = destDir + request + "/"
+                        reqDir = destDir + orderNr + "/"
                         print('reqDir :', reqDir)
                         if not os.path.isdir(reqDir):
                             os.mkdir(reqDir)
                 
                         outFileName = os.path.join(destDir,after)
             
-                        outFile = outFileName.replace(" ", "\ ")
-                        inFile = inFileName.replace(" ", "\ ")
+                        outFile = outFileName.replace(" ", "\\ ")
+                        inFile = inFileName.replace(" ", "\\ ")
 
                         file_stats = os.stat(inFileName)
                         #print(file_stats)
@@ -734,11 +747,11 @@ def ConvertingVideos():
                             outFileName = outFileName 
                 
                             message = 'Copying h264 ' + inFileName + " Size: " + fSize + " MB"
-                            addLogEntry(request,message)
+                            addLogEntry(orderNr,message)
                             shutil.copyfile(inFileName, outFileName)
-                            extractDBitems(outFileName)
+                            extractDBitems(request,outFileName)
                             # removeFile(inFileName) # uncommend for production
-                            moveFileToDone(inFileName,request) 
+                            moveFileToDone(inFileName,orderNr) 
                             
                         else: #conversion needed
                             if converting <= maxConverting:
@@ -753,7 +766,8 @@ def ConvertingVideos():
                                 #h264
                                 outFileName = outFileName.replace(".mp4", "_conv_h264.mp4")
                                 outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
-                                outFile = outFileName.replace(" ", "\ ")
+                            
+                                outFile = outFileName.replace(" ", "\\ ")
                             
                                 #ffmpeg -i input_file.mp4 -c:v libx264 -crf 23 -c:a copy output_file.mp4 -- Chatgpt
                                 #command = "ffmpeg -y -i " + inFile
@@ -767,7 +781,7 @@ def ConvertingVideos():
                                 #vb9
                                 #outFileName = outFileName.replace(".mp4", ".webm")
                                 #outFileName = outFileName.replace(".MP4", ".webm")
-                                #outFile = outFileName.replace(" ", "\ ")
+                                #outFile = outFileName.replace(" ", "\\ ")
                             
                                 #vp9 
                                 #command = "ffmpeg -y -i " + inFile
@@ -805,8 +819,8 @@ def ConvertingVideos():
                                     addLogEntry(request,message)
                         
                                     # removeFile(inFileName) # uncommend for production
-                                    # moveFileToDone(inFileName,request) Not yet after conversion 
-                                    extractDBitems(outFileName)
+                                    # moveFileToDone(inFileName,orderNr) Not yet after conversion 
+                                    extractDBitems(request,outFileName)
                                 else:
                                     addLogEntry(request,"ERROR : Not Migrated")
                             else:
@@ -816,7 +830,7 @@ def ConvertingVideos():
     setRunningStatus(False)
     return
 
-def ConvertingVideosOrder(order):
+def ConvertingVideosOrder(request,order):
     print('Order Conversion')
    
     videoPath     = getVideoLocation()
@@ -841,8 +855,8 @@ def ConvertingVideosOrder(order):
                     if (after and size_changed(inFileName,5)) and (os.path.getsize(inFileName)) > 0:
                       
                         print('After :',after)
-                        request = after[0:after.find("/")]
-                        print('request:',request)
+                        orderNr = after[0:after.find("/")]
+                        print('request:',orderNr)
                         
                         #make/check output dir
                         destDir = substring_before(inFileName, "2Convert") + "Migrated/" 
@@ -852,15 +866,15 @@ def ConvertingVideosOrder(order):
                             os.mkdir(destDir)
 
                         # check / create request directory
-                        reqDir = destDir + request + "/"
+                        reqDir = destDir + orderNr + "/"
                         print('reqDir :', reqDir)
                         if not os.path.isdir(reqDir):
                             os.mkdir(reqDir)
                 
                         outFileName = os.path.join(destDir,after)
             
-                        outFile = outFileName.replace(" ", "\ ")
-                        inFile = inFileName.replace(" ", "\ ")
+                        outFile = outFileName.replace(" ", "\\ ")
+                        inFile = inFileName.replace(" ", "\\ ")
 
                         file_stats = os.stat(inFileName)
                         #print(file_stats)
@@ -877,9 +891,9 @@ def ConvertingVideosOrder(order):
                             outFileName = outFileName 
                 
                             message = 'Copying h264 ' + inFileName + " Size: " + fSize + " MB"
-                            addLogEntry(request,message)
+                            addLogEntry(orderNr,message)
                             shutil.copyfile(inFileName, outFileName)
-                            extractDBitems(outFileName)
+                            extractDBitems(orderNr,outFileName)
                             # removeFile(inFileName) # uncommend for production
                             moveFileToDone(inFileName,request) 
                             
@@ -888,7 +902,7 @@ def ConvertingVideosOrder(order):
                                 converting += 1
                                 startTime = time.time()
                                 message = 'Migrating   ' + inFileName + " Size: " + fSize + " MB"
-                                addLogEntry(request,message)
+                                addLogEntry(orderNr,message)
 
                                 #command 
                                 #command = "cp " + inFile + " " + outFile 
@@ -896,7 +910,7 @@ def ConvertingVideosOrder(order):
                                 #h264
                                 outFileName = outFileName.replace(".mp4", "_conv_h264.mp4")
                                 outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
-                                outFile = outFileName.replace(" ", "\ ")
+                                outFile = outFileName.replace(" ", "\\ ")
                             
                                 #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
                                 command = "ffmpeg -y -threads 1 -i " + inFile
@@ -905,7 +919,7 @@ def ConvertingVideosOrder(order):
                                 #vb9
                                 #outFileName = outFileName.replace(".mp4", ".webm")
                                 #outFileName = outFileName.replace(".MP4", ".webm")
-                                #outFile = outFileName.replace(" ", "\ ")
+                                #outFile = outFileName.replace(" ", "\\ ")
                             
                                 #vp9 
                                 #command = "ffmpeg -y -i " + inFile
@@ -916,7 +930,7 @@ def ConvertingVideosOrder(order):
                                 #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
                                 #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
 
-                                #addLogEntry(request,command)
+                                #addLogEntry(orderNr,command)
                                 print('Command :',command) 
                                 # removeFile(outFile) # uncomment in production
                             
@@ -940,13 +954,13 @@ def ConvertingVideosOrder(order):
                                     
                                     message = "To " + outFileName 
                                     #message = "Migrated to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
-                                    addLogEntry(request,message)
+                                    addLogEntry(orderNr,message)
                         
                                     # removeFile(inFileName) # uncommend for production
-                                    # moveFileToDone(inFileName,request) Not yet after conversion 
-                                    extractDBitems(outFileName)
+                                    # moveFileToDone(inFileName,orderNr) Not yet after conversion 
+                                    extractDBitems(request,outFileName)
                                 else:
-                                    addLogEntry(request,"ERROR : Not Migrated")
+                                    addLogEntry(orderNr,"ERROR : Not Migrated")
                             else:
                                 addLogEntry(order,"INFO : Exceeding Number of ffmpeg converions") 
     message = "Order migrating Ended"
@@ -971,10 +985,11 @@ def ListVideos():
             
                     if (after and size_changed(inFileName,1)) and (os.path.getsize(inFileName)) > 0:
                         #print('After :',after)
-                        request = after[0:after.find("/")]
-                        #print('request:',request)
+                        orderNr = after[0:after.find("/")]
+                        #print('request:',orderNr)
+                      
+                        #inFile = inFileName.replace(" ", "\\ ")
                         
-                        inFile = inFileName.replace(" ", "\ ")
                         file_stats = os.stat(inFileName)
                         fileSize = file_stats.st_size / (1024 * 1024)
                         fSize = "%.5f" % fileSize
@@ -986,10 +1001,10 @@ def ListVideos():
                     
                         if "h264" in formatData:
                             message = 'ToCopy h264 ' + inFileName + " Size: " + fSize + " MB"
-                            addLogEntry(request,message)
+                            addLogEntry(orderNr,message)
                         else: #conversion needed
                             message = 'ToConvert    ' + inFileName + " Size: " + fSize + " MB"
-                            addLogEntry(request,message)                
+                            addLogEntry(orderNr,message)                
                           
     message = "Listing Ended "
     addLogEntry(" ", message)
@@ -1003,25 +1018,25 @@ def ListConvertedVideos():
   
         for name in files:
             inFileName = os.path.join(root, name)
-            #print("Files :",os.path.join(root, name))
+            print("Files :",os.path.join(root, name))
             if "Migrated" in inFileName:
-                #print('inFile :',inFileName)
+                print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName  and not "._" in inFileName:
                     print('inFile :',inFileName)
                     after = substring_after(inFileName,"Migrated/") 
             
                     if (os.path.getsize(inFileName)) > 0:
                         #print('After :',after)
-                        request = after[0:after.find("/")]
-                        #print('request:',request)
+                        orderNr = after[0:after.find("/")]
+                        #print('request:',orderNr)
                         
-                        inFile = inFileName.replace(" ", "\ ")
+                        #inFile = inFileName.replace(" ", "\\ ")
                         file_stats = os.stat(inFileName)
                         fileSize = file_stats.st_size / (1024 * 1024)
                         fSize = "%.5f" % fileSize
 
                         message = 'Migrated '  + inFileName + " Size: " + fSize + " MB"
-                        addLogEntry(request,message)
+                        addLogEntry(orderNr,message)
                                                            
     message = "Listing Migrated Ended"
     addLogEntry(" ", message)
@@ -1030,7 +1045,7 @@ def ListConvertedVideos():
 # make Preview Images
 def makeImage(videoFilename,imageName):
     # ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
-    #inFilename = videoFilename.replace(" ", "\ ")
+    #inFilename = videoFilename.replace(" ", "\\ ")
     # imagename = $
     command = "ffmpeg -y -i  " + videoFilename  + " -ss 00:00:01.000 -vframes 1 " + imageName
     result = os.system(command)                   
@@ -1051,7 +1066,7 @@ def makeImages():
                     after = substring_after(inFileName,"Migrated/") 
             
                     if (os.path.getsize(inFileName)) > 0:
-                        request = after[0:after.find("/")]
+                        orderNr = after[0:after.find("/")]
 
                         imageName = inFileName
                         imageName = imageName.replace(".mp4", ".jpg")
@@ -1064,7 +1079,7 @@ def makeImages():
                             updateImageInDB(inFileName,imageName)
                         else:
                             message = 'ERROR: Image created from '  + inFileName 
-                        addLogEntry(request,message)
+                        addLogEntry(orderNr,message)
                                                            
     message = "Make preview Images Ended"
     addLogEntry(" ", message)
@@ -1075,15 +1090,14 @@ def DurationVideo(videoFilename):
     aVideos  = Video.objects.filter(video_link=videoFilename)
     if aVideos:
         aVideo = aVideos[0]
-        #print('Dxxx' ,videoFilename, aVideo.duration)
-        #if aVideo.duration == "":
         if aVideo.duration:
             return True
         else:
             return False
 
 def updateDurationVideoInDB(videoFilename,duration):
-    aVideos  = Video.objects.filter(video_link=videoFilename)
+    videoNaam = extractVideoNaam(videoFilename)
+    aVideos  = Video.objects.filter(naam=videoNaam)
     if aVideos and duration:
         aVideo = aVideos[0]
         aVideo.duration = substring_before(duration, ".") # hh:mmm:ss 
@@ -1091,9 +1105,9 @@ def updateDurationVideoInDB(videoFilename,duration):
     return
 
 def getDurationVideo(videoFileName):
-    inFilename = videoFileName.replace(" ", "\ ")
-    inFilename = inFilename.replace("(", "\(")
-    inFilename = inFilename.replace(")", "\)")
+    inFilename = videoFileName.replace(" ", "\\ ")
+    inFilename = inFilename.replace("(", "\\(")
+    inFilename = inFilename.replace(")", "\\)")
     
     command = "ffprobe -v error -show_entries format=duration  -sexagesimal -of default=noprint_wrappers=1:nokey=1 " +  inFilename  + " > ._isSize"                                                                                                                                                                                                                        
     result = os.system(command)  
@@ -1118,7 +1132,7 @@ def getDurationVideos():
                 if (".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName)  and not "._" in inFileName:
                     after = substring_after(inFileName,"Migrated/") 
                     if (os.path.getsize(inFileName)) > 0:
-                        request = after[0:after.find("/")]
+                        orderNr = after[0:after.find("/")]
                         
                         # is it set in the db ?
                         if not DurationVideo(inFileName):
@@ -1127,7 +1141,7 @@ def getDurationVideos():
                                 message = 'Setting the duration from '  + inFileName
                             else:
                                 message = 'ERROR: Setting duration from '  + inFileName
-                                addLogEntry(request,message)
+                                addLogEntry(orderNr,message)
                                                   
     message = "End :set the duration from the Videos"
     addLogEntry(" ", message)
@@ -1144,9 +1158,9 @@ def FileSizeVideo(videoFilename):
     return False
 
 def updateFileSizeVideoInDB(videoFilename,fileSize):
-    aVideos  = Video.objects.filter(video_link=videoFilename)
+    videoNaam = extractVideoNaam(videoFilename)
+    aVideos  = Video.objects.filter(naam=videoNaam)
     if aVideos and fileSize :
-        print ('UpdateLengthInDB', videoFilename, fileSize)
         aVideo = aVideos[0]
         aVideo.file_size = fileSize
         aVideo.save()
@@ -1174,7 +1188,7 @@ def getFileSizeVideos():
                 if (".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName)  and not "._" in inFileName:
                     after = substring_after(inFileName,"Migrated/") 
                     if (os.path.getsize(inFileName)) > 0:
-                        request = after[0:after.find("/")]
+                        orderNr = after[0:after.find("/")]
 
                          # is it set in the db ?
                         if not FileSizeVideo(inFileName):
@@ -1182,7 +1196,7 @@ def getFileSizeVideos():
                                 message = 'Getting the FileSize of '  + inFileName
                             else:
                                 message = 'ERROR: Getting the FileSize of '  + inFileName
-                            addLogEntry(request,message)
+                            addLogEntry(orderNr,message)
                                                            
     message = "Getting the Filesize of the Videos Ended"
     addLogEntry(" ", message)
@@ -1199,17 +1213,17 @@ def valid_email_address(email_address):
 
 def SendMail(subject,message,recipentList):
     emailcheckedRecepentList = []
-    request = " "
+    orderNr = " "
     for emailAdress in recipentList:
         #print ("email_adress :",emailAdress)
         
         if valid_email_address(emailAdress):
             emailcheckedRecepentList.append(emailAdress)       
             errorMessage = 'INFO : Mail send to: '  + emailAdress
-            addLogEntry(request,errorMessage) 
+            addLogEntry(orderNr,errorMessage) 
         else:
             errorMessage = 'INFO : Wrong email Adress Specified: '  + emailAdress
-            addLogEntry(request,errorMessage) 
+            addLogEntry(orderNr,errorMessage) 
 
     #print ("emailcheckedRecepentList :",emailcheckedRecepentList)    
     #chatgpt

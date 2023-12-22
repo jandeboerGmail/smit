@@ -2,6 +2,7 @@
 {% block head_title %} 
 {% endblock %}
 {% block content %}
+{% load static %}
 
 <form action="." method="GET">
   {% csrf_token %}
@@ -52,6 +53,12 @@
          <td> {{video.camera.plaats}} </td>
          <td> {{video.opname_van}} </td>
          <td> {{video.duration}} </td>
+         {% if video.video_image %}
+            <td><img src="{{ video.video_image.url }}"  width="50" height="50"> </td>
+          {% else %}
+            <td><img src="{%static 'images/stadgenoot.jpg' %}" width="50" height="50"> </td>
+            <!--- <td><img src="{%static 'images/smit-logo.png' %}" width="50" height="50"> </td> -->
+        {% endif %}
          <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
          <td><a class="btn btn-sm btn-info" href="{% url 'editVideo' video.id %}">Edit</a></td>
          <td><a class="btn btn-sm btn-danger" href="{% url 'deleteVideo' video.id %}">Delete</a></td>
