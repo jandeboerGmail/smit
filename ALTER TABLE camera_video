@@ -1,2 +1,0 @@
-ALTER TABLE camera_video
-ADD file_size  varchar(30) NOT NULL;
