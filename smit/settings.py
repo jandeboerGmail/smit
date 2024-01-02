@@ -117,7 +117,7 @@ DATABASES = {
 #LOGIN / LOGOUT
 #LOGIN_URL = '/admin/login'
 #LOGOUT_REDIRECT_URL = 'about'
-#LOGIN_URL = 'two_factor:login' 
+LOGIN_URL = 'two_factor:login' 
 # this one is optional
 #LOGIN_REDIRECT_URL = 'two_factor:profile'
 
@@ -125,7 +125,7 @@ DATABASES = {
 #LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "indexVideo"
 #LOGIN_REDIRECT_URL = "allowedVideo"
-LOGOUT_REDIRECT_URL = "login"
+#LOGOUT_REDIRECT_URL = "login"
 
 # Develop
 #TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake' 
@@ -156,6 +156,7 @@ ACME_DEFAULT_EMAIL  = os.environ.get('ACME_DEFAULT_EMAIL ')
 
 DOMAIN              = os.environ.get('DOMAIN')
 
+
 #MFA
 #TWO_FACTOR_REMEMBER_COOKIE_AGE =  None # 300
 #TWO_FACTOR_LOGIN_TIMEOUT=60
@@ -164,7 +165,7 @@ DOMAIN              = os.environ.get('DOMAIN')
 #SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 #SESSION_COOKIE_AGE=3600
 #SESSION_COOKIE_AGE  = int(os.environ.get('SESSION_COOKIE_AGE','3600'))
-#SESSION_COOKIE_SECURE=True
+SESSION_COOKIE_SECURE=False
 #PASSWORD_RESET_TIMEOUT_DAYS=30
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -207,5 +208,3 @@ MEDIA_URL = '/media/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None
-
-

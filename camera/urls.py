@@ -151,16 +151,17 @@ urlpatterns = [
     #path ('accounts/', include('django.contrib.auth.urls')),
  
 #MFA
-    #path( '', HomeView.as_view(),name='home',),
-    #path('account/logout/',LogoutView.as_view(),name='logout',),
-    #path('secret/',ExampleSecretView.as_view(),name='secret',),
-    #path('account/register/done/',RegistrationCompleteView.as_view(),name='registration_complete',),
+    path( '', HomeView.as_view(),name='home',),
+    path('account/logout/',LogoutView.as_view(),name='logout',),
+    path('secret/',ExampleSecretView.as_view(),name='secret',),
+    path('account/register/done/',RegistrationCompleteView.as_view(),name='registration_complete',),
     
-    #path('', include(tf_urls)),
-    #path('', include(tf_twilio_urls)),
+    path('', include(tf_urls)),
+    path('', include(tf_twilio_urls)),
     #path('', include('user_sessions.urls', 'user_sessions')),
     path('admin/', admin.site.urls),
     #path('', include('smit.urls'))
+
 ]  + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 

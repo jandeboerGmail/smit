@@ -1203,7 +1203,7 @@ def actieListVideo(request):
 @csrf_protect
 def actieListConvertedVideo(request):
     functions.ListConvertedVideos()
-    html = "<html><body><strong><center>Listing Converted video's Done.. (check logs) </center></strong></body></html>" 
+    html = "<html><body><strong><center>Listing Migrated video's Done.. (check logs) </center></strong></body></html>" 
     return HttpResponse(html)
     #return redirect('indexActies')
     

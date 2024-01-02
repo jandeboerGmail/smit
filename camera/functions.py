@@ -536,6 +536,7 @@ def updateImageInDB(inFileName,imageName):
     aVideos  = Video.objects.filter(naam=videoNaam)
     if aVideos:
         aVideo = aVideos[0]
+        imageName=imageName.replace("\\ "," ")
         aVideo.video_image = substring_after(imageName,getVideoLocation())
         aVideo.save()
     return
@@ -1045,8 +1046,11 @@ def ListConvertedVideos():
 # make Preview Images
 def makeImage(videoFilename,imageName):
     # ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
-    #inFilename = videoFilename.replace(" ", "\\ ")
-    # imagename = $
+  
+    videoFilename = videoFilename.replace(" ", "\\ ")
+    imageName = imageName.replace(" ", "\\ ")
+    #print("making image:",videoFilename,"-> ",imageName)
+
     command = "ffmpeg -y -i  " + videoFilename  + " -ss 00:00:01.000 -vframes 1 " + imageName
     result = os.system(command)                   
     return result
