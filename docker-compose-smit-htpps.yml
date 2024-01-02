@@ -7,8 +7,9 @@ services:
     restart: always
     volumes:
       - type: bind
-        source: /home/jan/videos
-        target: /code/camera/videos
+        source: /mnt/cctv/KLANTEN/DOWNLOAD
+        #source: /home/jan/videos
+        target: /code/media
       - type: volume
         source: static_data
         target: /vol/web
