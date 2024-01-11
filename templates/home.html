@@ -108,6 +108,11 @@
               <li class="nav-item">
                 <a class="nav-link text-dark">{{ user }} {% if user.otp_device %}🔒{% endif %}</a>
               </li>
+
+              <li class="nav-item mr-auto">
+                <a class="nav-link text-danger" href="/accounts/password_change/">Password</a>  
+            </li>
+
               <!--
                   <li class="nav-item mr-auto">
                   <a class="nav-link text-dark" href="{{ logout_url }}">Logout</a>  
@@ -115,9 +120,8 @@
               -->
               <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
-                <button type="submit" class="nav-link text-dark  btn btn-primary">Logout</button>
+                <button type="submit" class="nav-link text-danger  btn btn-primary">Logout</button>
              </form>
-
 
               {% if request.user|has_group:"Admin"%}
                 <li class="nav-item">
@@ -125,8 +129,7 @@
                     <a class="nav-link text-danger"  href="/accounts/signup">Register</a>
                    
                 </li>
-              {% endif %}
-                    
+              {% endif %}   
             {% else %}
               <li class="nav-item">
                 <a class="nav-link text-dark" href= "/accounts/login">Login</a>
