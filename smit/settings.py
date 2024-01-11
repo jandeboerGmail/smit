@@ -52,10 +52,10 @@ INSTALLED_APPS = [
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
     'django_otp.plugins.otp_email',  # <- if you want email capability.
-    'two_factor',
-    'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
-    'two_factor.plugins.email',  # <- if you want email capability.
-    'bootstrapform'
+    #'two_factor',
+    #'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
+    #'two_factor.plugins.email',  # <- if you want email capability.
+    #'bootstrapform'
      
 ]
 
@@ -116,30 +116,21 @@ DATABASES = {
 
 #LOGIN / LOGOUT
 #LOGIN_URL = '/admin/login'
-#LOGOUT_REDIRECT_URL = 'about'
-LOGIN_URL = 'two_factor:login' 
-# this one is optional
-#LOGIN_REDIRECT_URL = 'two_factor:profile'
-
-#LOGIN_URL = 'home' 
-#LOGIN_URL = "login"
-LOGIN_REDIRECT_URL = "indexVideo"
-#LOGIN_REDIRECT_URL = "allowedVideo"
-#LOGOUT_REDIRECT_URL = "login"
+LOGIN_REDIRECT_URL = "/camera/allowedVideo/"
 
 # Develop
 #TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake' 
 #TWO_FACTOR_SMS_GATEWAY =  'two_factor.gateways.fake.Fake'
 
 # Prod
-TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio' 
-TWO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
+##TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio' 
+##WO_FACTOR_SMS_GATEWAY = 'two_factor.gateways.twilio.gateway.Twilio'
 
-PHONENUMBER_DEFAULT_REGION = 'NL'
-TWO_FACTOR_WEBAUTHN_RP_NAME = 'Smit Video App'
+#PHONENUMBER_DEFAULT_REGION = 'NL'
+#TWO_FACTOR_WEBAUTHN_RP_NAME = 'Smit Video App'
 
-TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN  =  os.environ.get('TWILIO_AUTH_TOKEN')
+#TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID')
+#TWILIO_AUTH_TOKEN  =  os.environ.get('TWILIO_AUTH_TOKEN')
 TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
 
 #mail
@@ -165,7 +156,7 @@ DOMAIN              = os.environ.get('DOMAIN')
 #SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 #SESSION_COOKIE_AGE=3600
 #SESSION_COOKIE_AGE  = int(os.environ.get('SESSION_COOKIE_AGE','3600'))
-SESSION_COOKIE_SECURE=False
+#SESSION_COOKIE_SECURE=False
 #PASSWORD_RESET_TIMEOUT_DAYS=30
 
 AUTH_PASSWORD_VALIDATORS = [
