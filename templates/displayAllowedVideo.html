@@ -25,7 +25,7 @@
         <th scope="col">Plaats</th>
         <th scope="col">Opname van</th>
         <th scope="col">Tijdsduur</th>
-        <th scope="col">Groote</th>
+        <th scope="col">MB</th>
     </tr>
   </thead>
   <tbody>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
@@ -39,7 +39,7 @@
        <td> {{video.camera.plaats}} </td>
        <td> {{video.opname_van}} </td>
        <td> {{video.duration}} </td>
-       <td> {{video.file_size}} MB </td>
+       <td> {{video.file_size}}</td>
        {% if video.video_image %}
        <td><img src="{{ video.video_image.url }}"  width="50" height="50"> </td>
       {% else %}

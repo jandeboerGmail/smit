@@ -144,8 +144,7 @@ urlpatterns = [
     path('actieAddVideo/',views.actieAddVideo,name='actieAddVideo'),
     path('actieInsertConvertedVideos/',views.actieInsertConvertedVideos,name='actieInsertConvertedVideos'),
     path('actieMakeImages/',views.actieMakeImages,name='actieMakeImages'),
-    path('actieGetDurationVideos/',views.actieGetDurationVideos,name='actieGetDurationVideos'),
-    path('actieGetFileSize/',views.actieGetFileSize,name='actieGetFileSize'),
+    path('actieGetDurationAndFileSizeVideos/',views.actieGetDurationAndFileSizeVideos,name='actieGetDurationAndFileSizeVideos'),
 
 #Authenticate
     #path ('accounts/', include('django.contrib.auth.urls')),

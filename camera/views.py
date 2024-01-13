@@ -1220,16 +1220,10 @@ def actieMakeImages(request):
     return redirect('indexActies')
 
 @login_required
-@csrf_protect
-def actieGetDurationVideos(request):
-    functions.getDurationVideos()
+def actieGetDurationAndFileSizeVideos(request):
+    functions.getDurationAndFileSizeVideos()
     return redirect('indexActies')
 
-@login_required
-@csrf_protect
-def actieGetFileSize(request):
-    functions.getFileSizeVideos()
-    return redirect('indexActies')
 
 @login_required
 @csrf_protect

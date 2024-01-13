@@ -34,6 +34,15 @@ ALLOWED_HOSTS.extend(
    )
 )
 
+
+CSRF_TRUSTED_ORIGINS = []
+CSRF_TRUSTED_ORIGINS.extend(
+    filter(
+        None,
+        os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(','),
+   )
+)
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,12 +55,19 @@ INSTALLED_APPS = [
 
     #'camera.apps.AccountConfig',
     'camera',
+    'django_mfa',
+
+    #otp
+    'django_otp',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_hotp',
 
     #mfa
-    'django_otp',
-    'django_otp.plugins.otp_static',
-    'django_otp.plugins.otp_totp',
-    'django_otp.plugins.otp_email',  # <- if you want email capability.
+    #'django_otp',
+    #'django_otp.plugins.otp_static',
+    #'django_otp.plugins.otp_totp',
+    #'django_otp.plugins.otp_email',  # <- if you want email capability.
+    
     #'two_factor',
     #'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
     #'two_factor.plugins.email',  # <- if you want email capability.

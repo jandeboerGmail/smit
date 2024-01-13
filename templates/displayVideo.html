@@ -29,7 +29,10 @@
         <th scope="col">Plek</th>
         <th scope="col">Opname van</th>
         <th scope="col">Tijdsduur</th>
+        <th scope="col">MB</th>
+        <!--
         <th class = "text-danger" scope ="col">Verwijderd</th>
+        -->
         {% if perms.camera.change_video %}
           <th scope="col">Acties</th>
         {% endif %}
@@ -47,7 +50,10 @@
        <td> {{video.camera.plaats}} </td>
        <td> {{video.opname_van}} </td>
        <td> {{video.duration}} </td>
+       <td> {{video.file_size}}</td>
+       <!--
        <td> {{video.verwijder_datum}} </td>
+       -->
        {% if video.video_image %}
          <td><img src="{{ video.video_image.url }}"  width="50" height="50"> </td>
        {% else %}
