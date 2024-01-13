@@ -17,8 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
-#from two_factor.urls import urlpatterns as tf_urls
-#from two_factor.admin import AdminSiteOTPRequired
+from two_factor.urls import urlpatterns as tf_urls
+# from two_factor.admin import AdminSiteOTPRequired
 from django.views.generic.base import TemplateView
 
 #admin.site.__class__ = AdminSiteOTPRequired
@@ -26,16 +26,15 @@ from django.views.generic.base import TemplateView
 app_name = 'camera'
 
 urlpatterns = [
-   
-  
-  
     #path('', include('user_sessions.urls', 'user_sessions')),
 
     path('', include('camera.urls')),
     path('camera/', include('camera.urls')),
     path('admin/', admin.site.urls),
 
+    path('', include(tf_urls)),
+
     path("accounts/", include("accounts.urls")),  # new
     path("accounts/", include("django.contrib.auth.urls")),
-    #path ('accounts/', include('django.contrib.auth.urls')),
+
 ]

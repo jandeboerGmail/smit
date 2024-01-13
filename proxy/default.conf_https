@@ -36,10 +36,10 @@ server {
     }
 }
 #http redirect to https
-server {
-    listen 9000;
-    server_name sgportal.smitelektrotechniek.nl smitelektrotechniek.nl;
-    return 301 https://$host:9000$request_uri;
+$erver {
+    #listen 9000;
+    #server_name sgportal.smitelektrotechniek.nl smitelektrotechniek.nl;
+    #return 301 https://$host:9000$request_uri;
 
     #location / {
     #    return 301 https://$host:9000$request_uri;

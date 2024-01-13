@@ -882,13 +882,14 @@ def createVideo(request):
 @csrf_protect
 @permission_required('camera.edit_video')
 def editVideo(request,pk):
+    print('Edit video')
     try :
         video = Video.objects.get(id=pk)
     except Video.DoesNotExist:
         return redirect('about')
 
     form = VideoForm(request.POST or None,instance = video)
-    # print('Request Method:',request.method)
+    print('Request Method:',request.method)
     if request.method == 'POST':
         if form.is_valid():
             form.save()
@@ -1255,7 +1256,7 @@ def actieAddVideo(request):
 def actieSendMail(request):
     recipients = ['jandeboer@gmail.com','eenwest@gmail.com']
   
-    functions.SendMail('My subject',"Test Message3",recipients)
+    functions.SendMail('My subject',"Test Message",recipients)
     return HttpResponse("Mail send!!")
     #return redirect('redirect to a new page')
 

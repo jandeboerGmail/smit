@@ -55,24 +55,16 @@ INSTALLED_APPS = [
 
     #'camera.apps.AccountConfig',
     'camera',
-    'django_mfa',
-
-    #otp
-    'django_otp',
-    'django_otp.plugins.otp_totp',
-    'django_otp.plugins.otp_hotp',
 
     #mfa
-    #'django_otp',
-    #'django_otp.plugins.otp_static',
-    #'django_otp.plugins.otp_totp',
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
     #'django_otp.plugins.otp_email',  # <- if you want email capability.
-    
-    #'two_factor',
+
+    'two_factor',
     #'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
-    #'two_factor.plugins.email',  # <- if you want email capability.
-    #'bootstrapform'
-     
+    #'two_factor.plugins.email',  # <- if you want email capability.     
 ]
 
 MIDDLEWARE = [
@@ -132,6 +124,7 @@ DATABASES = {
 
 #LOGIN / LOGOUT
 #LOGIN_URL = '/admin/login'
+LOGIN_URL = 'two_factor:login'
 LOGIN_REDIRECT_URL = "/camera/allowedVideo/"
 
 # Develop
@@ -147,7 +140,8 @@ LOGIN_REDIRECT_URL = "/camera/allowedVideo/"
 
 #TWILIO_ACCOUNT_SID =  os.environ.get('TWILIO_ACCOUNT_SID')
 #TWILIO_AUTH_TOKEN  =  os.environ.get('TWILIO_AUTH_TOKEN')
-TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
+#TWILIO_CALLER_ID   =  os.environ.get('TWILIO_CALLER_ID')
+
 
 #mail
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
