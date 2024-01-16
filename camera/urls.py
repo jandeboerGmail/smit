@@ -11,6 +11,9 @@ from django.views.generic.base import TemplateView
 from django.contrib import admin
 from django.contrib.auth.views import LogoutView
 from django.urls import include, path
+#mfa
+from django.contrib.auth.views import LoginView as AuthLoginView
+#from two_factor.views import LoginViewMixin
 
 #from two_factor.gateways.twilio.urls import urlpatterns as tf_twilio_urls
 #from two_factor.urls import urlpatterns as tf_urls
@@ -150,6 +153,9 @@ urlpatterns = [
     #path ('accounts/', include('django.contrib.auth.urls')),
  
 #MFA
+
+   # path('login/', CustomLoginView.as_view(), name='login'),
+
    # path( '', HomeView.as_view(),name='home',),
    # path('account/logout/',LogoutView.as_view(),name='logout',),
    # path('secret/',ExampleSecretView.as_view(),name='secret',),

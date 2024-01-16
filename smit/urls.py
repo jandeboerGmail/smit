@@ -28,12 +28,11 @@ app_name = 'camera'
 urlpatterns = [
     #path('', include('user_sessions.urls', 'user_sessions')),
 
+    path('', include(tf_urls)),
     path('', include('camera.urls')),
     path('camera/', include('camera.urls')),
     path('admin/', admin.site.urls),
-
-    path('', include(tf_urls)),
-
+    
     path("accounts/", include("accounts.urls")),  # new
     path("accounts/", include("django.contrib.auth.urls")),
 

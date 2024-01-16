@@ -7,6 +7,6 @@ xlwt
 
 django-two-factor-auth
 django-two-factor-auth[phonenumbers]
-twilio
+#twilio
 
 django-bootstrap-form

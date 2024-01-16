@@ -28,6 +28,9 @@ from django.views.generic import FormView, TemplateView
 from two_factor.views import OTPRequiredMixin
 from two_factor.views.utils import class_view_decorator
 
+from django.contrib.auth.views import LoginView as AuthLoginView
+#from two_factor.views import LoginViewMixin
+
 import os,time,shutil,re,locale,xlwt
 
 # Create your views here.
@@ -1603,3 +1606,5 @@ class RegistrationCompleteView(TemplateView):
 class ExampleSecretView(OTPRequiredMixin, TemplateView):
     template_name = 'secret.html'
    
+#class CustomLoginView(LoginViewMixin, AuthLoginView):
+#    template_name = 'custom_login.html'  # Specify your custom template

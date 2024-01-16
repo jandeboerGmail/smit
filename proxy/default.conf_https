@@ -7,6 +7,16 @@ server {
     ssl_protocols           TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers             HIGH:!aNULL:!MD5;
 
+    location media {
+        alias /home/jan/media;
+            types {
+                video/mp4 mp4;
+                video/webm webm;
+            }
+    
+    #      add_header Cache-Control "public, max-age=7200";
+    }
+
     location /static {
         alias /vol/static;
     }
@@ -21,14 +31,6 @@ server {
      #
     
 
-    location /media/ {
-        alias /home/jan/media/;
-            types {
-                video/mp4 mp4;
-                video/webm webm;
-            }
-            add_header Cache-Control "public, max-age=7200";
-    }
 
     location / {
         uwsgi_pass app:8000;
@@ -52,8 +54,8 @@ server {
     server_name             192.168.1.10;
 
 
-    location /media/ {
-        alias /home/jan/media/;
+    location media {
+        alias /home/jan/media;
     
         # slice;
 

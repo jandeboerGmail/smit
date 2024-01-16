@@ -64,7 +64,8 @@ INSTALLED_APPS = [
 
     'two_factor',
     #'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
-    #'two_factor.plugins.email',  # <- if you want email capability.     
+    #'two_factor.plugins.email',  # <- if you want email capability
+    'bootstrapform'     
 ]
 
 MIDDLEWARE = [
@@ -124,6 +125,7 @@ DATABASES = {
 
 #LOGIN / LOGOUT
 #LOGIN_URL = '/admin/login'
+
 LOGIN_URL = 'two_factor:login'
 LOGIN_REDIRECT_URL = "/camera/allowedVideo/"
 
@@ -169,6 +171,18 @@ DOMAIN              = os.environ.get('DOMAIN')
 #SESSION_COOKIE_SECURE=False
 #PASSWORD_RESET_TIMEOUT_DAYS=30
 
+#AUTHENTICATION_BACKENDS = [
+#    'django.contrib.auth.backends.ModelBackend',
+#    'two_factor.auth_backends.AllAuthBackend',
+#]
+# Enforce MFA for all users
+ACCOUNT_DEFAULT_PRACTICE = 'mandatory'
+
+# Optional: Specify authentication methods allowed
+# By default, all methods are allowed
+# TWO_FACTOR_AUTHENTICATION_METHODS = ('call', 'sms', 'generator', 'yubikey')
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -207,5 +221,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
 #MEDIA_ROOT = BASE_DIR / 'media'
 
-CRISPY_TEMPLATE_PACK = 'bootstrap5'
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+#CRISPY_TEMPLATE_PACK = 'bootstrap5'
+#SECURE_CROSS_ORIGIN_OPENER_POLICY = None
