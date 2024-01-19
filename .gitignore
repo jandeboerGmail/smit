@@ -165,4 +165,5 @@ scripts/@
 
 # code
 *workspace*
-
+*db*
+*.sql

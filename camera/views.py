@@ -728,21 +728,25 @@ def allVideo(request):
     video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'displayVideo.html',video_dict )
 
-#@login_required
+@login_required
 #@csrf_protect 
-#@permission_required('camera.view_video')
+@permission_required('camera.view_video')
 def allowedVideo(request):
     currentUser = request.user
-    print ('current User: ', currentUser.id,currentUser.username)
+    #print ('current User: ', currentUser.id,currentUser.username)
     list = functions.checkVideos (currentUser.id,"admin")
+    
     # aantal =  list.count
     aantal = 0
     for aItem in list:
         aantal += 1 
-    paginator = Paginator(list,15)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    if aantal > 0:
+        paginator = Paginator(list,15)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    else:
+        video_dict = {}
     return render(request,'displayAllowedVideo.html',video_dict )
 
 # Zoek

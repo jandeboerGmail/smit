@@ -47,7 +47,7 @@ def videoIsAllowed(request,aVideo):
         
 def checkVideos (aUserId,bedrijf):  
     aUser =  User.objects.get(id=aUserId)   
-    # print ("User = ",aUser,bedrijf )  
+    #print ("User = ",aUser,bedrijf )  
     
     if bedrijf == "admin" :
        aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
@@ -58,18 +58,22 @@ def checkVideos (aUserId,bedrijf):
         return aVideoList
     else:
         validatedVideos = []
-        
-        aAccount = Account.objects.get(user_id=aUserId)
-        for aVideo in aVideoList:
-            aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
-            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
-            #print ('Locatie :',aVideo.naam, aLocatie.gebied)
+        try:
+            aAccount = Account.objects.get(user_id=aUserId)
+        except:
+            aAccount = None
+      
+        if aAccount:
+            for aVideo in aVideoList:
+                aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
+                aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+                #print ('Locatie :',aVideo.naam, aLocatie.gebied)
 
-            for gebied in aAccount.gebied.all():
-                #print ("Gebieden van Account: ",gebied)
-                if aLocatie.gebied == gebied:
-                    validatedVideos.append(aVideo)
-                    #print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
+                for gebied in aAccount.gebied.all():
+                    #print ("Gebieden van Account: ",gebied)
+                    if aLocatie.gebied == gebied:
+                        validatedVideos.append(aVideo)
+                     #print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
         return validatedVideos
        
 def checkVideosNaam(aUserId,bedrijf,naam):   

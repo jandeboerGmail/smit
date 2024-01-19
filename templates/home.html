@@ -64,7 +64,7 @@
           </li>
         
           <li class="nav-item">
-            <a class="nav-link text-danger" href="/camera/indexActies">Actie</a>
+            <a class="nav-link text-secondary" href="/camera/indexActies">Actie</a>
           </li>
         {% else %}
 
@@ -106,11 +106,17 @@
             </li> 
             {% if user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link text-dark">{{ user }} {% if user.otp_device %}🔒{% endif %}</a>
+                <a class="nav-link text-dark">{{ user }} 
+                  {% if user.otp_device %}🔒{% else %}
+                  <li class="nav-item">
+                    <a class="nav-link text-white" href="/account/two_factor/setup/">MFA</a>
+                  </li> 
+                  {% endif %}</a>
               </li>
 
+
               <li class="nav-item mr-auto">
-                <a class="nav-link text-danger" href="/accounts/password_change/">Password</a>  
+                <a class="nav-link text-white" href="/accounts/password_change/">Password</a>  
             </li>
 
               <!--
