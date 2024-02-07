@@ -1182,10 +1182,10 @@ def actieGetVideoLocation(request):
 @csrf_protect
 def actieConvertVideo(request):
     if functions.getRunningStatus() == False:
-        functions.ConvertingVideos(request)
-        html = "<html><body><strong><center>Conversie gestart... (check logs)</center></strong></body></html>" 
+        functions.convertingVideos(request)
+        html = "<html><body><strong><center>Videos geconverteerd (check logs)</center></strong></body></html>" 
     else:
-        html = "<html><body><strong><center>Niets te converteren(check status)</center></strong></body></html>" 
+        html = "<html><body><strong><center>Niets te converteren (check status)</center></strong></body></html>" 
     return HttpResponse(html)
 
 @login_required
@@ -1193,16 +1193,16 @@ def actieConvertVideo(request):
 def actieConvertVideoOrder(request):
     if functions.getRunningStatus() == False:
         order = functions.getOrder()
-        functions.ConvertingVideosOrder(request,order)
-        html = "<html><body><strong><center>Order conversie gestart... (check logs)</center></strong></body></html>" 
+        functions.convertingVideosOrder(request,order)
+        html = "<html><body><strong><center>Order videos geconverteerd (check logs)</center></strong></body></html>" 
     else:
-        html = "<html><body><strong><center>Niets te converteren(check status)</center></strong></body></html>" 
+        html = "<html><body><strong><center>Niets te converteren (check status)</center></strong></body></html>" 
     return HttpResponse(html)
 
 @login_required
 @csrf_protect
 def actieListVideo(request):
-    functions.ListVideos()
+    functions.listVideos()
     html = "<html><body><strong><center>Listing video's Done.. (check logs) </center></strong></body></html>" 
     return HttpResponse(html)
     #return redirectcheckCamerasindexActies')
@@ -1210,7 +1210,7 @@ def actieListVideo(request):
 @login_required
 @csrf_protect
 def actieListConvertedVideo(request):
-    functions.ListConvertedVideos()
+    functions.listConvertedVideos()
     html = "<html><body><strong><center>Listing Migrated video's Done.. (check logs) </center></strong></body></html>" 
     return HttpResponse(html)
     #return redirect('indexActies')

@@ -44,7 +44,9 @@ def videoIsAllowed(request,aVideo):
                 result = True
                 # print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
         return result
-        
+    
+  
+   
 def checkVideos (aUserId,bedrijf):  
     aUser =  User.objects.get(id=aUserId)   
     #print ("User = ",aUser,bedrijf )  
@@ -275,13 +277,105 @@ def checkOrders(aUserId,bedrijf):
                     #print ('Allowed :',aAccount.user, anOrder.ordernr, aLocatie.gebied)
         return validatedOrders
 
-# Log functions
+#  Generic functions
 def addLogEntry(orderNr,message):
     aLog = Log()
     aLog.ordernr = orderNr
     aLog.message = message
     aLog.save()
     return
+
+def removeFile(fileName):
+   if os.path.exists(fileName):
+        os.remove(fileName)
+        print('Removed File :',fileName)
+
+def moveFileToDone(fileName,request):
+    destFileName = fileName.replace("2Convert", "2_Convert")
+    destDir = substring_before(destFileName, "2_Convert") + "2_Convert/"
+
+    # Check if 2_Convert directory exists
+    #print('destDir :',destDir)
+    if not os.path.isdir(destDir):
+        os.mkdir(destDir)
+
+    # check / create request/Order directory
+    reqDir = destDir + request + "/"
+    #print('reqDir :', reqDir)
+    if not os.path.isdir(reqDir):
+         os.mkdir(reqDir)
+    
+    #print('Move the File :',fileName,destFileName)
+    shutil.move(fileName,destFileName)
+
+def size_changed(fileName,sec):
+        b_size = os.path.getsize(fileName)
+        time.sleep(sec)
+        e_size = os.path.getsize(fileName)
+        #print('Sizes :',b_size, e_size)
+        return b_size == e_size
+
+def substring_after(s, delim):
+        return s.partition(delim)[2]
+
+def substring_before(s, delim):
+        return s.split(delim)[0]
+
+def convertFileName(inName):
+    outName =  inName.replace(" ", "\\ ")
+    outName = outName.replace("(", "\\(")
+    outName=  outName.replace(")", "\\)")
+    return(outName) 
+
+def getFileSize(fileName):
+    file_stats = os.stat(fileName)
+    fileSize = file_stats.st_size / (1024 * 1024)
+    fSize = "%.0f" % fileSize 
+    return (fSize)
+
+#----------------- mail stuff -------------------------
+def valid_email_address(email_address):
+    try:
+        validate_email(email_address)
+        valid_email = True
+    except ValidationError as e:
+        valid_email = False
+    return valid_email 
+
+def SendMail(subject,message,recipentList):
+    emailcheckedRecepentList = []
+    orderNr = " "
+    for emailAdress in recipentList:
+        #print ("email_adress :",emailAdress)
+        
+        if valid_email_address(emailAdress):
+            emailcheckedRecepentList.append(emailAdress)       
+            errorMessage = 'INFO : Mail send to: '  + emailAdress
+            addLogEntry(orderNr,errorMessage) 
+        else:
+            errorMessage = 'INFO : Wrong email Adress Specified: '  + emailAdress
+            addLogEntry(orderNr,errorMessage) 
+
+    #print ("emailcheckedRecepentList :",emailcheckedRecepentList)    
+    #chatgpt
+    email = EmailMessage(
+        subject, message, 
+        'sgportal@smitelektrotechniek.nl', 
+        emailcheckedRecepentList, 
+        reply_to=['sgportal@smitelektrotechniek.uyhnl'], 
+                #headers={'Message-ID': 'foo'},
+    )
+    email.send()
+    return
+
+def mailConversionReady(sender,fileName):
+        now = datetime.now()
+        dtString = now.strftime("%d/%m/%Y %H:%M:%S")
+        subject = 'Conversion ready ->' +  substring_after(fileName,"Migrated/") 
+        message = "Conversion ready -> "  + fileName +' @ '+ dtString
+        print ('Message : ',message)
+        sender = [sender]
+        SendMail(subject,message,sender)
 
 # Parameter functions
 def getVideoLocation():
@@ -546,53 +640,7 @@ def updateImageInDB(inFileName,imageName):
         aVideo.save()
     return
 
-# Log generic functions
-def addLogEntry(orderNr,message):
-    aLog = Log()
-    aLog.ordernr = orderNr
-    aLog.message = message
-    aLog.save()
-    return
-
-def removeFile(fileName):
-   if os.path.exists(fileName):
-        os.remove(fileName)
-        print('Removed File :',fileName)
-
-def moveFileToDone(fileName,request):
-    #print('Move File :',fileName)
-    #print('request:',request)    
-
-    destFileName = fileName.replace("2Convert", "2_Convert")
-    destDir = substring_before(destFileName, "2_Convert") + "2_Convert/"
-
-    # Check if 2_Convert directory exists
-    print('destDir :',destDir)
-    if not os.path.isdir(destDir):
-        os.mkdir(destDir)
-
-    # check / create request/Order directory
-    reqDir = destDir + request + "/"
-    #print('reqDir :', reqDir)
-    if not os.path.isdir(reqDir):
-         os.mkdir(reqDir)
-    
-    #print('Move the File :',fileName,destFileName)
-    shutil.move(fileName,destFileName)
-
-def size_changed(fileName,sec):
-        b_size = os.path.getsize(fileName)
-        time.sleep(sec)
-        e_size = os.path.getsize(fileName)
-        #print('Sizes :',b_size, e_size)
-        return b_size == e_size
-
-def substring_after(s, delim):
-        return s.partition(delim)[2]
-
-def substring_before(s, delim):
-        return s.split(delim)[0]
- 
+# Name extracion
 def extractVideoNaam(filename):
     s = filename
     while substring_after(s, "/"):
@@ -692,65 +740,54 @@ def insertConvertedVideos(request):
     addLogEntry(" ", message)
     return   
 
-def ConvertingVideos(request):
-    print('Conversion')
-   
+#actions -------------------------------
+def convertingVideos(request):
     videoPath     = getVideoLocation()
     maxConverting = getMaximumConvert()
     converting = 1
     
-    message = "Converting Looking for New Videos in " + videoPath
+    message = "Converting... Looking for New Videos in " + videoPath
     addLogEntry(" ", message)
     setRunningStatus(True)
 
     for root, dirs, files in os.walk(videoPath, topdown=True):
-  
         for name in files:
             inFileName = os.path.join(root, name)
             #print("Files :",os.path.join(root, name))
             if "2Convert" in inFileName:
                 #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
-                    print('inFile :',inFileName)
+                    #print('inFile :',inFileName)
                     after = substring_after(inFileName,"2Convert/") 
-            
                     if (after and size_changed(inFileName,5)) and (os.path.getsize(inFileName)) > 0:
-                      
-                        print('After :',after)
+                        #print('After :',after)
                         orderNr = after[0:after.find("/")]
-                        print('request:',orderNr)
+                        #print('order',orderNr)
                         
                         #make/check output dir
                         destDir = substring_before(inFileName, "2Convert") + "Migrated/" 
-                       
-                        print('destDir :',destDir)
+                        #print('destDir :',destDir)
                         if not os.path.isdir(destDir):
                             os.mkdir(destDir)
 
-                        # check / create request directory
+                        # check / create orderNr directory
                         reqDir = destDir + orderNr + "/"
                         print('reqDir :', reqDir)
                         if not os.path.isdir(reqDir):
                             os.mkdir(reqDir)
                 
                         outFileName = os.path.join(destDir,after)
-            
-                        outFile = outFileName.replace(" ", "\\ ")
-                        inFile = inFileName.replace(" ", "\\ ")
-
-                        file_stats = os.stat(inFileName)
-                        #print(file_stats)
-                        fileSize = file_stats.st_size / (1024 * 1024)
-                        fSize = "%.5f" % fileSize
+                        fSize = getFileSize(inFileName)
 
                         #probe format
+                        inFile = convertFileName(inFileName)
                         command = "ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 " + inFile  + " > ._isFormat"
                         result = os.system(command)
                         with open('._isFormat', 'r') as file:
                             formatData= file.read().replace('\n', '')
                     
                         if "h264" in formatData:
-                            outFileName = outFileName 
+                            # outFileName = outFileName 
                 
                             message = 'Copying h264 ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(orderNr,message)
@@ -762,9 +799,9 @@ def ConvertingVideos(request):
                         else: #conversion needed
                             if converting <= maxConverting:
                                 converting += 1
-                                startTime = time.time()
+                                startTime = time.perf_counter()
                                 message = 'Migrating   ' + inFileName + " Size: " + fSize + " MB"
-                                addLogEntry(request,message)
+                                addLogEntry(orderNr,message)
 
                                 #command 
                                 #command = "cp " + inFile + " " + outFile 
@@ -772,9 +809,9 @@ def ConvertingVideos(request):
                                 #h264
                                 outFileName = outFileName.replace(".mp4", "_conv_h264.mp4")
                                 outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
-                            
-                                outFile = outFileName.replace(" ", "\\ ")
-                            
+
+                                outFile = convertFileName(outFileName)
+                                
                                 #ffmpeg -i input_file.mp4 -c:v libx264 -crf 23 -c:a copy output_file.mp4 -- Chatgpt
                                 #command = "ffmpeg -y -i " + inFile
                                 #command = command + " -c:v libx264 -crf 23 -c:a copy " + outFile + " &"
@@ -798,37 +835,30 @@ def ConvertingVideos(request):
                                 #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 1 -an -f null /dev/null && ffmpeg -i " + inFile 
                                 #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
 
-                                #addLogEntry(request,command)
-                                print('Command :',command) 
+                                #addLogEntry(orderNr,command)
+                                #print ('infile: ',inFile)
+                                #print ('OutFile: ',outFile)
+                                #print('Command :',command) 
                                 # removeFile(outFile) # uncomment in production
-                            
-                                startTime = time.time()
-                                
+                    
                                 result = os.system(command)
                                 #result = 0
 
                                 #print('Result :',result)
                                 if result ==  0: # 256 error
-                                    # Elapsed Time
-                                    endTime = time.time()
-                                    elapsedTime = endTime - startTime
-                                    #elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
-
-                                    # fileSize
-                                    #file_stats = os.stat(outFileName)
-                                    ##print(file_stats)
-                                    #fileSize = file_stats.st_size / (1024 * 1024)
-                                    #fSize = "%.5f" % fileSize
-                                    
-                                    message = "To " + outFileName 
+                                    message = "To " + outFileName
                                     #message = "Migrated to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
-                                    addLogEntry(request,message)
+                                    addLogEntry(orderNr,message)
+
+                                    userEmail = request.user.email
+                                    #print('Email: ',userEmail)
+                                    mailConversionReady(userEmail,outFileName)
                         
                                     # removeFile(inFileName) # uncommend for production
                                     # moveFileToDone(inFileName,orderNr) Not yet after conversion 
                                     extractDBitems(request,outFileName)
                                 else:
-                                    addLogEntry(request,"ERROR : Not Migrated")
+                                    addLogEntry(orderNr,"ERROR : Not Migrated")
                             else:
                                 addLogEntry(" ","INFO : Exceeding Number of ffmpeg converions") 
     message = "Migrating Ended "
@@ -836,8 +866,8 @@ def ConvertingVideos(request):
     setRunningStatus(False)
     return
 
-def ConvertingVideosOrder(request,order):
-    print('Order Conversion')
+def convertingVideosOrder(request,order):
+    #print('Order Conversion')
    
     videoPath     = getVideoLocation()
     maxConverting = getMaximumConvert()
@@ -873,19 +903,14 @@ def ConvertingVideosOrder(request,order):
 
                         # check / create request directory
                         reqDir = destDir + orderNr + "/"
-                        print('reqDir :', reqDir)
                         if not os.path.isdir(reqDir):
                             os.mkdir(reqDir)
                 
-                        outFileName = os.path.join(destDir,after)
-            
-                        outFile = outFileName.replace(" ", "\\ ")
-                        inFile = inFileName.replace(" ", "\\ ")
+                        fSize = getFileSize(inFileName)
 
-                        file_stats = os.stat(inFileName)
-                        #print(file_stats)
-                        fileSize = file_stats.st_size / (1024 * 1024)
-                        fSize = "%.5f" % fileSize
+                        outFileName = os.path.join(destDir,after)
+                        inFile = convertFileName(inFileName)
+                        outFle = convertFileName(outFileName)
 
                         #probe format
                         command = "ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1 " + inFile  + " > ._isFormat"
@@ -916,7 +941,8 @@ def ConvertingVideosOrder(request,order):
                                 #h264
                                 outFileName = outFileName.replace(".mp4", "_conv_h264.mp4")
                                 outFileName = outFileName.replace(".MP4","._conv_h264.mp4")
-                                outFile = outFileName.replace(" ", "\\ ")
+
+                                outFile = convertFileName(outFileName)
                             
                                 #ffmpeg -i "$i" -map 0 -c:v libx264 -crf 18 2_10.mp4
                                 command = "ffmpeg -y -threads 1 -i " + inFile
@@ -951,12 +977,7 @@ def ConvertingVideosOrder(request,order):
                                     endTime = time.time()
                                     elapsedTime = endTime - startTime
                                     #elapsed = time.strftime("%H:%M:%S", time.gmtime(elapsedTime))
-
-                                    # fileSize
-                                    #file_stats = os.stat(outFileName)
-                                    ##print(file_stats)
-                                    #fileSize = file_stats.st_size / (1024 * 1024)
-                                    #fSize = "%.5f" % fileSize
+                                    #fSize = getFilesize(outFileName)
                                     
                                     message = "To " + outFileName 
                                     #message = "Migrated to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
@@ -974,9 +995,9 @@ def ConvertingVideosOrder(request,order):
     setRunningStatus(False)
     return
 
-def ListVideos():
+def listVideos():
     videoPath=getVideoLocation()
-    message = "Looking for New Videos in " + videoPath
+    message = "Looking for New Videos in " + videoPath + " ..."
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
@@ -986,25 +1007,20 @@ def ListVideos():
             if "2Convert" in inFileName:
                 #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
-                    print('inFile :',inFileName)
+                    #print('inFile :',inFileName)
                     after = substring_after(inFileName,"2Convert/") 
             
                     if (after and size_changed(inFileName,1)) and (os.path.getsize(inFileName)) > 0:
-                        #print('After :',after)
                         orderNr = after[0:after.find("/")]
-                        #print('request:',orderNr)
-                      
-                        #inFile = inFileName.replace(" ", "\\ ")
-                        
-                        file_stats = os.stat(inFileName)
-                        fileSize = file_stats.st_size / (1024 * 1024)
-                        fSize = "%.5f" % fileSize
+                        fSize = getFileSize(inFileName)
 
                         #probe format
+                        command = "ffprobe -v error -select_streams v:0 -show_entries stream=codec_name -of default=nokey=1:noprint_wrappers=1  " +  convertFileName(inFileName) + " > ._isFormat" 
+                        #print('Command:',command)
                         result = os.system(command)
                         with open('._isFormat', 'r') as file:
                             formatData= file.read().replace('\n', '')
-                    
+                        #print ("Fomat data:",formatData)             
                         if "h264" in formatData:
                             message = 'ToCopy h264 ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(orderNr,message)
@@ -1012,23 +1028,22 @@ def ListVideos():
                             message = 'ToConvert    ' + inFileName + " Size: " + fSize + " MB"
                             addLogEntry(orderNr,message)                
                           
-    message = "Listing Ended "
+    message = "Listing New Videos Ended "
     addLogEntry(" ", message)
     return
 
-def ListConvertedVideos():
+def listConvertedVideos():
     videoPath=getVideoLocation()
-    message = "Looking for Migrated Videos in " + videoPath
+    message = "Looking for Migrated Videos in " + videoPath + " ..."
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
-  
         for name in files:
             inFileName = os.path.join(root, name)
-            print("Files :",os.path.join(root, name))
+            #print("Files :",os.path.join(root, name))
             if "Migrated" in inFileName:
-                print('inFile :',inFileName)
+                #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName or ".webm" in inFileName  or ".WEBM" in inFileName  and not "._" in inFileName:
-                    print('inFile :',inFileName)
+                    #print('inFile :',inFileName)
                     after = substring_after(inFileName,"Migrated/") 
             
                     if (os.path.getsize(inFileName)) > 0:
@@ -1036,38 +1051,27 @@ def ListConvertedVideos():
                         orderNr = after[0:after.find("/")]
                         #print('request:',orderNr)
                         
-                        #inFile = inFileName.replace(" ", "\\ ")
-                        file_stats = os.stat(inFileName)
-                        fileSize = file_stats.st_size / (1024 * 1024)
-                        fSize = "%.5f" % fileSize
-
+                        fSize =  getFileSize(inFileName)
                         message = 'Migrated '  + inFileName + " Size: " + fSize + " MB"
-                        addLogEntry(orderNr,message)
-                                                           
+                        addLogEntry(orderNr,message)                                                      
     message = "Listing Migrated Ended"
     addLogEntry(" ", message)
     return
 
 # make Preview Images
 def makeImage(videoFilename,imageName):
-    # ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
-  
-    videoFilename = videoFilename.replace(" ", "\\ ")
-    videoFilename = videoFilename.replace("(", "\\(")
-    videoFilename = videoFilename.replace(")", "\\)")
-
-    imageName = imageName.replace(" ", "\\ ")
-    imageName = imageName.replace("(", "\\(")
-    imageName = imageName.replace(")", "\\)")
+    videoFilename = convertFileName(videoFilename)
+    imageName     = convertFileName(imageName)
     #print("making image:",videoFilename,"-> ",imageName)
 
+    # ffmpeg -i input.mp4 -ss 00:00:01.000 -vframes 1 output.png
     command = "ffmpeg -y -i  " + videoFilename  + " -ss 00:00:01.000 -vframes 1 " + imageName
     result = os.system(command)                   
     return result
 
 def makeImages():
     videoPath=getVideoLocation()
-    message = "Make preview Images in " + videoPath
+    message = "Make preview Images in " + videoPath + ' ...'
     print (message)
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
@@ -1119,10 +1123,7 @@ def updateDurationVideoInDB(videoFilename,duration):
     return
 
 def getDurationVideo(videoFileName):
-    inFilename = videoFileName.replace(" ", "\\ ")
-    inFilename = inFilename.replace("(", "\\(")
-    inFilename = inFilename.replace(")", "\\)")
-    
+    inFilename = convertFileName(videoFileName)
     command = "ffprobe -v error -show_entries format=duration  -sexagesimal -of default=noprint_wrappers=1:nokey=1 " +  inFilename  + " > ._isSize"                                                                                                                                                                                                                        
     result = os.system(command)  
     with open('._isSize', 'r') as file:
@@ -1155,10 +1156,7 @@ def updateFileSizeVideoInDB(videoFilename,fileSize):
     return
 
 def getFileSizeVideo(inFilename):
-    file_stats = os.stat(inFilename)
-    fileSize = file_stats.st_size / (1024 * 1000) 
-    fSize = "%.0f" % fileSize
-
+    fSize = getFileSize(inFilename)
     if fSize != 0:
         updateFileSizeVideoInDB(inFilename,fSize)    
         return True
@@ -1167,7 +1165,7 @@ def getFileSizeVideo(inFilename):
     
 def getDurationAndFileSizeVideos():
     videoPath=getVideoLocation()
-    message = "Getting the duration of the Videos in " + videoPath
+    message = "Getting the duration of the Videos in " + videoPath +' ...'
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
         for name in files:
@@ -1198,41 +1196,4 @@ def getDurationAndFileSizeVideos():
                                                   
     message = "End set the length/filesize  from the Videos"
     addLogEntry(" ", message)
-    return
-
-
-#mail stuff
-def valid_email_address(email_address):
-    try:
-        validate_email(email_address)
-        valid_email = True
-    except ValidationError as e:
-        valid_email = False
-    return valid_email 
-
-def SendMail(subject,message,recipentList):
-    emailcheckedRecepentList = []
-    orderNr = " "
-    for emailAdress in recipentList:
-        #print ("email_adress :",emailAdress)
-        
-        if valid_email_address(emailAdress):
-            emailcheckedRecepentList.append(emailAdress)       
-            errorMessage = 'INFO : Mail send to: '  + emailAdress
-            addLogEntry(orderNr,errorMessage) 
-        else:
-            errorMessage = 'INFO : Wrong email Adress Specified: '  + emailAdress
-            addLogEntry(orderNr,errorMessage) 
-
-    #print ("emailcheckedRecepentList :",emailcheckedRecepentList)    
-    #chatgpt
-    email = EmailMessage(
-        subject, message, 
-        'sgportal@smitelektrotechniek.nl', 
-        emailcheckedRecepentList, 
-        reply_to=['sgportal@smitelektrotechniek.uyhnl'], 
-                #headers={'Message-ID': 'foo'},
-    )
-    email.send()
-
     return
