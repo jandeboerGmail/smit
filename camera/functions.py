@@ -368,11 +368,11 @@ def SendMail(subject,message,recipentList):
     email.send()
     return
 
-def mailConversionReady(sender,fileName):
+def mailMigrationReady(sender,fileName):
         now = datetime.now()
         dtString = now.strftime("%d/%m/%Y %H:%M:%S")
-        subject = 'Conversion ready ->' +  substring_after(fileName,"Migrated/") 
-        message = "Conversion ready -> "  + fileName +' @ '+ dtString
+        subject = 'Migratie ready ->' +  substring_after(fileName,"Migrated/") 
+        message = "Migratie ready -> "  + fileName +' @ '+ dtString
         print ('Message : ',message)
         sender = [sender]
         SendMail(subject,message,sender)
@@ -793,6 +793,8 @@ def convertingVideos(request):
                             addLogEntry(orderNr,message)
                             shutil.copyfile(inFileName, outFileName)
                             extractDBitems(request,outFileName)
+                            userEmail = request.user.email
+                            mailMigrationReady(userEmail,outFileName)
                             # removeFile(inFileName) # uncommend for production
                             moveFileToDone(inFileName,orderNr) 
                             
@@ -849,14 +851,13 @@ def convertingVideos(request):
                                     message = "To " + outFileName
                                     #message = "Migrated to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
                                     addLogEntry(orderNr,message)
-
+                                    extractDBitems(request,outFileName)
                                     userEmail = request.user.email
                                     #print('Email: ',userEmail)
-                                    mailConversionReady(userEmail,outFileName)
-                        
+                                    mailMigrationReady(userEmail,outFileName)
                                     # removeFile(inFileName) # uncommend for production
                                     # moveFileToDone(inFileName,orderNr) Not yet after conversion 
-                                    extractDBitems(request,outFileName)
+                                
                                 else:
                                     addLogEntry(orderNr,"ERROR : Not Migrated")
                             else:
@@ -1005,13 +1006,14 @@ def listVideos():
             inFileName = os.path.join(root, name)
             #print("Files :",os.path.join(root, name))
             if "2Convert" in inFileName:
-                #print('inFile :',inFileName)
+                print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
                     #print('inFile :',inFileName)
                     after = substring_after(inFileName,"2Convert/") 
             
                     if (after and size_changed(inFileName,1)) and (os.path.getsize(inFileName)) > 0:
                         orderNr = after[0:after.find("/")]
+                        print('Ordernr: ",orderNr')
                         fSize = getFileSize(inFileName)
 
                         #probe format
