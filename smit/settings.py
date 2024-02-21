@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     #'camera.apps.AccountConfig',
     'camera',
 
+    #'django_table_sort',
+    #'django_tables2',
     #mfa
     'django_otp',
     'django_otp.plugins.otp_static',
@@ -223,3 +225,5 @@ MEDIA_URL = '/media/'
 
 #CRISPY_TEMPLATE_PACK = 'bootstrap5'
 #SECURE_CROSS_ORIGIN_OPENER_POLICY = None
+
+#DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"

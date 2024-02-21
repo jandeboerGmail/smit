@@ -5,6 +5,9 @@ mysql-connector-python
 Pillow
 xlwt
 
+#django-table-sort
+#django-tables2
+
 django-two-factor-auth
 django-two-factor-auth[phonenumbers]
 #twilio

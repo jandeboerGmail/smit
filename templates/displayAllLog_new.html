@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+{% load render_table from django_tables2 %}
+
+
+<div class="container-fluid">
+  {% csrf_token %}
+  <div class="row align-items-end">
+    
+    <div class="col-9">
+      <h2>Log Entries (nieuwste eerst)</h2> 
+    </div>
+
+    <div class="col-1">
+      <a class="btn btn-sm btn-dark" href="{% url 'exportLog' %}">Export </a>
+    </div>
+    
+    <div class="col-1 smit-h2">
+      {{aantal}} 
+    </div>
+</div>
+<p  class="h6">
+    <body>
+        {% render_table log_list %}
+    </body>
+</p>
+{% endblock %}

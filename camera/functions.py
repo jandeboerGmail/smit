@@ -629,16 +629,6 @@ def addVideo(request,orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoL
     #print ("Video: ",aVideo.naam)
     return aVideo
 
-def updateImageInDB(inFileName,imageName):
-    videoNaam = extractVideoNaam(inFileName)
-    aVideos  = Video.objects.filter(naam=videoNaam)
-    if aVideos:
-        aVideo = aVideos[0]
-        imageName=imageName.replace("\\ "," ")
-    
-        aVideo.video_image = substring_after(imageName,getVideoLocation())
-        aVideo.save()
-    return
 
 # Name extracion
 def extractVideoNaam(filename):
@@ -1061,6 +1051,33 @@ def listConvertedVideos():
     return
 
 # make Preview Images
+def updateImageInDB(inFileName,imageName):
+    videoNaam = extractVideoNaam(inFileName)
+    aVideos  = Video.objects.filter(naam=videoNaam)
+    if aVideos:
+        aVideo = aVideos[0]
+        imageName=imageName.replace("\\ "," ")
+    
+        aVideo.video_image = substring_after(imageName,getVideoLocation())
+        aVideo.save()
+    return
+
+'''
+def hasNoImageFile(inFileName):
+    videoNaam = extractVideoNaam(inFileName)
+    print('----------------hasNoImage ',videoNaam)
+    aVideos  = Video.objects.filter(naam=videoNaam)
+    if aVideos:
+        aVideo = aVideos[0]
+        print('---------------aVideo :',videoNaam, aVideo.video_image,le)
+       
+        if aVideo.video_image is not None:
+            return True
+        else:
+            return False
+    return True
+''' 
+
 def makeImage(videoFilename,imageName):
     videoFilename = convertFileName(videoFilename)
     imageName     = convertFileName(imageName)
@@ -1094,12 +1111,13 @@ def makeImages():
                         imageName = imageName.replace(".WEBM", ".jpg")
                         imageName = imageName.replace(".webm", ".jpg")
         
+                        #if hasNoImageFile(inFileName):
                         if makeImage(inFileName,imageName) == 0:
-                            message = 'Image created from '  + inFileName 
-                            updateImageInDB(inFileName,imageName)
+                                message = 'Image created from '  + inFileName 
+                                updateImageInDB(inFileName,imageName)
                         else:
                             message = 'ERROR: Image created from '  + inFileName 
-                        addLogEntry(orderNr,message)
+                            addLogEntry(orderNr,message)
                                                            
     message = "Make preview Images Ended"
     addLogEntry(" ", message)

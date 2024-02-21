@@ -13,7 +13,9 @@ from django.core.mail import EmailMessage
 from django.core import mail
 import urllib
 
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User   
+#from django_table_sort.table import TableSort
+
 
 import camera.functions as functions
 from camera.models import Adress, Account, Bedrijf, Camera, Gebied, Locatie, Video ,ServiceOrder, Log, Parameter
@@ -135,15 +137,17 @@ def indexUserOrder(request):
 @csrf_protect
 @permission_required('camera.view_adress')
 def allAdress(request):
-    adress_list = Adress.objects.order_by('plaats','naam')
-    aantal =  adress_list.count
+    list = Adress.objects.order_by('plaats','naam')
+    #table = TableSort(request,list,fields=['plaats'])
+    aantal =  list.count
 
-    paginator = Paginator(adress_list,12)
+    paginator = Paginator(list,12)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    adress_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'displayAdress.html',adress_dict )
+    dict  = {'page_obj' : page_obj , 'aantal' : aantal }
+    #dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'table':table}
+    return render(request,'displayAdress.html',dict )
 
 @login_required
 @csrf_protect
@@ -1081,7 +1085,6 @@ def deleteOrder(request,pk):
     template_name = 'deleteRecord.html'
     context = {'item' : order , 'title': 'Verwijder Service Order'}
     return render(request,template_name,context)
-
 # ---- Log ---------------
 @login_required
 @csrf_protect
@@ -1094,8 +1097,10 @@ def allLog(request):
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
-    log_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    log_dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'log_list':log_list}
+    #log_dict  = {'log_list':log_list}
     return render(request,'displayAllLog.html',log_dict )
+#return render(request,'displayAllLog.html',log_dict )
 
 # Zoek
 @login_required
