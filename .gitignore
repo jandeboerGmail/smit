@@ -15,8 +15,8 @@ migrations/
 *isFormat
 setenv*
 accessList
-*test*
-*cer*
+F*test*
+*.cer*
 *crt*
 *.pem
 *.key
