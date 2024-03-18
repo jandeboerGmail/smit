@@ -34,7 +34,7 @@
         <th scope="col">Bedrijf</td>
         <th scope="col">Serviceorder</td>
         <th scope="col">Geopend</td>
-        <th scope="col">Afgehandeld<td>
+        <th scope="col">Geslotenn<td>
         <th scope="col">Acties</td>
       </div>
       </tr>
@@ -46,8 +46,8 @@
         <td> {{order.contact}} </td>
         <td> {{order.bedrijf}} </td>
         <td> {{order.ordernr}} </td>
-        <td> {{order.opened}} </td>
-        <td> {{order.closed}} </td> 
+        <td> {{order.opened_date}} </td>
+        <td> {{order.closed_date}} </td> 
         <td><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></td>
         <td><a class="btn btn-sm btn-danger" href="{% url 'deleteOrder' order.id %}">Delete</a></td>
        </tr>

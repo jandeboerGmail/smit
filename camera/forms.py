@@ -81,15 +81,15 @@ class VideoForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = ServiceOrder
-        fields = ['ordernr','bedrijf','contact','opdrachtnummer','locatie','opened','closed','memo']
+        fields = ['ordernr','bedrijf','contact','opdrachtnummer','locatie','opened_date','closed_date','memo']
         widgets = {
             'ordernr': forms.TextInput(attrs={'class': 'form-control'}),
             'bedrijf': forms.Select(attrs={'class': 'form-control'}),
             'contact': forms.Select(attrs={'class': 'form-control'}),
             'opdrachtnummer': forms.TextInput(attrs={'class': 'form-control'}),
             'locatie': forms.Select(attrs={'class': 'form-control'}),
-            #'opened' : forms.SplitDateTimeWidget(),
-            '#closed' : forms.SelectDateWidget(),
+            # 'opened' : forms.SplitDateTimeWidget(),
+            # '#closed' : forms.SelectDateWidget(),
              #'opened' : forms.DateTimePickerInput(attrs={'class': 'form-control'}),
             #'closed' : forms.DateTimePickerInput(attrs={'class': 'form-control'}),
             #'keep_original': forms.CheckboxInput(),

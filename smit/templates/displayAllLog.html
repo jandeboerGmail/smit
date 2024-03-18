@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+
+
+<div class="container-fluid">
+  {% csrf_token %}
+  <div class="row align-items-end">
+    
+    <div class="col-9">
+      <h2>Log Entries (nieuwste eerst)</h2> 
+    </div>
+
+    <div class="col-1">
+      <a class="btn btn-sm btn-dark" href="{% url 'exportLog' %}">Export </a>
+    </div>
+    
+    <div class="col-1 smit-h2">
+      {{aantal}} 
+    </div>
+</div>
+
+{% if page_obj %}
+<div class="smit-log">
+ <table class="table">
+   <thead class="text-primary" >
+    <tr>
+      <th scope="col">ServiceOrder</th>
+      <th scope="col">Bericht</th>
+      <th scope="col">Datum</th>
+    </tr>
+  </thead>
+
+
+  <tbody">
+    {% for log in page_obj %}
+       <th> {{log.ordernr}} </th>
+       <th> {{log.message}} </th>
+       <th> {{log.datum_inserted}} </th>
+    </tbody>  
+   {% endfor %}
+  </div>
+ </table>
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; eerste</a>
+            <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
+        {% endif %}
+
+        <span class="current">
+            Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">volgende</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+  {% else %}
+    <strong>Er zijn geen entries</strong>
+  {% endif %}
+
+ </div>
+{% endblock %}

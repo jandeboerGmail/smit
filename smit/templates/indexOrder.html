@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+{% load user_tags %}
+
+{% if request.user|has_group:"Admin"%}
+{% csrf_token %}
+<h2 class='container-fluid smit-h2'>Order</h2>
+<ul>
+  <div class="nav-index">
+      <a class="nav-index" href="/camera/allOrder">Alle Orders</a>
+  </div>
+
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/zNrOrder">Zoek op Service order nummer</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/zContactOrder">Zoek op Gebruiker</a>
+  </div>
+  <hr>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/createOrder">Aanvraag Beelden</a>
+  </div>
+</ul>
+{% endif %}
+{% endblock %}

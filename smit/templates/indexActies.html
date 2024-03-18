@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+{% load user_tags %}
+
+{% if request.user|has_group:"Admin"%}
+<h2 class='container-fluid smit-h2'>Acties</h2>
+{% csrf_token %}
+<ul>
+<hr>
+  <div class="nav-index">
+     <a class="nav-index" href="/camera/actieGetVideoLocation">Toon Video Locatie</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/actieDisplayConversionStatus">Toon Huidige Conversie Status</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/actieToggleConversionStatus">Verander de Conversie Status</a>
+  </div> 
+  <hr>
+  <div class="nav-index">
+    <a class="nav-index text-warning" href="/camera/actieSendMail">Stuur een testmail</a>
+  </div> 
+  <div class="nav-index">
+    <a class="nav-index text-warning" href="/camera/actieDisplayPermissions">List Permisions</a>
+  </div> 
+  <hr>
+  <div class="nav-index">
+    <a class="nav-index text-danger" href="/camera/actieListVideo">List nieuwe video's</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index text-danger" href="/camera/actieConvertVideo">Migreer de video's</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index text-danger"  href="/camera/actieConvertVideoOrder">Migreer de video's op basis van Serviceorder</a>
+  </div>
+  <hr>
+  <div class="nav-index">
+    <a class="nav-index text-success" href="/camera/actieListConvertedVideo">List gemigreerde video's</a>
+  </div>
+  <!--
+  <div class="nav-index">
+    <a class="nav-index" href="/camera/actieAddVideo">Test -> Voeg video toe aan DB</a>
+  </div>
+    -->
+  <div class="nav-index">
+    <a class="nav-index text-success" href="/camera/actieInsertConvertedVideos">Voeg gemigreerde video's toe aan DB</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index text-success" href="/camera/actieMakeImages">Maak voorbeeld images van de gemigreerde video's</a>
+  </div>
+  <div class="nav-index">
+    <a class="nav-index text-success" href="/camera/actieGetDurationAndFileSizeVideos">Zet de lengte / fileSize van de gemigreerde video's</a>
+  </div>
+</ul>
+<br>
+<h2 class='container-fluid smit-h2'>Log Files</h2>
+<ul>
+  <hr> 
+  <div class="nav-index">
+        <a class="nav-index" href="/camera/allLog">Alle Log Entries</a>
+  </div>
+  <div class="nav-index">
+      <a class="nav-index" href="/camera/zOrderLog">Zoek op Serviceorder</a>
+  </div>
+</ul>
+{% endif %}
+{% endblock %}

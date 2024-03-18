@@ -38,8 +38,10 @@
        <td>{{order.ordernr}}</td>
        <td>{{order.locatie.naam}}</td>
        <td>{{order.contact}}</td>
-       <td>{{order.opened}}</td>
-       <td>{{order.closed}}</td> 
+       <td>{{order.opened_date}}</td>
+       <td>{{order.opened_time}}</td>
+       <td>{{order.closed_date}}</td> 
+       <td>{{order.closed_time}}</td> 
        <td><a class="btn btn-sm btn-info" href="{% url 'editOrder' order.id %}">Edit</a></td>
      </tr>
     </tbody>  

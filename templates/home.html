@@ -68,19 +68,19 @@
 
           {% if request.user|has_group:"Stadgenoot"%}
           <li class="nav-item">
-            <a class="nav-link text-dark" href="/camera/about">SG: </a>
+            <a class="nav-link text-dark" href="/camera/about">SG </a>
           </li>
            {% endif %}
 
           {% if request.user|has_group:"Berkhout"%}
           <li class="nav-item">
-            <a class="nav-link text-dark" href="/camera/about">Berkhout: </a>
+            <a class="nav-link text-dark" href="/camera/about">Berkhout </a>
             </li>
           {% endif %}
 
           {% if request.user|has_group:"Smit"%}
             <li class="nav-item">
-              <a class="nav-link text-dark" href="/camera/about">Smit: </a>
+              <a class="nav-link text-dark" href="/camera/about">Smit </a>
             </li>
            {% endif %}    
 

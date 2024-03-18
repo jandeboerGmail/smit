@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block head_title %} {% endblock %}
+{% block content %}
+{% load static %}
+{% load user_tags %}
+
+{% if request.user|has_group:"Admin"%}
+{% csrf_token %}
+<h2 class='container-fluid smit-h2'>Log Files</h2>
+<ul>
+  <hr> 
+  <div class="nav-index">
+      <a class="nav-index" href="/camera/allLog">Alle Log Entries</a>
+  </div>
+  
+  <div class="nav-index">
+      <a class="nav-index" href="/camera/zOrderLog">Zoek op Serviceorder</a>
+  </div>
+  <hr>
+</ul>
+{% endif %}
+{% endblock %}

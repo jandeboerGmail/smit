@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block head_title %} 
+{% endblock %}
+{% block content %}
+
+<div class="container-fluid">
+  {% csrf_token %}
+  <div class="row align-items-end">
+      <h2 class="col-10 smit-h2">Videos</h2> 
+
+    <div class="col-1 smit-h2">{{aantal}}</div>
+  </div>
+ 
+  {% if page_obj %}
+  <table class="table table-hover table-sm">
+    <thead class="smit-header">
+      <tr>
+        <th scope="col">Serviceorder</th>
+        <th scope="col">Naam</th>
+        <th scope="col">Camera</th>
+        <th scope="col">Locatie</th>
+        <th scope="col">Plek</th>
+        <th scope="col">Opname van</th>
+        <th scope="col">Tijdsduur</th>
+        <th scope="col">Bijgewerkt</th>
+    </tr>
+  </thead>
+
+  <tbody>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+    {% for video in page_obj %}
+      {% if current_time.hour >= 6 and current_time.hour < 11 %}
+        <tr class="smit-line">
+      {% else %}
+        <tr class="video-last-updated">
+      {% endif %}
+    
+<!-- <tr class="smit-line"> -->
+       <td> {{video.ordernr}} </td>
+       <td> {{video.naam}} </td>
+       <td> {{video.camera.naam}} </td>
+       <td> {{video.camera.locatie.naam}} </td>
+       <td> {{video.camera.plaats}} </td>
+       <td> {{video.opname_van}} </td>
+       <td> {{video.duration}} </td>
+       <td> {{video.datum_updated}} </td>
+      
+       {% if perms.camera.view_video %}
+       <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>
+       {% endif %}
+      </tr>
+  </tbody>
+  {% endfor %}
+</table>
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; eerste</a>
+            <a href="?page={{ page_obj.previous_page_number }}">vorige</a>
+        {% endif %}
+
+        <span class="current">
+            Pagina {{ page_obj.number }} van {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">volgende</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">laatste &raquo;</a>
+        {% endif %}
+    </span>
+  </div>
+  {% else %}
+    <strong>Er zijn geen entries</strong>
+  {% endif %}
+ </div>
+
+    <!-- javascript -->
+    <script type="text/javascript" src="{% static 'js/script.js' %}"></script>
+
+{% endblock %}

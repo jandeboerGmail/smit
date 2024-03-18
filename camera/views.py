@@ -1061,7 +1061,7 @@ def editOrder(request,pk):
         if form.is_valid():
             form.save()
         #return ( redirect('about'))
-        return ( redirect('/camera/IndexUserOrder'))
+        return ( redirect('indexOrder'))
 
     template_name = 'inputForm.html'
     context = {'form' : form, 'title': 'Wijzig Service Order'}
@@ -1080,7 +1080,7 @@ def deleteOrder(request,pk):
         #print('Deleting Post:',request.POST)
         order.delete()
         #return ( redirect('about'))
-        return ( redirect('/camera/indexOrder'))
+        return ( redirect('indexOrder'))
 
     template_name = 'deleteRecord.html'
     context = {'item' : order , 'title': 'Verwijder Service Order'}

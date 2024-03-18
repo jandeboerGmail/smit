@@ -159,8 +159,10 @@ class ServiceOrder(models.Model):
         keep_original =  models.BooleanField(default=False,verbose_name="Behoud orgineel")
         auto_cleanup =  models.BooleanField(default=False,verbose_name="Automatisch opruimen")
         conversion_ready =  models.BooleanField(default=False)
-        opened = models.DateField(blank=False,default=timezone.now,verbose_name="Startdatum tijd incidend")
-        closed = models.DateField(blank=False,null=True,verbose_name="Einddatum tijd incidend")
+        opened_date = models.DateTimeField(blank=False,default=timezone.now,verbose_name="Incidend start datum")
+        #opened_time = models.TimeField(blank=False,null=False,verbose_name='"Incidend start tijd')
+        closed_date = models.DateTimeField(blank=False,default=timezone.now,verbose_name="Incidend eind datum")
+        #closed_time = models.TimeField(blank=False,null=False,verbose_name='Incidend eind tijd')
         memo = models.TextField(blank = True,verbose_name="Omschrijf voorval")
         slug = models.SlugField(max_length=120,default='slug')
         datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
@@ -174,6 +176,8 @@ class ServiceOrder(models.Model):
         class Meta:
             verbose_name_plural = 'ServiceOrder'
             ordering = ['ordernr']
+
+            
 
         def __str__(self): # For Python 2, use __unicode__ too
             return self.ordernr   
