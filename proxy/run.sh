@@ -20,3 +20,6 @@ else
   echo "SSL cert exists, enabling HTTPS..."
   envsubst < /etc/nginx/default-ssl.conf.tpl > /etc/nginx/conf.d/default.conf
 fi
+
+nginx -g 'daemon off;'
+#nginx 

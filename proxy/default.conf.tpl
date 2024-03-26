@@ -1,6 +1,6 @@
 server {
-    listen 9000;
-    server_name ${DOMAIN} sgportal.${DOMAIN};
+    listen 80;
+    server_name ${DOMAIN} www.${DOMAIN};
 
     location /.well-known/acme-challenge/ {
         root /vol/www/;
