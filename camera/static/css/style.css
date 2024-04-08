@@ -63,8 +63,16 @@ font-size: 10px;
 .table-day {
   background-color: #e6ffe6;
 }
-
 .table-night {
   background-color: #f2f2f2;
 }
-
+.privacy-h1 {
+  color: black;
+  text-align: left;
+  font-size: 30px;
+}
+.privacy-h2 {
+  color: black;
+  text-align: left;
+  font-size: 14px;
+}

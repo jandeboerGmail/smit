@@ -150,7 +150,7 @@ class Camera(models.Model):
 class ServiceOrder(models.Model):
         # id =  models.AutoField(verbose_name='ID', serialize=False,auto_created=True,primary_key=True)
         ordernr = models.CharField(max_length=50,blank = True,unique=False,default="",verbose_name="Smit intern Serviceorder nummer")
-        opdrachtnummer  =  models.CharField(max_length=50,blank = False,unique=False,default="",verbose_name="Opdrachtnummer")
+        opdrachtnummer  =  models.CharField(max_length=50,blank = False,unique=False,default="",verbose_name="Klant opdrachtnummer")
         bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
         contact = models.ForeignKey(User,on_delete=models.CASCADE)
         locatie = models.ForeignKey(Locatie,on_delete=models.CASCADE)
@@ -163,7 +163,7 @@ class ServiceOrder(models.Model):
         #opened_time = models.TimeField(blank=False,null=False,verbose_name='"Incidend start tijd')
         closed_date = models.DateTimeField(blank=False,default=timezone.now,verbose_name="Incidend eind datum")
         #closed_time = models.TimeField(blank=False,null=False,verbose_name='Incidend eind tijd')
-        memo = models.TextField(blank = True,verbose_name="Omschrijf voorval")
+        memo = models.TextField(blank = True,verbose_name="Omschrijf incident: (Specificeer zo duidelijk mogelijk wanneer in een zo kort mogelijke periode, waar en/of op welke plek het incident heeft plaatsgevonden)")
         slug = models.SlugField(max_length=120,default='slug')
         datum_inserted = models.DateTimeField(default=timezone.now, blank=False)
         datum_updated  = models.DateTimeField(default=timezone.now, blank=False)
