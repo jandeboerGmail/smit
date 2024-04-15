@@ -8,6 +8,7 @@ set -e
 # until it is available. This is so nginx has time to start before
 # certbot runs.
 #until nc -z proxy 80; do
+#until nc -z 192.168.1.10 80; do
 until nc -z 192.168.2.62 80; do
     echo "Waiting for proxy..."
     sleep 5s & wait ${!}

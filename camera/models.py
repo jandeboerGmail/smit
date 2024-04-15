@@ -91,6 +91,7 @@ class Account(models.Model):
     telefoon_mobiel = models.CharField(default = '06 11 22 33 44',max_length=16,blank = False)
     telefoon_vast = models.CharField(default = '00 11 22 33 44',max_length=16,blank = True)
     soort = models.IntegerField(choices=Soorten.choices,default=2)
+    # bedrijf = models.ForeignKey(Bedrijf,on_delete=models.CASCADE)
     gebied  = models.ManyToManyField(Gebied)
    
     def __str__(self): 
