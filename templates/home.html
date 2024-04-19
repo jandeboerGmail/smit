@@ -59,7 +59,9 @@
             <a class="nav-link text-danger" href="/camera/indexOrder">Order</a>
           </li>
           <li class="nav-item">
+            {% if perms.camera.view_video and user.otp_device %} 
             <a class="nav-link text-black" href="/camera/indexVideo">Video</a>
+            {%endif%}
           </li>
           <li class="nav-item">
             <a class="nav-link text-black" href="/camera/indexActies">Actie</a>
@@ -84,7 +86,7 @@
             </li>
            {% endif %}    
 
-            {% if perms.camera.view_video %}
+            {% if perms.camera.view_video and user.otp_device %}
               <li class="nav-item">
                 <a class="nav-link text-white" href="/camera/indexUserVideo">Video</a>
               </li>
@@ -102,6 +104,10 @@
             <li class="nav-item">
               <a class="nav-link text-white" href="/camera/about">Over</a>
             </li> 
+            <li class="nav-item">
+              <a class="nav-link text-white" href="/camera/privacy">Privacy</a>
+            </li> 
+          
             {% if user.is_authenticated %}
               <li class="nav-item">
                 <a class="nav-link text-dark">{{ user }} 

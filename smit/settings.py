@@ -34,17 +34,14 @@ ALLOWED_HOSTS.extend(
    )
 )
 
-#
+
 CSRF_TRUSTED_ORIGINS = []
 CSRF_TRUSTED_ORIGINS.extend(
     filter(
-       None,
+        None,
         os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(','),
    )
 )
-
-CSRF_TRUSTED_ORIGINS = ['https://*.smitelektrotechniek.nl:9000','https://*.127.0.0.1','https://berkhout.ddns.net:9000','https://192.168.1.10:9000 ']
-#CSRF_TRUSTED_ORIGINS = ['https://*.smitelektrotechniek.nl:9000','https://*.127.0.0.1','https://berkhout.ddns.net:9000']
 
 # Application definition
 

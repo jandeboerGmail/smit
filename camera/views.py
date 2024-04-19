@@ -16,7 +16,6 @@ import urllib
 from django.contrib.auth.models import User   
 #from django_table_sort.table import TableSort
 
-
 import camera.functions as functions
 from camera.models import Adress, Account, Bedrijf, Camera, Gebied, Locatie, Video ,ServiceOrder, Log, Parameter
 from camera.forms import AdressForm, BedrijfForm, LocatieForm, CameraForm, OrderForm,  VideoForm, GebiedForm
@@ -44,6 +43,10 @@ def current_datetime(request):
 def about(request):
     context  = {}
     return render(request,'about.html',context )
+
+def privacy(request):
+    context  = {}
+    return render(request,'privacy.html',context )
 
 def todo(request):
     context  = {}
@@ -745,9 +748,10 @@ def allowedVideo(request):
     for aItem in list:
         aantal += 1 
     if aantal > 0:
-        paginator = Paginator(list,15)
+        paginator = Paginator(list,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
+
         video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     else:
         video_dict = {}
@@ -762,10 +766,9 @@ def zNaamVideo(request):
     if query:
         qset = (Q(naam__icontains=query))    
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
-        #video_list = Video.objects.order_by('naam')
         aantal = video_list.count
 
-        paginator = Paginator(video_list,15)
+        paginator = Paginator(video_list,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
      
@@ -784,7 +787,7 @@ def zOrderVideo (request):
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
         aantal = video_list.count
 
-        paginator = Paginator(video_list,15)
+        paginator = Paginator(video_list,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
      
@@ -806,7 +809,7 @@ def zCameraVideo (request):
         video_list = Video.objects.filter(qset).distinct().order_by('naam')
         aantal = video_list.count
 
-        paginator = Paginator(video_list,15)
+        paginator = Paginator(video_list,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
      
@@ -823,10 +826,9 @@ def zLocatieVideo (request):
     if query:
         qset = (Q(camera__locatie__naam__icontains=query))    
         video_list = Video.objects.filter(qset).select_related('camera').distinct().order_by('naam')
-        #print ('video_list: ',str(video_list.query))
         aantal = video_list.count
 
-        paginator = Paginator(video_list,15)
+        paginator = Paginator(video_list,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
           
@@ -954,7 +956,7 @@ def allOrder(request):
     list = ServiceOrder.objects.order_by('bedrijf','contact','ordernr')
     aantal =  list.count
 
-    paginator = Paginator(list,15)
+    paginator = Paginator(list,10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
 
@@ -971,7 +973,7 @@ def zNrOrder (request):
         list = ServiceOrder.objects.filter(qset).distinct().order_by('bedrijf','ordernr','contact')
         aantal = list.count
 
-        paginator = Paginator(list,15)
+        paginator = Paginator(list,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -991,7 +993,7 @@ def zContactOrder (request):
         list = ServiceOrder.objects.filter(qset).distinct().order_by('contact','bedrijf','ordernr')
         aantal = list.count
 
-        paginator = Paginator(list,15)
+        paginator = Paginator(list,0)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         
@@ -1290,7 +1292,7 @@ def allVideoBedrijf(request,bedrijf):
         aantal = 0
         for aItem in aList:
             aantal += 1
-        paginator = Paginator(aList,15)
+        paginator = Paginator(aList,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
     
@@ -1313,7 +1315,7 @@ def zVideoBedrijfNaam(request,bedrijf,naam):
             aantal = 0
             for aItem in aList:
                 aantal += 1
-            paginator = Paginator(aList,15)
+            paginator = Paginator(aList,10)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
             dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' : naam}
@@ -1339,7 +1341,7 @@ def zVideoBedrijfLocatie(request,bedrijf,locatie):
             aantal += 1
         #print('aantal: ',aantal)
         if aList:
-            paginator = Paginator(aList,15)
+            paginator = Paginator(aList,10)
             page_number = request.GET.get('page')
             page_obj = paginator.get_page(page_number)
             dict  = {'page_obj' : page_obj , 'aantal' : aantal, "query": locatie}
@@ -1361,7 +1363,7 @@ def allCameraBedrijf(request,bedrijf):
 
     dict = {}
     if aList:
-        paginator = Paginator(aList,12)
+        paginator = Paginator(aList,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
 
@@ -1382,7 +1384,7 @@ def zCameraBedrijfNaam(request,bedrijf,naam):
 
     dict = {}
     if aList:
-        paginator = Paginator(aList,15)
+        paginator = Paginator(aList,10)
         page_number = request.GET.get('page')
         page_obj = paginator.get_page(page_number)
         dict  = {'page_obj' : page_obj , 'aantal' : aantal, 'query' : naam}
