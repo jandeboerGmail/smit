@@ -1,8 +1,8 @@
 # Probe to Converted Files
 import os,time,datetime
 
-videoPath='/home/jan/media/'
-#videoPath='/mnt/cctv/KLANTEN/DOWNLOAD/Stadgenoot' 
+#videoPath='/home/jan/media/'
+videoPath='/mnt/cctv/KLANTEN/DOWNLOAD/Stadgenoot' 
 i = 0
 
 for root, dirs, files in os.walk(videoPath, topdown=True):

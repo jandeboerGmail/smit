@@ -35,12 +35,34 @@ services:
     build:
       context: ./proxy
     restart: always
-    volumes:
-      - static_data:/vol/static
-    ports:
-      - "9000:9000"
     depends_on:
       - app
+    ports:
+      - 80:80
+      - 9000:9000
+    volumes:
+      - certbot-web:/vol/www
+      - proxy-dhparams:/vol/proxy
+      - certbot-certs:/etc/letsencrypt
+      - static_data:/vol/static
+    environment:
+      - DOMAIN=${DOMAIN}
+
+  certbot:
+    build:
+      context:./certbot
+    command: echo "Skipping..."
+    environment:
+      - EMAIL = ${ACME_DEFAULT_EMAIL}
+      - DOMAIN=${DOMAIN}
+    volumes:
+      - certbot-web:/vol/www
+      - cerbot-certs:/etc/letsecrypt/
+    depends_on:
+      - proxy
 
 volumes:
+  certbot-web:
+  proxy-dhparams:
+  certbot-certs:
   static_data:

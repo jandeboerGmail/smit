@@ -44,6 +44,14 @@
        <td> {{video.opname_van}} </td>
        <td> {{video.duration}} </td>
        <td> {{video.datum_updated}} </td>
+
+       {% if video.video_image %}
+       <td><img src="{{ video.video_image.url }}"  width="50" height="50"> </td>
+       {% else %}
+        <td><img src="{%static 'images/stadgenoot.jpg' %}" width="50" height="50"> </td>
+      <!--- <td><img src="{%static 'images/smit-logo.png' %}" width="50" height="50"> </td> -->
+         {% endif %}
+
       
        {% if perms.camera.view_video %}
        <td><a class="btn btn-sm btn-success" href="{% url 'playVideo' video.id %}">Play</a></td>

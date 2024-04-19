@@ -9,7 +9,8 @@ xlwt
 #django-tables2
 
 django-two-factor-auth
-django-two-factor-auth[phonenumbers]
+#django-two-factor-auth[phonenumbers]
+django-two-factor-auth[phonenumberslite]
 #twilio
 
 django-bootstrap-form

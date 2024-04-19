@@ -26,7 +26,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', 0)))
 
-ALLOWED_HOSTS = ['127.0.0.1','localhost','192.168.1.10']
+ALLOWED_HOSTS = ['127.0.0.1','localhost','klanten.smitelektrotechniek.nl']
 ALLOWED_HOSTS.extend(
     filter(
         None,
@@ -34,14 +34,17 @@ ALLOWED_HOSTS.extend(
    )
 )
 
-
+#
 CSRF_TRUSTED_ORIGINS = []
 CSRF_TRUSTED_ORIGINS.extend(
     filter(
-        None,
+       None,
         os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(','),
    )
 )
+
+CSRF_TRUSTED_ORIGINS = ['https://*.smitelektrotechniek.nl:9000','https://*.127.0.0.1','https://berkhout.ddns.net:9000','https://192.168.1.10:9000 ']
+#CSRF_TRUSTED_ORIGINS = ['https://*.smitelektrotechniek.nl:9000','https://*.127.0.0.1','https://berkhout.ddns.net:9000']
 
 # Application definition
 
@@ -58,6 +61,7 @@ INSTALLED_APPS = [
 
     #'django_table_sort',
     #'django_tables2',
+
     #mfa
     'django_otp',
     'django_otp.plugins.otp_static',
@@ -227,3 +231,5 @@ MEDIA_URL = '/media/'
 #SECURE_CROSS_ORIGIN_OPENER_POLICY = None
 
 #DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap5.html"
+
+#SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

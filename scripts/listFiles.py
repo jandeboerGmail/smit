@@ -1,8 +1,8 @@
 # List to Converted Files
 import os,time
 
-videoPath='/home/jan/video/'
-#videoPath='/mnt/cctv/KLANTEN/DOWNLOAD/Stadgenoot' 
+#videoPath='/home/jan/video/'
+videoPath='/mnt/cctv/KLANTEN/DOWNLOAD/Stadgenoot' 
 
 i = 0
 
