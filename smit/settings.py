@@ -42,6 +42,7 @@ CSRF_TRUSTED_ORIGINS.extend(
         os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(','),
    )
 )
+CSRF_TRUSTED_ORIGINS = ['https://*.smitelektrotechniek.nl:9000','https://*.127.0.0.1','https://berkhout.ddns.net:9000','https://192.168.1.10:9000']
 
 # Application definition
 
@@ -130,7 +131,8 @@ DATABASES = {
 #LOGIN_URL = '/admin/login'
 
 LOGIN_URL = 'two_factor:login'
-LOGIN_REDIRECT_URL = "/camera/allowedVideo/"
+#LOGIN_REDIRECT_URL = "/camera/allowedVideo/"
+LOGIN_REDIRECT_URL = "/camera/indexUserOrder"
 
 # Develop
 #TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake' 
