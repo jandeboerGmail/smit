@@ -44,6 +44,10 @@ def about(request):
     context  = {}
     return render(request,'about.html',context )
 
+def activateMFA(request):
+    context  = {}
+    return render(request,'activateMFA.html',context )
+
 def privacy(request):
     context  = {}
     return render(request,'privacy.html',context )

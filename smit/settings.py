@@ -132,7 +132,8 @@ DATABASES = {
 
 LOGIN_URL = 'two_factor:login'
 #LOGIN_REDIRECT_URL = "/camera/allowedVideo/"
-LOGIN_REDIRECT_URL = "/camera/indexUserOrder"
+#LOGIN_REDIRECT_URL = "/camera/indexUserOrder"
+LOGIN_REDIRECT_URL = "/camera/activateMFA"
 
 # Develop
 #TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake' 

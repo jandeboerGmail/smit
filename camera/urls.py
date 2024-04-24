@@ -27,6 +27,7 @@ urlpatterns = [
     #path('allowedVideo/', views.allowedVideo, name='allowedVideo'),
     path('time/',views.current_datetime,name='current_datetime'),
     path('about/',views.about,name='about'),
+    path('activateMFA/',views.activateMFA,name='activateMFA'),
     path('privacy/',views.privacy,name='privacy'),
     path('todo/',views.todo,name='todo'),
 

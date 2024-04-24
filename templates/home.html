@@ -30,7 +30,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="navbar-nav mr-auto">
         
-        {% if request.user|has_group:"Admin"%}
+        {% if request.user|has_group:"Admin" and user.otp_device %} 
           <li class="nav-item">
             <a class="nav-link text-black" href="/admin">Admin: </a>
           </li>
@@ -54,10 +54,11 @@
           <li class="nav-item">
             <a class="nav-link text-danger" href="/camera/indexCamera">Camera</a>
           </li>
-        
+          {% if user.otp_device %} 
           <li class="nav-item">
-            <a class="nav-link text-danger" href="/camera/indexOrder">Order</a>
+            <a class="nav-link text-danger" href="/camera/indexOrder">Order<a>
           </li>
+          {% endif %}
           <li class="nav-item">
             {% if perms.camera.view_video and user.otp_device %} 
             <a class="nav-link text-black" href="/camera/indexVideo">Video</a>
@@ -92,13 +93,13 @@
               </li>
             {% endif %}
               
-            {% if perms.camera.view_serviceorder %}
+           {% if user.otp_device %}
             <li class="nav-item">
               <a class="nav-link text-white" href="/camera/indexUserOrder">Order</a>
             </li>
             {% endif %}   
          </ul>
-        {% endif %}
+       {% endif %}
         {% endif %}
           <ul class="navbar-nav mlrauto">
             <li class="nav-item">
@@ -113,7 +114,7 @@
                 <a class="nav-link text-dark">{{ user }} 
                   {% if user.otp_device %}🔒{% else %}
                   <li class="nav-item">
-                    <a class="nav-link text-white" href="/account/two_factor/setup/">MFA</a>
+                    <a class="nav-link text-danger" href="/account/two_factor/setup/">MFA</a>
                   </li> 
                   {% endif %}</a>
               </li>
