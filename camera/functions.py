@@ -325,6 +325,8 @@ def convertFileName(inName):
     outName =  inName.replace(" ", "\\ ")
     outName = outName.replace("(", "\\(")
     outName=  outName.replace(")", "\\)")
+    outName=  outName.replace("$", "\\$")
+    
     return(outName) 
 
 def getFileSize(fileName):
