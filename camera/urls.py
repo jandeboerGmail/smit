@@ -101,9 +101,14 @@ urlpatterns = [
     path('createCamera/',views.createCamera,name='createCamera'),
     path('editCamera/<int:pk>',views.editCamera,name='editCamera'),
     path('deleteCamera/<int:pk>',views.deleteCamera,name='deleteCamera'),
+    
+    path('allCameraUser/',views.allCameraUser,name='allCameraUser'),
+    path('zNaamCameraUser/',views.zNaamCameraUser,name='zNaamCameraUser'),
+    path('zLocatieCameraUser/',views.zLocatieCameraUser,name='zLocatieCameraUser'),
 
 # Video
     path('allVideo/',views.allVideo,name='allVideo'),
+    path('newVideo/',views.newVideo,name='newVideo'),
     path('allowedVideo/',views.allowedVideo,name='allowedVideo'),
 
     path('allVideoStadgenoot/',views.allVideoStadgenoot,name='allVideoStadgenoot'),

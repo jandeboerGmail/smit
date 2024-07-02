@@ -598,12 +598,38 @@ def allCamera(request):
 
     camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'displayCamera.html',camera_dict )
+
+def allCameraUser(request):
+    camera_list = Camera.objects.order_by('locatie','naam')
+    aantal =  camera_list.count
+
+    paginator = Paginator(camera_list,12)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    return render(request,'displayCamera.html',camera_dict )
     
 # Zoek
 @login_required
 @csrf_protect
 @permission_required('camera.view_camera')
 def zNaamCamera (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(naam__icontains=query))       
+        camera_list = Camera.objects.filter(qset).distinct().order_by('naam')
+        aantal = camera_list.count
+        camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
+    else:
+        camera_dict = {}
+    return render(request,'zNaamCamera.html', camera_dict ) 
+
+# Zoek
+@login_required
+@csrf_protect
+@permission_required('camera.view_camera')
+def zNaamCameraUser (request):
     query = request.GET.get('q','')
     if query:
         qset = (Q(naam__icontains=query))       
@@ -628,6 +654,19 @@ def zLocatieCamera (request):
         camera_dict = {}
     return render(request,'zLocatieCamera.html', camera_dict ) 
 
+@login_required
+@csrf_protect
+@permission_required('camera.view_camera')
+def zLocatieCameraUser (request):
+    query = request.GET.get('q','')
+    if query:
+        qset = (Q(locatie__naam__icontains=query))       
+        camera_list = Camera.objects.filter(qset).distinct().order_by('locatie','naam')
+        aantal = camera_list.count
+        camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
+    else:
+        camera_dict = {}
+    return render(request,'zLocatieCamera.html', camera_dict ) 
 
 # Export
 @login_required
@@ -738,6 +777,28 @@ def allVideo(request):
 
     video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'displayVideo.html',video_dict )
+
+#@csrf_protect 
+@permission_required('camera.view_video')
+def newVideo(request):
+    currentUser = request.user
+    #print ('current User: ', currentUser.id,currentUser.username)
+    list = functions.checkNewVideos (currentUser.id,"admin")
+    
+    # aantal =  list.count
+    aantal = 0
+    for aItem in list:
+        aantal += 1 
+    if aantal > 0:
+        paginator = Paginator(list,10)
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+
+        video_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
+    else:
+        video_dict = {}
+    return render(request,'displayAllowedVideo.html',video_dict )
+
 
 @login_required
 #@csrf_protect 
@@ -957,7 +1018,8 @@ def playVideo(request,pk):
 @csrf_protect
 @permission_required('camera.view_serviceorder')
 def allOrder(request):
-    list = ServiceOrder.objects.order_by('bedrijf','contact','ordernr')
+    #list = ServiceOrder.objects.order_by('bedrijf','contact','ordernr')
+    list = ServiceOrder.objects.order_by('bedrijf','datum_inserted')
     aantal =  list.count
 
     paginator = Paginator(list,10)
@@ -1272,7 +1334,9 @@ def actieAddVideo(request):
 @login_required
 @csrf_protect
 def actieSendMail(request):
-    recipients = ['jandeboer@gmail.com','eenwest@gmail.com']
+    recipients =  [request.user.email]
+    ## mailMigrationReady(userEmail,"Test")
+    #recipients = ['jandeboer@gmail.com','eenwest@gmail.com']
   
     functions.SendMail('My subject',"Test Message",recipients)
     return HttpResponse("Mail send!!")

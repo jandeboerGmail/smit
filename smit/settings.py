@@ -26,6 +26,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = bool(int(os.environ.get('DJANGO_DEBUG', 0)))
 
+
 ALLOWED_HOSTS = ['127.0.0.1','localhost','klanten.smitelektrotechniek.nl']
 ALLOWED_HOSTS.extend(
     filter(
@@ -64,7 +65,7 @@ INSTALLED_APPS = [
     'django_otp',
     'django_otp.plugins.otp_static',
     'django_otp.plugins.otp_totp',
-    #'django_otp.plugins.otp_email',  # <- if you want email capability.
+    'django_otp.plugins.otp_email',  # <- if you want email capability.
 
     'two_factor',
     #'two_factor.plugins.phonenumber',  # <- if you want phone number capability.
@@ -131,9 +132,10 @@ DATABASES = {
 #LOGIN_URL = '/admin/login'
 
 LOGIN_URL = 'two_factor:login'
+LOGIN_REDIRECT_URL = 'two_factor:profile'
 #LOGIN_REDIRECT_URL = "/camera/allowedVideo/"
 #LOGIN_REDIRECT_URL = "/camera/indexUserOrder"
-LOGIN_REDIRECT_URL = "/camera/activateMFA"
+#LOGIN_REDIRECT_URL = "/camera/activateMFA"
 
 # Develop
 #TWO_FACTOR_CALL_GATEWAY = 'two_factor.gateways.fake.Fake' 

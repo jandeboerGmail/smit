@@ -1,6 +1,10 @@
 import os,time,shutil,re
 from django.utils import timezone
 from datetime import datetime
+
+from dateutil.relativedelta import relativedelta
+from django.utils.timezone import now
+
 from django.core.mail import send_mail, EmailMessage
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
@@ -25,7 +29,7 @@ def isFromBedrijf(aUser):
     return result
 
 def videoIsAllowed(request,aVideo):
-    #print('videoIsAllowed')
+    # print('videoIsAllowed',aVideo.naam)
     currentUser = request.user
     aUser =  User.objects.get(id=currentUser.id)
 
@@ -34,9 +38,12 @@ def videoIsAllowed(request,aVideo):
     else:
         result = False
         aAccount = Account.objects.get(user_id=currentUser.id)
-        aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
-        aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
-        #print ('Locatie :',aVideo.naam, aLocatie.gebied)
+        # chabges
+        if aVideo.camera:
+            aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
+        if aCamera.locatie:
+            aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+        # print ('Locatie :',aVideo.naam, aLocatie.gebied)
 
         for gebied in aAccount.gebied.all():
             #print ("Gebieden van Account: ",gebied)
@@ -44,17 +51,15 @@ def videoIsAllowed(request,aVideo):
                 result = True
                 # print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
         return result
-    
-  
-   
+
 def checkVideos (aUserId,bedrijf):  
     aUser =  User.objects.get(id=aUserId)   
     #print ("User = ",aUser,bedrijf )  
     
     if bedrijf == "admin" :
-       aVideoList = Video.objects.order_by('-datum_updated','ordernr','naam','camera')
+       aVideoList = Video.objects.order_by('-datum_inserted','-datum_updated','ordernr','naam','camera')
     else:
-      aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_updated","ordernr","camera__locatie")
+      aVideoList = Video.objects.filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_inserted","-datum_updated","ordernr","camera__locatie")
     
     if aUser.is_superuser:
         return aVideoList
@@ -69,7 +74,38 @@ def checkVideos (aUserId,bedrijf):
             for aVideo in aVideoList:
                 aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
                 aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
-                #print ('Locatie :',aVideo.naam, aLocatie.gebied)
+                # printprint ('Locatie :',aVideo.naam, aLocatie.gebied)
+
+                for gebied in aAccount.gebied.all():
+                    #print ("Gebieden van Account: ",gebied)
+                    if aLocatie.gebied == gebied:
+                        validatedVideos.append(aVideo)
+                     #print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
+        return validatedVideos  
+   
+def checkNewVideos (aUserId,bedrijf):  
+    aUser =  User.objects.get(id=aUserId)   
+    #print ("User = ",aUser,bedrijf )  
+    
+    if bedrijf == "admin" :
+       aVideoList = Video.objects.filter(datum_inserted__gte=now()-relativedelta(month=1)).order_by('-datum_inserted','-datum_updated','ordernr','naam','camera')
+    else:
+      aVideoList = Video.objects.filter(datum_inserted__gte=now()-relativedelta(month=1)).filter(camera__locatie__bedrijf__naam__icontains=bedrijf).select_related('camera').order_by("-datum_inserted","-datum_updated","ordernr","camera__locatie")
+    
+    if aUser.is_superuser:
+        return aVideoList
+    else:
+        validatedVideos = []
+        try:
+            aAccount = Account.objects.get(user_id=aUserId)
+        except:
+            aAccount = None
+      
+        if aAccount:
+            for aVideo in aVideoList:
+                aCamera = Camera.objects.filter(naam=aVideo.camera)[0]
+                aLocatie = Locatie.objects.filter(naam=aCamera.locatie)[0]
+                # printprint ('Locatie :',aVideo.naam, aLocatie.gebied)
 
                 for gebied in aAccount.gebied.all():
                     #print ("Gebieden van Account: ",gebied)
@@ -139,7 +175,6 @@ def checkCameras(aUserId,bedrijf):
         aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).order_by('locatie','naam')
 
     if aUser.is_superuser:
-        print
         return aCameraList
     else:
         validatedCameras = []
@@ -181,7 +216,8 @@ def checkCamerasNaam(aUserId,bedrijf,naam):
         return validatedCameras
     
 def checkCamerasLocatie(aUserId,bedrijf,locatie):   
-    aUser =  User.objects.get(id=aUserId)   
+    aUser =  User.objects.get(id=aUserId) 
+    print ('checkCamerasLocatie ',bedrijf,locatie)
         
     if bedrijf == "admin":
         aCameraList = Camera.objects.filter(locatie__naam__icontains=locatie).select_related("locatie").order_by('locatie','naam')
@@ -325,8 +361,8 @@ def convertFileName(inName):
     outName =  inName.replace(" ", "\\ ")
     outName = outName.replace("(", "\\(")
     outName=  outName.replace(")", "\\)")
-    outName=  outName.replace("$", "\\$")
-    
+    outName=  outName.replace("$", "\\$")  
+     
     return(outName) 
 
 def getFileSize(fileName):
@@ -364,7 +400,7 @@ def SendMail(subject,message,recipentList):
         subject, message, 
         'sgportal@smitelektrotechniek.nl', 
         emailcheckedRecepentList, 
-        reply_to=['sgportal@smitelektrotechniek.uyhnl'], 
+        reply_to=['sgportal@smitelektrotechniek.nl'], 
                 #headers={'Message-ID': 'foo'},
     )
     email.send()
@@ -472,14 +508,14 @@ def addUser(orderNr,naam):
 #Gebied
 def addGebied(orderNr,bedrijfNaam):
 
-    print("addGebied: ",orderNr,bedrijfNaam)
+    #print("addGebied: ",orderNr,bedrijfNaam)
     aBedrijf = addBedrijf(orderNr,bedrijfNaam)
 
     aGebiedNr = 0 # Not yet known. Set Manually
 
     aGebieden = Gebied.objects.filter(bedrijf__naam=bedrijfNaam,gebiedNr=aGebiedNr)
     if not aGebieden and bedrijfNaam:
-        print ('Add gebied: ',orderNr,'-',bedrijfNaam)
+        #print ('Add gebied: ',orderNr,'-',bedrijfNaam)
         aGebied = Gebied()
         aGebied.gebiedNr = 0
         aGebied.naam = "onbekend"
@@ -568,7 +604,7 @@ def addCamera(orderNr,cameraNaam,locatieNaam,bedrijfNaam,locatieNm,adressNaam,ge
         aCamera.type      = "Dahua"
         aCamera.plaats    = "onbekend"
         aCamera.save()
-        print('add aCamera name: ',aCamera.naam)
+        #print('add aCamera name: ',aCamera.naam)
 
         message = "WARNING: Default values added for camera: "  + cameraNaam +  " | " + locatieNaam
         addLogEntry(orderNr,message)
@@ -588,7 +624,7 @@ def addVideo(request,orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoL
     print("bedrijfnaam: ",bedrijfNaam)
 
     aAdress = addAdress(orderNr,locatieNaam)
-    print ("Adress: ",aAdress.naam)
+    #print ("Adress: ",aAdress.naam)
 
     currentUser = request.user
     aUser =  User.objects.get(id=currentUser.id)
@@ -600,7 +636,7 @@ def addVideo(request,orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoL
     #aVideo   = Camera.objects.filter(naam=cameraNaam).select_related('locatie')[0]
 
     locatieId = Locatie.objects.filter(naam=locatieNaam)[0]
-    print ('locatieId :',locatieId)
+    #print ('locatieId :',locatieId)
 
     aVideos   = Video.objects.filter(naam=videoNaam,camera__naam=cameraNaam,camera__locatie=locatieId)
     aOrder=addServiceOrder(orderNr,bedrijfNaam,locatieNaam,aAdress.naam,aUser.username) # LoginUser ?
@@ -626,7 +662,7 @@ def addVideo(request,orderNr,videoNaam,cameraNaam,locatieNaam,bedrijfNaam,videoL
         addLogEntry(orderNr,message)
     else:
         aVideo = aVideos[0]
-        print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
+        #print("Found aVideo;  ",   aVideo.naam , aVideo.camera )
 
     #print ("Video: ",aVideo.naam)
     return aVideo
@@ -646,7 +682,7 @@ def extractDBitems(request,filename):
     # print("----------- extractDBitems -----")
    
     inFile = filename.replace(" ", "\\ ")
-    print("filename: ",inFile)
+    #print("filename: ",inFile)
     fileItems = re.split("/",inFile)
 
     itr = 0
@@ -681,7 +717,7 @@ def extractDBitems(request,filename):
 
     itr = 0
     for item in naamItems:
-        print ("naamItems :",itr,item)
+        #print ("naamItems :",itr,item)
         itr += 1
 
     #extract Naaam
@@ -764,11 +800,12 @@ def convertingVideos(request):
 
                         # check / create orderNr directory
                         reqDir = destDir + orderNr + "/"
-                        print('reqDir :', reqDir)
+                        #print('reqDir :', reqDir)
                         if not os.path.isdir(reqDir):
                             os.mkdir(reqDir)
                 
                         outFileName = os.path.join(destDir,after)
+                        userEmail = request.user.email
                         fSize = getFileSize(inFileName)
 
                         #probe format
@@ -785,10 +822,11 @@ def convertingVideos(request):
                             addLogEntry(orderNr,message)
                             shutil.copyfile(inFileName, outFileName)
                             extractDBitems(request,outFileName)
-                            userEmail = request.user.email
+                            setDurationFileSizeVideo(orderNr,outFileName) 
+                            
                             mailMigrationReady(userEmail,outFileName)
-                            # removeFile(inFileName) # uncommend for production
-                            moveFileToDone(inFileName,orderNr) 
+                            removeFile(inFileName) # uncommend for production
+                            #moveFileToDone(inFileName,orderNr) 
                             
                         else: #conversion needed
                             if converting <= maxConverting:
@@ -844,10 +882,10 @@ def convertingVideos(request):
                                     #message = "Migrated to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
                                     addLogEntry(orderNr,message)
                                     extractDBitems(request,outFileName)
-                                    userEmail = request.user.email
+                                    #setDurationFileSizeVideo(orderNr,outFileName)  
                                     #print('Email: ',userEmail)
                                     mailMigrationReady(userEmail,outFileName)
-                                    # removeFile(inFileName) # uncommend for production
+                                    removeFile(inFileName) # uncommend for production
                                     # moveFileToDone(inFileName,orderNr) Not yet after conversion 
                                 
                                 else:
@@ -878,14 +916,14 @@ def convertingVideosOrder(request,order):
             if "2Convert" in inFileName:
                 #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName or inFileName in order and not "._" in inFileName:
-                    print('inFile :',inFileName)
+                    p#rint('inFile :',inFileName)
                     after = substring_after(inFileName,"2Convert/") 
             
                     if (after and size_changed(inFileName,5)) and (os.path.getsize(inFileName)) > 0:
                       
-                        print('After :',after)
+                        #print('After :',after)
                         orderNr = after[0:after.find("/")]
-                        print('request:',orderNr)
+                        #print('request:',orderNr)
                         
                         #make/check output dir
                         destDir = substring_before(inFileName, "2Convert") + "Migrated/" 
@@ -918,8 +956,9 @@ def convertingVideosOrder(request,order):
                             addLogEntry(orderNr,message)
                             shutil.copyfile(inFileName, outFileName)
                             extractDBitems(orderNr,outFileName)
-                            # removeFile(inFileName) # uncommend for production
-                            moveFileToDone(inFileName,request) 
+                            setDurationFileSizeVideo(orderNr,outFileName) 
+                            removeFile(inFileName) # uncommend for production
+                            # moveFileToDone(inFileName,request) 
                             
                         else: #conversion needed
                             if converting <= maxConverting:
@@ -956,7 +995,7 @@ def convertingVideosOrder(request,order):
                                 #command = command + " -c:v libvpx-vp9 -b:v 2M -pass 2 -c:a libopus "  + outFile
 
                                 #addLogEntry(orderNr,command)
-                                print('Command :',command) 
+                                #print('Command :',command) 
                                 # removeFile(outFile) # uncomment in production
                             
                                 startTime = time.time()
@@ -974,11 +1013,12 @@ def convertingVideosOrder(request,order):
                                     
                                     message = "To " + outFileName 
                                     #message = "Migrated to " + outFileName + " Size: " + fSize + " MB Time: " + elapsed
-                                    addLogEntry(orderNr,message)
-                        
-                                    # removeFile(inFileName) # uncommend for production
-                                    # moveFileToDone(inFileName,orderNr) Not yet after conversion 
+                                    addLogEntry(orderNr,message)                                   
                                     extractDBitems(request,outFileName)
+                                    setDurationFileSizeVideo(orderNr,outFileName) 
+                                    makeImage(inFileName)
+                                    removeFile(inFileName) # uncommend for production
+                                    # moveFileToDone(inFileName,orderNr) Not yet after conversion 
                                 else:
                                     addLogEntry(orderNr,"ERROR : Not Migrated")
                             else:
@@ -998,14 +1038,14 @@ def listVideos():
             inFileName = os.path.join(root, name)
             #print("Files :",os.path.join(root, name))
             if "2Convert" in inFileName:
-                print('inFile :',inFileName)
+                #print('inFile :',inFileName)
                 if ".MP4" in inFileName or ".mp4" in inFileName and not "._" in inFileName:
                     #print('inFile :',inFileName)
                     after = substring_after(inFileName,"2Convert/") 
             
                     if (after and size_changed(inFileName,1)) and (os.path.getsize(inFileName)) > 0:
                         orderNr = after[0:after.find("/")]
-                        print('Ordernr: ",orderNr')
+                        #print('Ordernr: ",orderNr')
                         fSize = getFileSize(inFileName)
 
                         #probe format
@@ -1064,23 +1104,31 @@ def updateImageInDB(inFileName,imageName):
         aVideo.save()
     return
 
-'''
 def hasNoImageFile(inFileName):
     videoNaam = extractVideoNaam(inFileName)
     print('----------------hasNoImage ',videoNaam)
     aVideos  = Video.objects.filter(naam=videoNaam)
     if aVideos:
         aVideo = aVideos[0]
-        print('---------------aVideo :',videoNaam, aVideo.video_image,le)
+        print('---------------aVideo :',videoNaam, aVideo.video_image)
        
         if aVideo.video_image is not None:
             return True
         else:
             return False
     return True
-''' 
+ 
+def makeImageName(videoFilename):
+    imageName = videoFilename
+    imageName = imageName.replace(".mp4", ".jpg")
+    imageName = imageName.replace(".MP4", ".jpg")
+    imageName = imageName.replace(".WEBM", ".jpg")
+    imageName = imageName.replace(".webm", ".jpg")
+    return(imageName)
 
-def makeImage(videoFilename,imageName):
+
+def makeImage(videoFilename):
+    imageName     = makeImageName (videoFilename)
     videoFilename = convertFileName(videoFilename)
     imageName     = convertFileName(imageName)
     #print("making image:",videoFilename,"-> ",imageName)
@@ -1090,10 +1138,21 @@ def makeImage(videoFilename,imageName):
     result = os.system(command)                   
     return result
 
+def insertImage(orderNr,inFileName):
+     if hasNoImageFile(inFileName):
+        if makeImage(inFileName) == 0:
+            imageName = makeImageName (inFileName)
+            message = 'Image created from '  + inFileName 
+            updateImageInDB(inFileName,imageName)
+        else:
+            message = 'ERROR: Image created from '  + inFileName 
+        addLogEntry(orderNr,message)
+                                                           
+
 def makeImages():
     videoPath=getVideoLocation()
     message = "Make preview Images in " + videoPath + ' ...'
-    print (message)
+    # print (message)
     addLogEntry(" ", message)
     for root, dirs, files in os.walk(videoPath, topdown=True):
   
@@ -1106,21 +1165,8 @@ def makeImages():
             
                     if (os.path.getsize(inFileName)) > 0:
                         orderNr = after[0:after.find("/")]
-
-                        imageName = inFileName
-                        imageName = imageName.replace(".mp4", ".jpg")
-                        imageName = imageName.replace(".MP4", ".jpg")
-                        imageName = imageName.replace(".WEBM", ".jpg")
-                        imageName = imageName.replace(".webm", ".jpg")
-        
-                        #if hasNoImageFile(inFileName):
-                        if makeImage(inFileName,imageName) == 0:
-                                message = 'Image created from '  + inFileName 
-                                updateImageInDB(inFileName,imageName)
-                        else:
-                            message = 'ERROR: Image created from '  + inFileName 
-                            addLogEntry(orderNr,message)
-                                                           
+                        insertImage(orderNr,inFileName)
+                                       
     message = "Make preview Images Ended"
     addLogEntry(" ", message)
     return
@@ -1185,6 +1231,25 @@ def getFileSizeVideo(inFilename):
     else:
         return False
     
+def setDurationFileSizeVideo(orderNr,inFileName):
+     # is it set in the db ?
+    if not DurationVideo(inFileName):
+        #print('Setting the duration of ', inFileName) 
+        if getDurationVideo(inFileName):
+            message = 'Setting the duration from '  + inFileName
+        else:
+            message = 'ERROR: Setting duration from '  + inFileName
+        addLogEntry(orderNr,message)
+
+        # is it set in the db ?
+        if not FileSizeVideo(inFileName):
+            if getFileSizeVideo(inFileName):
+                message = 'Getting the FileSize of '  + inFileName
+            else:
+                message = 'ERROR: Getting the FileSize of '  + inFileName
+            addLogEntry(orderNr,message)
+                                                           
+    
 def getDurationAndFileSizeVideos():
     videoPath=getVideoLocation()
     message = "Getting the duration of the Videos in " + videoPath +' ...'
@@ -1197,25 +1262,7 @@ def getDurationAndFileSizeVideos():
                     after = substring_after(inFileName,"Migrated/") 
                     if (os.path.getsize(inFileName)) > 0:
                         orderNr = after[0:after.find("/")]
-                        
-                        # is it set in the db ?
-                        if not DurationVideo(inFileName):
-                            #print('Setting the duration of ', inFileName) 
-                            if getDurationVideo(inFileName):
-                                message = 'Setting the duration from '  + inFileName
-                            else:
-                                message = 'ERROR: Setting duration from '  + inFileName
-                                addLogEntry(orderNr,message)
-
-                        # is it set in the db ?
-                        if not FileSizeVideo(inFileName):
-                            if getFileSizeVideo(inFileName):
-                                message = 'Getting the FileSize of '  + inFileName
-                            else:
-                                message = 'ERROR: Getting the FileSize of '  + inFileName
-                            addLogEntry(orderNr,message)
-                                                           
-                                                  
+                        setDurationFileSizeVideo(orderNr,inFileName)                                 
     message = "End set the length/filesize  from the Videos"
     addLogEntry(" ", message)
     return

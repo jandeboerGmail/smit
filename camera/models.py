@@ -10,7 +10,7 @@ def in_a_year():
     return timezone.now() + timedelta(days=365)
 
 class Adress (models.Model):
-    naam = models.CharField(max_length=50,blank = False)
+    naam = models.CharField(max_length=100,blank = False)
     straat = models.CharField(max_length=50,blank = False,default = 'Straatnaam 1')
     postcode = models.CharField(max_length=6,blank = False,default = '0000AA')
     plaats = models.CharField(max_length=50,blank = False,default = 'Plaats')
@@ -98,7 +98,7 @@ class Account(models.Model):
         return self.user.username 
     
 class Locatie(models.Model):
-    naam = models.CharField(max_length=50,blank = False)
+    naam = models.CharField(max_length=100,blank = False)
     adres = models.ForeignKey(Adress,on_delete=models.CASCADE)
     gebied  = models.ForeignKey(Gebied,on_delete=models.CASCADE)
     image =  models.ImageField(upload_to ='images/',null=True,blank=True)
@@ -177,8 +177,6 @@ class ServiceOrder(models.Model):
         class Meta:
             verbose_name_plural = 'ServiceOrder'
             ordering = ['ordernr']
-
-            
 
         def __str__(self): # For Python 2, use __unicode__ too
             return self.ordernr   
