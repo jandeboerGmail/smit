@@ -52,6 +52,7 @@ def videoIsAllowed(request,aVideo):
                 # print ('Allowed :',aAccount.user, aVideo.naam, aLocatie.gebied)
         return result
 
+# CheckVideos
 def checkVideos (aUserId,bedrijf):  
     aUser =  User.objects.get(id=aUserId)   
     #print ("User = ",aUser,bedrijf )  
@@ -170,9 +171,9 @@ def checkVideosLocatie(aUserId,bedrijf,locatie):
 def checkCameras(aUserId,bedrijf):   
     aUser =  User.objects.get(id=aUserId)     
     if bedrijf == "admin":
-        aCameraList = Camera.objects.order_by('locatie','naam')
+        aCameraList = Camera.objects.order_by('naam','locatie')
     else:
-        aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).order_by('locatie','naam')
+        aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf).order_by('naam','locatie')
 
     if aUser.is_superuser:
         return aCameraList
@@ -194,10 +195,10 @@ def checkCamerasNaam(aUserId,bedrijf,naam):
     aUser =  User.objects.get(id=aUserId) 
       
     if bedrijf == "admin" :
-        aCameraList = Camera.objects.filter(naam__icontains=naam).order_by('locatie','naam')
+        aCameraList = Camera.objects.filter(naam__icontains=naam).order_by('naam','locatie')
     else:
         #aList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).select_related("locatie").order_by('locatie','naam')
-        aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).order_by('locatie','naam')
+        aCameraList = Camera.objects.filter(locatie__bedrijf__naam__icontains=bedrijf,naam__icontains=naam).order_by('naam','locatie')
        
     if aUser.is_superuser:
         return aCameraList

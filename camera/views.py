@@ -599,16 +599,6 @@ def allCamera(request):
     camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
     return render(request,'displayCamera.html',camera_dict )
 
-def allCameraUser(request):
-    camera_list = Camera.objects.order_by('locatie','naam')
-    aantal =  camera_list.count
-
-    paginator = Paginator(camera_list,12)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    camera_dict  = {'page_obj' : page_obj , 'aantal' : aantal}
-    return render(request,'displayCamera.html',camera_dict )
     
 # Zoek
 @login_required
@@ -618,7 +608,7 @@ def zNaamCamera (request):
     query = request.GET.get('q','')
     if query:
         qset = (Q(naam__icontains=query))       
-        camera_list = Camera.objects.filter(qset).distinct().order_by('naam')
+        camera_list = Camera.objects.filter(qset).distinct().order_by('naam','locatie')
         aantal = camera_list.count
         camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
     else:
@@ -633,7 +623,7 @@ def zNaamCameraUser (request):
     query = request.GET.get('q','')
     if query:
         qset = (Q(naam__icontains=query))       
-        camera_list = Camera.objects.filter(qset).distinct().order_by('naam')
+        camera_list = Camera.objects.filter(qset).distinct().order_by('naam','locatie')
         aantal = camera_list.count
         camera_dict  = {'results' : camera_list , 'aantal' : aantal, "query": query}
     else:
